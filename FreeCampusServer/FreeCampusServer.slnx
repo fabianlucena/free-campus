@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="FreeCampusServer/FreeCampusServer.csproj" />
+  <Project Path="RCBAC/RCBAC.csproj" Id="e7cadd99-a47e-4acc-9915-1edc650ac6df" />
+</Solution>
