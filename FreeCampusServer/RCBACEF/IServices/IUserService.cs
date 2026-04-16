@@ -1,6 +1,6 @@
-﻿using RCBAC.Models;
+﻿using RCBACEF.Models;
 
-namespace RCBAC.IServices
+namespace RCBACEF.IServices
 {
     public interface IUserService
     {

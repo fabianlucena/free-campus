@@ -1,6 +1,6 @@
-﻿using RCBAC.Models;
+﻿using RCBACEF.Models;
 
-namespace RCBAC.DTO
+namespace RCBACEF.DTO
 {
     public class UserResponse(User user)
     {

@@ -1,4 +1,4 @@
-using RCBAC;
+using RCBACEF;
 
 namespace FreeCampusServer
 {
@@ -10,7 +10,7 @@ namespace FreeCampusServer
 
             // Add services to the container.
 
-            builder.AddRCBAC();
+            builder.Services.AddRCBACEF();
 
             builder.Services.AddControllers();
 

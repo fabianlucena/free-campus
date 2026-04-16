@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using RCBAC.DTO;
-using RCBAC.IServices;
+using RCBACEF.DTO;
+using RCBACEF.IServices;
 
-namespace RCBAC.Controllers
+namespace RCBACEF.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -11,7 +11,7 @@ namespace RCBAC.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var response = (await userService.GetList())
+            var response = (await userService.GetListAsync())
                 .Select(user => new UserResponse(user));
 
             return Ok(response);

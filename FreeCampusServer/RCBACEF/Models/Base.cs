@@ -1,4 +1,4 @@
-﻿namespace RCBAC.Models
+﻿namespace RCBACEF.Models
 {
     public class Base
     {

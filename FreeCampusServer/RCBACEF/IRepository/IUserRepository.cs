@@ -1,6 +1,6 @@
-﻿using RCBAC.Models;
+﻿using RCBACEF.Models;
 
-namespace RCBAC.IRepository
+namespace RCBACEF.IRepository
 {
     public interface IUserRepository
     {

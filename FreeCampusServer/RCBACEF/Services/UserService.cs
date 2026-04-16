@@ -1,8 +1,7 @@
-﻿using RCBAC.DTO;
-using RCBAC.IServices;
-using RCBAC.Models;
+﻿using RCBACEF.IServices;
+using RCBACEF.Models;
 
-namespace RCBAC.Services
+namespace RCBACEF.Services
 {
     public class UserService : IUserService
     {
