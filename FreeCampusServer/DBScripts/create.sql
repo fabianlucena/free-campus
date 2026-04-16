@@ -1,0 +1,28 @@
+CREATE TABLE auth.Users (
+    Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    Uuid UNIQUEIDENTIFIER NOT NULL,
+    CreatedAt DATETIME2 NOT NULL,
+    UpdatedAt DATETIME2 NOT NULL,
+    DeletedAt DATETIME2 NULL,
+
+    CreatedById BIGINT NOT NULL,
+    UpdatedById BIGINT NOT NULL,
+    DeletedById BIGINT NULL,
+
+    Username VARCHAR(64) NOT NULL,
+    DisplayName VARCHAR(128) NOT NULL,
+    Email VARCHAR(256) NOT NULL,
+    PasswordHash VARCHAR(256) NOT NULL,
+    IsActive BIT NOT NULL,
+    CanLogin BIT NOT NULL,
+    LastLogin DATETIME2 NULL,
+
+    CONSTRAINT FK_Users_CreatedBy FOREIGN KEY (CreatedById)
+        REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+    CONSTRAINT FK_Users_UpdatedBy FOREIGN KEY (UpdatedById)
+        REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+    CONSTRAINT FK_Users_DeletedBy FOREIGN KEY (DeletedById)
+        REFERENCES auth.Users(Id) ON DELETE NO ACTION
+);
