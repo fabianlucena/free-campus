@@ -1,5 +1,8 @@
-﻿namespace RCBACEF.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace RCBACEF.Models
 {
+    [Table("Users", Schema = "auth")]
     public class User : Base
     {
         public string Username { get; set; } = string.Empty;

@@ -1,4 +1,6 @@
-﻿namespace RCBACEF.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace RCBACEF.Models
 {
     public class Base
     {
@@ -11,17 +13,11 @@
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime? DeletedAt { get; set; }
-
+    
         public Int64 CreatedById { get; set; }
 
         public Int64 UpdatedById { get; set; }
 
         public Int64? DeletedById { get; set; }
-
-        public User? CreatedBy { get; set; }
-
-        public User? UpdatedBy { get; set; }
-
-        public User? DeletedBy { get; set; }
     }
 }
