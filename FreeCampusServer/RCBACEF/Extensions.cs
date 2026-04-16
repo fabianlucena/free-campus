@@ -7,7 +7,7 @@ using RCBACEF.Services;
 
 namespace RCBACEF
 {
-    public static class RepositoryExtensions
+    public static class Extensions
     {
         public static IServiceCollection AddRCBACEF(this IServiceCollection services)
         {
