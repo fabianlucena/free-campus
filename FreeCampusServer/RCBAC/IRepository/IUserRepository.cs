@@ -1,8 +1,8 @@
 ﻿using RCBAC.Models;
 
-namespace RCBAC.IServices
+namespace RCBAC.IRepository
 {
-    public interface IUserService
+    public interface IUserRepository
     {
         Task<IEnumerable<User>> GetListAsync();
     }
