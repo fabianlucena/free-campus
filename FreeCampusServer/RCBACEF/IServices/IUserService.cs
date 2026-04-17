@@ -7,6 +7,8 @@ namespace RCBACEF.IServices
     {
         Task<User> GetSingleByUsernameAsync(string username, UserQueryOptions? options = null);
 
+        string HashPassword(string password);
+
         bool CheckPassword(User user, string password);
     }
 }

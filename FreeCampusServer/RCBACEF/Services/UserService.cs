@@ -13,7 +13,7 @@ namespace RCBACEF.Services
         private const int KeySize = 32;  // 256 bits
         private const int Iterations = 100_000;
 
-        public static string HashPassword(string password)
+        public string HashPassword(string password)
         {
             byte[] salt = RandomNumberGenerator.GetBytes(SaltSize);
 
