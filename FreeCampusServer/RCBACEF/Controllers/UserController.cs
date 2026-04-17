@@ -12,13 +12,14 @@ namespace RCBACEF.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var response = (await userService.GetListAsync(new UserQueryOptions
+            var users = await userService.GetListAsync(new UserQueryOptions
             {
                 IncludeCreatedBy = true,
                 IncludeUpdatedBy = true,
                 IncludeDeletedBy = true,
-            }))
-                .Select(user => new UserResponse(user));
+            });
+
+            var response = users.Select(user => new UserResponse(user));
 
             return Ok(response);
         }

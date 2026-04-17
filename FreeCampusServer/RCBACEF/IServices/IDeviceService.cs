@@ -2,7 +2,7 @@
 
 namespace RCBACEF.IServices
 {
-    public interface IDeviceService
+    public interface IDeviceService : IBaseService<Device>
     {
         Task<Device> CreateAsync();
         Task<Device> GetFirstOrCreateByTokenAsync(string deviceToken);

@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 
 namespace RCBACEF.Services
 {
-    public class UserService(IUserRepository userRepository) : IUserService
+    public class UserService(IUserRepository userRepository) : SoftDeletableService<User>(userRepository), IUserService
     {
         private const int SaltSize = 16; // 128 bits
         private const int KeySize = 32;  // 256 bits
@@ -46,11 +46,6 @@ namespace RCBACEF.Services
             );
 
             return CryptographicOperations.FixedTimeEquals(keyToCheck, key);
-        }
-
-        public async Task<IEnumerable<User>> GetListAsync(UserQueryOptions? options = null)
-        {
-            return await userRepository.GetListAsync(options);
         }
 
         public async Task<User> GetSingleByUsernameAsync(string username, UserQueryOptions? options = null)

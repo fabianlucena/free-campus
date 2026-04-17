@@ -2,9 +2,8 @@
 
 namespace RCBACEF.IRepository
 {
-    public interface IDeviceRepository
+    public interface IDeviceRepository : IBaseRepository<Device>
     {
-        Task<Device> CreateAsync(Device device);
         Task<Device?> GetFirstOrDefaultByTokenAsync(string token);
     }
 }

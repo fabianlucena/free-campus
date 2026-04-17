@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RCBACEF.Models;
+using RCBACEF.QueryOptions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace RCBACEF.Repository
 {
@@ -17,30 +19,45 @@ namespace RCBACEF.Repository
 
         public virtual async Task<T> ValidateForCreation(T entity)
         {
-            if (entity.Id != 0)
-            {
-                throw new ArgumentException("Entity ID must be zero for new entries.");
-            }
-
-            if (entity.Uuid == Guid.Empty)
-            {
-                do
-                {
-                    entity.Uuid = Guid.NewGuid();
-                } while (await GetFirstOrDefaultByUuidAsync(entity.Uuid) != null);
-            }
-            else
-            {
-                throw new ArgumentException("Entity UUID must be empty for new entries.");
-            }
-
             entity.CreatedAt = DateTime.UtcNow;
 
+            return entity;
+        }
+
+        public virtual async Task<T> CreateAsync(T entity)
+        {
             var table = context.Set<T>();
             table.Add(entity);
             await context.SaveChangesAsync();
 
             return entity;
+        }
+
+        public virtual IQueryable<T> CreateDBSet(BaseQueryOptions options)
+        {
+            IQueryable<T> quereable = context.Set<T>();
+
+            if (options is BaseQueryOptions baseOptions)
+            {
+                if (baseOptions.IncludeCreatedBy)
+                {
+                    quereable = quereable.Include(u => u.CreatedBy);
+                }
+
+                quereable = quereable.Take(options.Take);
+            }
+
+            return quereable;
+        }
+
+        public virtual async Task<IEnumerable<T>> GetListAsync(BaseQueryOptions? options)
+        {
+            var set = CreateDBSet(options);
+
+            var list = await set
+                .ToListAsync();
+
+            return list;
         }
 
         public async Task<T?> GetFirstOrDefaultByUuidAsync(Guid uuid)

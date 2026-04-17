@@ -5,9 +5,29 @@ using System.Security.Cryptography;
 
 namespace RCBACEF.Services
 {
-    public class SessionService(ISessionRepository sessionRepository) : ISessionService
+    public class SessionService(ISessionRepository sessionRepository) : BaseService<Session>(sessionRepository), ISessionService
     {
         public int TokenSize { get; set; } = 32;
+
+        public override async Task<Session> ValidateForCreationAsync(Session session)
+        {
+            session = await base.ValidateForCreationAsync(session);
+
+            if (string.IsNullOrEmpty(session.Token))
+            {
+                do
+                {
+                    byte[] bytes = RandomNumberGenerator.GetBytes(TokenSize);
+                    var token = Convert.ToBase64String(bytes);
+                    session.Token = token;
+                } while (await GetFirstOrDefaultByTokenAsync(session.Token) != null);
+            } else if (await GetFirstOrDefaultByTokenAsync(session.Token) != null)
+            {
+                throw new InvalidOperationException("A session with the same token already exists.");
+            }
+
+            return session;
+        }
 
         public async Task<Session> CreateAsync(long userId, long deviceId)
         {
@@ -22,10 +42,16 @@ namespace RCBACEF.Services
                 UserId = userId,
                 User = null,
                 DeviceId = deviceId,
-                Device = null
+                Device = null,
+                CreatedById = userId,
             };
 
-            return await sessionRepository.CreateAsync(session);
+            return await CreateAsync(session);
+        }
+    
+        public async Task<Session?> GetFirstOrDefaultByTokenAsync(string token)
+        {
+            return await sessionRepository.GetFirstOrDefaultByTokenAsync(token);
         }
     }
 }

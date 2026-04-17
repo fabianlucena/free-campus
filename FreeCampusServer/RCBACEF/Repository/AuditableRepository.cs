@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RCBACEF.Models;
+using RCBACEF.QueryOptions;
 
 namespace RCBACEF.Repository
 {
@@ -14,6 +15,21 @@ namespace RCBACEF.Repository
             entity.UpdatedAt = DateTime.UtcNow;
 
             return entity;
+        }
+
+        public override IQueryable<T> CreateDBSet(BaseQueryOptions options)
+        {
+            var quereable = base.CreateDBSet(options);
+
+            if (options is AuditableQueryOptions auditableOptions)
+            {
+                if (auditableOptions.IncludeUpdatedBy)
+                {
+                    quereable = quereable.Include(u => u.UpdatedBy);
+                }
+            }
+
+            return quereable;
         }
     }
 }

@@ -3,10 +3,8 @@ using RCBACEF.QueryOptions;
 
 namespace RCBACEF.IServices
 {
-    public interface IUserService
+    public interface IUserService : ISoftDeletableService<User>
     {
-        Task<IEnumerable<User>> GetListAsync(UserQueryOptions? options = null);
-
         Task<User> GetSingleByUsernameAsync(string username, UserQueryOptions? options = null);
 
         bool CheckPassword(User user, string password);

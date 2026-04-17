@@ -2,8 +2,8 @@
 
 namespace RCBACEF.IRepository
 {
-    public interface ISessionRepository
+    public interface ISessionRepository : IBaseRepository<Session>
     {
-        Task<Session> CreateAsync(Session session);
+        Task<Session?> GetFirstOrDefaultByTokenAsync(string token);
     }
 }

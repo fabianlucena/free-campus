@@ -11,25 +11,21 @@ namespace RCBACEF.Repository
         {
         }
 
-        public async Task<IEnumerable<User>> GetListAsync(UserQueryOptions? options = null)
+        public override IQueryable<User> CreateDBSet(BaseQueryOptions options)
         {
-            options ??= new UserQueryOptions();
-            var table = context.Set<User>()
+            var quereable = base.CreateDBSet(options)
                 .AsNoTracking();
 
-            table = options.Apply(table);
-
-            return await table.ToListAsync();
+            return quereable;
         }
 
         public async Task<User> GetSingleByUsernameAsync(string username, UserQueryOptions? options = null)
         {
             options ??= new UserQueryOptions();
-            var table = context.Set<User>()
-                .AsNoTracking();
-
-            var list = await options.Apply(table)
-                .Take(2)
+            options.Take = 2;
+            var set = CreateDBSet(options);
+            
+            var list = await set
                 .Where(u => u.Username == username)
                 .ToListAsync();
 

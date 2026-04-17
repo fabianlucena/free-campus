@@ -3,10 +3,8 @@ using RCBACEF.QueryOptions;
 
 namespace RCBACEF.IRepository
 {
-    public interface IUserRepository
+    public interface IUserRepository : ISoftDeletableRepository<User>
     {
-        Task<IEnumerable<User>> GetListAsync(UserQueryOptions? options = null);
-
         Task<User> GetSingleByUsernameAsync(string username, UserQueryOptions? options = null);
     }
 }
