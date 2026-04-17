@@ -11,8 +11,13 @@ namespace RCBACEF
         public static IServiceCollection AddRCBACEF(this IServiceCollection services)
         {
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IDeviceService, DeviceService>();
+            services.AddScoped<ISessionService, SessionService>();
+            services.AddScoped<ILoginService, LoginService>();
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IDeviceRepository, DeviceRepository>();
+            services.AddScoped<ISessionRepository, SessionRepository>();
 
             return services;
         }

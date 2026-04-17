@@ -1,6 +1,6 @@
-@FreeCampusServer_HostAddress = http://localhost:5256
+@host = http://localhost:5256
 
-GET {{FreeCampusServer_HostAddress}}/user/
+GET {{host}}/user/
 Accept: application/json
 
 ###
