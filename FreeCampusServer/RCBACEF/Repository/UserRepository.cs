@@ -7,9 +7,9 @@ namespace RCBACEF.Repository
 {
     public class UserRepository(DbContext context) : IUserRepository
     {
-        public async Task<IEnumerable<User>> GetListAsync(UserOptions? options = null)
+        public async Task<IEnumerable<User>> GetListAsync(UserQueryOptions? options = null)
         {
-            options ??= new UserOptions();
+            options ??= new UserQueryOptions();
             var table = context.Set<User>()
                 .AsNoTracking();
 

@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace RCBACEF.Models
+﻿namespace RCBACEF.Models
 {
-    public class SoftDelete : Base
+    public class SoftDeletable : Auditable
     {
         public DateTime? DeletedAt { get; set; } = null;
 

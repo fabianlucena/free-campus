@@ -12,11 +12,6 @@ namespace RCBACEF.EntityTypeConfigurations
                   .WithMany()
                   .HasForeignKey(u => u.CreatedById)
                   .OnDelete(DeleteBehavior.Restrict);
-
-            entity.HasOne(u => u.UpdatedBy)
-                  .WithMany()
-                  .HasForeignKey(u => u.UpdatedById)
-                  .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

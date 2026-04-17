@@ -5,6 +5,6 @@ namespace RCBACEF.IRepository
 {
     public interface IUserRepository
     {
-        Task<IEnumerable<User>> GetListAsync(UserOptions? options = null);
+        Task<IEnumerable<User>> GetListAsync(UserQueryOptions? options = null);
     }
 }

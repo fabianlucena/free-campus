@@ -3,12 +3,12 @@ using RCBACEF.Models;
 
 namespace RCBACEF.QueryOptions
 {
-    public class SoftDeleteOptions : BaseOptions
+    public class SoftDeletableQueryOptions : AuditableQueryOptions
     {
         public bool IncludeDeleted { get; set; } = false;
         public bool IncludeDeletedBy { get; set; } = false;
 
-        public new IQueryable<T> Apply<T>(IQueryable<T> query) where T : SoftDelete
+        public new IQueryable<T> Apply<T>(IQueryable<T> query) where T : SoftDeletable
         {
             query = base.Apply(query);
 

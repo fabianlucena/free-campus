@@ -12,7 +12,7 @@ namespace RCBACEF.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var response = (await userService.GetListAsync(new UserOptions
+            var response = (await userService.GetListAsync(new UserQueryOptions
             {
                 IncludeCreatedBy = true,
                 IncludeUpdatedBy = true,

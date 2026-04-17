@@ -4,15 +4,15 @@ using RCBACEF.Models;
 
 namespace RCBACEF.EntityTypeConfigurations
 {
-    public class SoftDeleteConfiguration<T> : BaseConfiguration<T> where T : SoftDelete
+    public class AuditableConfiguration<T> : BaseConfiguration<T> where T : Auditable
     {
         public override void Configure(EntityTypeBuilder<T> entity)
         {
             base.Configure(entity);
 
-            entity.HasOne(u => u.DeletedBy)
+            entity.HasOne(u => u.UpdatedBy)
                   .WithMany()
-                  .HasForeignKey(u => u.DeletedById)
+                  .HasForeignKey(u => u.UpdatedById)
                   .OnDelete(DeleteBehavior.Restrict);
         }
     }

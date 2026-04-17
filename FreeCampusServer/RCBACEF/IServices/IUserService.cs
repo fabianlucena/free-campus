@@ -5,6 +5,6 @@ namespace RCBACEF.IServices
 {
     public interface IUserService
     {
-        Task<IEnumerable<User>> GetListAsync(UserOptions? options = null);
+        Task<IEnumerable<User>> GetListAsync(UserQueryOptions? options = null);
     }
 }
