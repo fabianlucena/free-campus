@@ -34,8 +34,8 @@ namespace RCBACEF.Repository
 
         public async Task<Session?> GetFirstOrDefaultByTokenAsync(string token, SessionQueryOptions? options = null)
         {
-            var table = context.Set<Session>();
-            var session = await table
+            var set = CreateDBSet(options);
+            var session = await set
                 .Where(s => s.Token == token)
                 .FirstOrDefaultAsync();
 

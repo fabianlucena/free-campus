@@ -11,14 +11,6 @@ namespace RCBACEF.Repository
         {
         }
 
-        public override IQueryable<User> CreateDBSet(BaseQueryOptions? options)
-        {
-            var quereable = base.CreateDBSet(options)
-                .AsNoTracking();
-
-            return quereable;
-        }
-
         public async Task<User> GetSingleByUsernameAsync(string username, UserQueryOptions? options = null)
         {
             return await GetSingleOrDefaultByUsernameAsync(username, options)

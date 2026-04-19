@@ -29,13 +29,13 @@ namespace RCBACEF.Middlewares
                         continue;
 
                     var token = authorization[7..].Trim();
-                    if (!cache.TryGetValue(token, out var sessionCache)
-                        || sessionCache is null)
+                    if (!cache.TryGetValue(token, out var cachedSession)
+                        || cachedSession is null)
                     {
                         var session = await sessionService.GetFirstOrDefaultByTokenAsync(token, new SessionQueryOptions { IncludeUser = true, IncludeDevice = true });
                         if (session != null)
                         {
-                            sessionCache = new SessionCache
+                            cachedSession = new SessionCache
                             {
                                 Token = token,
                                 SessionId = session.Id,
@@ -44,18 +44,19 @@ namespace RCBACEF.Middlewares
                                 User = session.User!,
                                 Device = session.Device!
                             };
+
+                            cache[token] = cachedSession;
                         }
                     }
 
-                    if (sessionCache is not null)
+                    if (cachedSession is not null)
                     {
-                        context.Items["SessionId"] = sessionCache.SessionId;
-                        context.Items["UserId"] = sessionCache.UserId;
-                        context.Items["Session"] = sessionCache.Session;
-                        context.Items["User"] = sessionCache.User;
-                        context.Items["Device"] = sessionCache.Device;
-
-                        _ = sessionService.UpdateLastUsageAsync(sessionCache.SessionId);
+                        context.Items["SessionId"] = cachedSession.SessionId;
+                        context.Items["UserId"] = cachedSession.UserId;
+                        context.Items["Session"] = cachedSession.Session;
+                        context.Items["User"] = cachedSession.User;
+                        context.Items["Device"] = cachedSession.Device;
+                        await sessionService.UpdateLastUsageAsync(cachedSession.SessionId);
                     }
                 }
             }

@@ -19,7 +19,8 @@ namespace RCBACEF.Repository
         public virtual IQueryable<T> CreateDBSet(BaseQueryOptions? options)
         {
             options ??= new BaseQueryOptions();
-            IQueryable<T> quereable = context.Set<T>();
+            IQueryable<T> quereable = context.Set<T>()
+                .AsNoTracking();
 
             if (options is BaseQueryOptions baseOptions)
             {
@@ -36,8 +37,8 @@ namespace RCBACEF.Repository
 
         public virtual async Task<T> CreateAsync(T entity)
         {
-            var table = context.Set<T>();
-            table.Add(entity);
+            var set = context.Set<T>();
+            set.Add(entity);
             await context.SaveChangesAsync();
 
             return entity;

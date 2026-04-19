@@ -1,5 +1,6 @@
 using RCBACEF;
 using Microsoft.EntityFrameworkCore;
+using RCBACEF.Middlewares;
 
 namespace FreeCampusServer
 {
@@ -36,6 +37,7 @@ namespace FreeCampusServer
 
             app.UseAuthorization();
 
+            app.UseMiddleware<AuthorizationMiddleware>();
 
             app.MapControllers();
 
