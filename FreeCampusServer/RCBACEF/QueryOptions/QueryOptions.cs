@@ -1,6 +1,4 @@
-﻿using RCBACEF.Models;
-
-namespace RCBACEF.QueryOptions
+﻿namespace RCBACEF.QueryOptions
 {
     public class QueryOptions
     {

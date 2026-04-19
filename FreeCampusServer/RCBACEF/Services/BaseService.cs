@@ -7,7 +7,7 @@ namespace RCBACEF.Services
 {
     public class BaseService<T>(IBaseRepository<T> repository) : IBaseService<T> where T : Base
     {
-        public virtual async Task<T> ValidateForCreationAsync(T entity)
+        public virtual async Task<T> ValidateForCreateAsync(T entity)
         {
             if (entity.Id != 0)
             {
@@ -36,9 +36,14 @@ namespace RCBACEF.Services
             return entity;
         }
 
+        public virtual async Task<Dictionary<string, object>> ValidateForUpdate(Dictionary<string, object> data)
+        {
+            return data;
+        }
+
         public async Task<T> CreateAsync(T entity)
         {
-            entity = await ValidateForCreationAsync(entity);
+            entity = await ValidateForCreateAsync(entity);
             return await repository.CreateAsync(entity);
         }
 
@@ -50,6 +55,16 @@ namespace RCBACEF.Services
         public async Task<T?> GetFirstOrDefaultByUuidAsync(Guid uuid)
         {
             return await repository.GetFirstOrDefaultByUuidAsync(uuid);
+        }
+
+        public async Task UpdateByIdAsync(Int64 id, Dictionary<string, object> data)
+        {
+            data = await ValidateForUpdate(data);
+            bool success = await repository.UpdateByIdAsync(id, data);
+            if (!success)
+            {
+                throw new InvalidOperationException($"Failed to update entity with ID {id}.");
+            }
         }
     }
 }

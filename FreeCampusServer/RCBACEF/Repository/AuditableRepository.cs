@@ -4,22 +4,15 @@ using RCBACEF.QueryOptions;
 
 namespace RCBACEF.Repository
 {
-    public class AuditableRepository<T> : BaseRepository<T> where T : Auditable
+    public class AuditableRepository<T> : BaseRepository<T> where T : Auditable, new()
     {
         public AuditableRepository(DbContext context) : base(context)
         {
         }
 
-        public override async Task<T> ValidateForCreation(T entity)
+        public override IQueryable<T> CreateDBSet(BaseQueryOptions? options)
         {
-            entity.UpdatedAt = DateTime.UtcNow;
-
-            return entity;
-        }
-
-        public override IQueryable<T> CreateDBSet(BaseQueryOptions options)
-        {
-            var quereable = base.CreateDBSet(options);
+            var quereable = base.CreateDBSet(options ?? new BaseQueryOptions());
 
             if (options is AuditableQueryOptions auditableOptions)
             {

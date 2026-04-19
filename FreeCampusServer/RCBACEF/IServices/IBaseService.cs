@@ -7,5 +7,6 @@ namespace RCBACEF.IServices
     {
         Task<T> CreateAsync(T entity);
         Task<IEnumerable<T>> GetListAsync(BaseQueryOptions? options = null);
+        Task UpdateByIdAsync(Int64 id, Dictionary<string, object> data);
     }
 }

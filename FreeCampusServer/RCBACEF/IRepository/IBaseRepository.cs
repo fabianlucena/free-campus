@@ -10,5 +10,7 @@ namespace RCBACEF.IRepository
         Task<IEnumerable<T>> GetListAsync(BaseQueryOptions? options = null);
 
         Task<T?> GetFirstOrDefaultByUuidAsync(Guid uuid);
+
+        Task<bool> UpdateByIdAsync(Int64 id, Dictionary<string, object> data);
     }
 }

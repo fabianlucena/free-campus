@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RCBACEF.IRepository;
 using RCBACEF.Models;
+using RCBACEF.QueryOptions;
 
 namespace RCBACEF.Repository
 {
@@ -11,7 +12,27 @@ namespace RCBACEF.Repository
         {
         }
 
-        public async Task<Session?> GetFirstOrDefaultByTokenAsync(string token)
+        public override IQueryable<Session> CreateDBSet(BaseQueryOptions? options)
+        {
+            var quereable = base.CreateDBSet(options ?? new BaseQueryOptions());
+
+            if (options is SessionQueryOptions sessionOptions)
+            {
+                if (sessionOptions.IncludeUser)
+                {
+                    quereable = quereable.Include(u => u.User);
+                }
+
+                if (sessionOptions.IncludeDevice)
+                {
+                    quereable = quereable.Include(d => d.Device);
+                }
+            }
+
+            return quereable;
+        }
+
+        public async Task<Session?> GetFirstOrDefaultByTokenAsync(string token, SessionQueryOptions? options = null)
         {
             var table = context.Set<Session>();
             var session = await table

@@ -11,7 +11,7 @@ namespace RCBACEF.Repository
         {
         }
 
-        public override IQueryable<User> CreateDBSet(BaseQueryOptions options)
+        public override IQueryable<User> CreateDBSet(BaseQueryOptions? options)
         {
             var quereable = base.CreateDBSet(options)
                 .AsNoTracking();

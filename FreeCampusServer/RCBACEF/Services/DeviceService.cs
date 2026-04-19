@@ -8,18 +8,19 @@ namespace RCBACEF.Services
 {
     public class DeviceService(IDeviceRepository deviceRepository, IServiceProvider serviceProvider) : BaseService<Device>(deviceRepository), IDeviceService
     {   
-        public int TokenSize { get; set; } = 32;
+        public int TokenSize { get; set; } = 64;
 
-        public override async Task<Device> ValidateForCreationAsync(Device device)
+        public override async Task<Device> ValidateForCreateAsync(Device device)
         {
-            device = await base.ValidateForCreationAsync(device);
+            device = await base.ValidateForCreateAsync(device);
 
             if (string.IsNullOrEmpty(device.Token))
             {
+                int byteCount = (int)Math.Ceiling(TokenSize / 4.0) * 3;
                 do
                 {
-                    byte[] bytes = RandomNumberGenerator.GetBytes(TokenSize);
-                    var token = Convert.ToBase64String(bytes);
+                    byte[] bytes = RandomNumberGenerator.GetBytes(byteCount);
+                    var token = Convert.ToBase64String(bytes)[..TokenSize];
                     device.Token = token;
                 } while (await GetFirstOrDefaultByTokenAsync(device.Token) != null);
             } else if (await GetFirstOrDefaultByTokenAsync(device.Token) != null)

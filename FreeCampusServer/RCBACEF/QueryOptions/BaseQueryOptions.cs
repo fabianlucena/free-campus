@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using RCBACEF.Models;
-
-namespace RCBACEF.QueryOptions
+﻿namespace RCBACEF.QueryOptions
 {
     public class BaseQueryOptions : QueryOptions
     {
