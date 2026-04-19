@@ -4,7 +4,6 @@ CREATE TABLE auth.Users (
     CreatedAt DATETIME2 NOT NULL,
     UpdatedAt DATETIME2 NOT NULL,
     DeletedAt DATETIME2 NULL,
-
     CreatedById BIGINT NOT NULL,
     UpdatedById BIGINT NOT NULL,
     DeletedById BIGINT NULL,
@@ -15,14 +14,51 @@ CREATE TABLE auth.Users (
     PasswordHash VARCHAR(256) NOT NULL,
     IsActive BIT NOT NULL,
     CanLogin BIT NOT NULL,
-    LastLogin DATETIME2 NULL,
+    LastLogin DATETIME2 NULL
+);
 
-    CONSTRAINT FK_Users_CreatedBy FOREIGN KEY (CreatedById)
+INSERT INTO auth.Users (
+    Uuid, CreatedAt, UpdatedAt, DeletedAt,
+    CreatedById, UpdatedById, DeletedById,
+    Username, DisplayName, Email, PasswordHash,
+    IsActive, CanLogin, LastLogin
+)
+VALUES (
+	NEWID(), GETUTCDATE(), GETUTCDATE(), NULL,
+	0, 0, NULL,
+	'system', 'System', '', '',
+	1, 1, NULL
+);
+
+DECLARE @Id BIGINT = SCOPE_IDENTITY();
+UPDATE auth.Users
+SET CreatedById = @Id,
+    UpdatedById = @Id
+WHERE Id = @Id;
+
+ALTER TABLE auth.Users
+ADD CONSTRAINT FK_Users_CreatedBy
+    FOREIGN KEY (CreatedById) REFERENCES auth.Users(Id) ON DELETE NO ACTION;
+
+ALTER TABLE auth.Users
+ADD CONSTRAINT FK_Users_UpdatedBy
+    FOREIGN KEY (UpdatedById) REFERENCES auth.Users(Id) ON DELETE NO ACTION;
+
+ALTER TABLE auth.Users
+ADD CONSTRAINT FK_Users_DeletedBy
+    FOREIGN KEY (DeletedById) REFERENCES auth.Users(Id) ON DELETE NO ACTION;
+
+GO
+
+CREATE TABLE auth.Devices (
+    Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    Uuid UNIQUEIDENTIFIER NOT NULL,
+
+    CreatedAt DATETIME2 NOT NULL,
+    CreatedById BIGINT NOT NULL,
+
+    Token VARCHAR(64) NOT NULL,
+
+    CONSTRAINT FK_Devices_CreatedBy FOREIGN KEY (CreatedById)
         REFERENCES auth.Users(Id) ON DELETE NO ACTION,
-
-    CONSTRAINT FK_Users_UpdatedBy FOREIGN KEY (UpdatedById)
-        REFERENCES auth.Users(Id) ON DELETE NO ACTION,
-
-    CONSTRAINT FK_Users_DeletedBy FOREIGN KEY (DeletedById)
-        REFERENCES auth.Users(Id) ON DELETE NO ACTION
 );

@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RCBACEF.Models;
-using System.Reflection;
 
 namespace FreeCampusServer
 {
     public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
         public DbSet<User> Users => Set<User>();
+        public DbSet<Device> Device => Set<Device>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

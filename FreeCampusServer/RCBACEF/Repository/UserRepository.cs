@@ -21,18 +21,22 @@ namespace RCBACEF.Repository
 
         public async Task<User> GetSingleByUsernameAsync(string username, UserQueryOptions? options = null)
         {
+            return await GetSingleOrDefaultByUsernameAsync(username, options)
+                ?? throw new KeyNotFoundException($"User with username '{username}' not found.");
+        }
+
+        public async Task<User?> GetSingleOrDefaultByUsernameAsync(string username, UserQueryOptions? options = null)
+        {
             options ??= new UserQueryOptions();
             options.Take = 2;
             var set = CreateDBSet(options);
-            
+
             var list = await set
                 .Where(u => u.Username == username)
                 .ToListAsync();
 
             if (list.Count == 0)
-            {
-                throw new KeyNotFoundException($"User with username '{username}' not found.");
-            }
+                return null;
 
             if (list.Count > 1)
             {

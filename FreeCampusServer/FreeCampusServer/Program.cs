@@ -20,6 +20,8 @@ namespace FreeCampusServer
 
             builder.Services.AddScoped<DbContext, AppDbContext>();
 
+            builder.Services.AddHttpContextAccessor();
+
             builder.Services.AddRCBACEF();
 
             // Add services to the container.

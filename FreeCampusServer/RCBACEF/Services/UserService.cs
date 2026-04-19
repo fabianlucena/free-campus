@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.AspNetCore.Http;
 using RCBACEF.IRepository;
 using RCBACEF.IServices;
 using RCBACEF.Models;
@@ -7,7 +8,7 @@ using System.Security.Cryptography;
 
 namespace RCBACEF.Services
 {
-    public class UserService(IUserRepository userRepository) : SoftDeletableService<User>(userRepository), IUserService
+    public class UserService(IUserRepository userRepository, IHttpContextAccessor contextAccessor) : SoftDeletableService<User>(userRepository), IUserService
     {
         private const int SaltSize = 16; // 128 bits
         private const int KeySize = 32;  // 256 bits
@@ -51,6 +52,45 @@ namespace RCBACEF.Services
         public async Task<User> GetSingleByUsernameAsync(string username, UserQueryOptions? options = null)
         {
             return await userRepository.GetSingleByUsernameAsync(username, options);
+        }
+
+        public async Task<User?> GetSingleOrDefaultByUsernameAsync(string username, UserQueryOptions? options = null)
+        {
+            return await userRepository.GetSingleOrDefaultByUsernameAsync(username, options);
+        }
+
+        public async Task<User> GetSystemUserAsync()
+        {
+            return await GetSingleByUsernameAsync("system");
+        }
+
+        public async Task<User> GetCurrentOrSystemUserAsync()
+        {
+            var items = contextAccessor.HttpContext?.Items;
+            if (items?.TryGetValue("CurrentUser", out var currentUserData) == true
+                && currentUserData is User currentUser
+                && currentUser is not null
+            )
+            {
+                return currentUser;
+            }
+
+            return await GetSystemUserAsync();
+        }
+
+        public async Task<Int64> GetCurrentOrSystemUserIdAsync()
+        {
+            var items = contextAccessor.HttpContext?.Items;
+            if (items?.TryGetValue("CurrentUserId", out var idCurrentUserData) == true
+                && idCurrentUserData is Int64 idCurrentUser
+                && idCurrentUser > 0
+            )
+            {
+                return idCurrentUser;
+            }
+         
+            var systemUser = await GetSystemUserAsync();
+            return systemUser.Id;
         }
     }
 }

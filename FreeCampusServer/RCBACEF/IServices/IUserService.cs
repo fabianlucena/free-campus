@@ -5,10 +5,17 @@ namespace RCBACEF.IServices
 {
     public interface IUserService : ISoftDeletableService<User>
     {
+        string HashPassword(string password);
+        bool CheckPassword(User user, string password);
+
         Task<User> GetSingleByUsernameAsync(string username, UserQueryOptions? options = null);
 
-        string HashPassword(string password);
+        Task<User?> GetSingleOrDefaultByUsernameAsync(string username, UserQueryOptions? options = null);
 
-        bool CheckPassword(User user, string password);
+        Task<User> GetSystemUserAsync();
+
+        Task<User> GetCurrentOrSystemUserAsync();
+
+        Task<Int64> GetCurrentOrSystemUserIdAsync();
     }
 }

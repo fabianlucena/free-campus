@@ -1,11 +1,12 @@
-﻿using RCBACEF.IRepository;
+﻿using Microsoft.Extensions.DependencyInjection;
+using RCBACEF.IRepository;
 using RCBACEF.IServices;
 using RCBACEF.Models;
 using System.Security.Cryptography;
 
 namespace RCBACEF.Services
 {
-    public class DeviceService(IDeviceRepository deviceRepository) : BaseService<Device>(deviceRepository), IDeviceService
+    public class DeviceService(IDeviceRepository deviceRepository, IServiceProvider serviceProvider) : BaseService<Device>(deviceRepository), IDeviceService
     {   
         public int TokenSize { get; set; } = 32;
 
@@ -31,7 +32,12 @@ namespace RCBACEF.Services
 
         public async Task<Device> CreateAsync()
         {
-            return await CreateAsync(new Device());
+            var userService = serviceProvider.GetRequiredService<IUserService>();
+            var device = new Device
+            {
+                CreatedById = await userService.GetCurrentOrSystemUserIdAsync(),
+            };
+            return await CreateAsync(device);
         }
 
         public async Task<Device?> GetFirstOrDefaultByTokenAsync(string token)
