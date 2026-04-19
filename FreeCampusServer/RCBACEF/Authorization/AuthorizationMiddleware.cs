@@ -3,7 +3,7 @@ using RCBACEF.IServices;
 using RCBACEF.Models;
 using RCBACEF.QueryOptions;
 
-namespace RCBACEF.Middlewares
+namespace RCBACEF.Authorization
 {
     public class SessionCache
     {
@@ -13,13 +13,15 @@ namespace RCBACEF.Middlewares
         public required Session Session { get; set; }
         public required User User { get; set; }
         public required Device Device { get; set; }
+        public required IEnumerable<string> Roles { get; set; }
+        public required IEnumerable<string> Permissions { get; set; }
     }
 
     public class AuthorizationMiddleware(RequestDelegate next)
     {
-        static Dictionary<string, SessionCache> cache = [];
+        private static readonly Dictionary<string, SessionCache> cache = [];
 
-        public async Task InvokeAsync(HttpContext context, ISessionService sessionService)
+        public async Task InvokeAsync(HttpContext context, ISessionService sessionService, IRoleXUserService roleXUserService, IPermissionXRoleService permissionXRoleService)
         {
             if (context.Request.Headers.TryGetValue("Authorization", out var authorizationList) && authorizationList.Count > 0)
             {
@@ -35,6 +37,15 @@ namespace RCBACEF.Middlewares
                         var session = await sessionService.GetFirstOrDefaultByTokenAsync(token, new SessionQueryOptions { IncludeUser = true, IncludeDevice = true });
                         if (session != null)
                         {
+                            var roles = await roleXUserService.GetAllRolesNameByUserIdAsync(session.UserId);
+                            var permissions = await permissionXRoleService.GetAllPermissionsNameForUserIdAsync(session.UserId);
+
+                            if (!roles.Any())
+                                roles = ["user"];
+
+                            if (!permissions.Any())
+                                permissions = ["default"];
+
                             cachedSession = new SessionCache
                             {
                                 Token = token,
@@ -42,7 +53,9 @@ namespace RCBACEF.Middlewares
                                 UserId = session.UserId,
                                 Session = session,
                                 User = session.User!,
-                                Device = session.Device!
+                                Device = session.Device!,
+                                Roles = roles,
+                                Permissions = permissions,
                             };
 
                             cache[token] = cachedSession;
@@ -56,6 +69,8 @@ namespace RCBACEF.Middlewares
                         context.Items["Session"] = cachedSession.Session;
                         context.Items["User"] = cachedSession.User;
                         context.Items["Device"] = cachedSession.Device;
+                        context.Items["Roles"] = cachedSession.Roles;
+                        context.Items["Permissions"] = cachedSession.Permissions;
                         await sessionService.UpdateLastUsageAsync(cachedSession.SessionId);
                     }
                 }

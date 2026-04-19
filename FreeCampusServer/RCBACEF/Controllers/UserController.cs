@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using RCBACEF.Authorization;
 using RCBACEF.DTO;
 using RCBACEF.IServices;
 using RCBACEF.QueryOptions;
@@ -10,6 +11,7 @@ namespace RCBACEF.Controllers
     public class UserController(IUserService userService) : ControllerBase
     {
         [HttpGet]
+        [Permission("user.read")]
         public async Task<IActionResult> Get()
         {
             var users = await userService.GetListAsync(new UserQueryOptions

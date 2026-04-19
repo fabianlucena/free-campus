@@ -1,6 +1,6 @@
 using RCBACEF;
 using Microsoft.EntityFrameworkCore;
-using RCBACEF.Middlewares;
+using RCBACEF.Authorization;
 
 namespace FreeCampusServer
 {
