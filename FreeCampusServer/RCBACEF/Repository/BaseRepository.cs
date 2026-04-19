@@ -16,7 +16,7 @@ namespace RCBACEF.Repository
             this.context = context;
         }
 
-        public virtual IQueryable<T> CreateDBSet(BaseQueryOptions? options)
+        public virtual IQueryable<T> CreateDBSet(BaseQueryOptions? options = null)
         {
             options ??= new BaseQueryOptions();
             IQueryable<T> quereable = context.Set<T>()
@@ -44,11 +44,22 @@ namespace RCBACEF.Repository
             return entity;
         }
 
-        public virtual async Task<IEnumerable<T>> GetListAsync(BaseQueryOptions? options)
+        public virtual async Task<IEnumerable<T>> GetListAsync(BaseQueryOptions? options = null)
         {
             var set = CreateDBSet(options);
 
             var list = await set
+                .ToListAsync();
+
+            return list;
+        }
+
+        public virtual async Task<IEnumerable<Int64>> GetListIdAsync(BaseQueryOptions? options = null)
+        {
+            var set = CreateDBSet(options);
+
+            var list = await set
+                .Select(e => e.Id)
                 .ToListAsync();
 
             return list;

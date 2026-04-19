@@ -52,6 +52,11 @@ namespace RCBACEF.Services
             return await repository.GetListAsync(options);
         }
 
+        public async Task<IEnumerable<Int64>> GetListIdAsync(BaseQueryOptions? options = null)
+        {
+            return await repository.GetListIdAsync(options);
+        }
+
         public async Task<T?> GetFirstOrDefaultByUuidAsync(Guid uuid)
         {
             return await repository.GetFirstOrDefaultByUuidAsync(uuid);

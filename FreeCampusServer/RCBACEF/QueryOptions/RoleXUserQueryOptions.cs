@@ -1,4 +1,6 @@
-﻿namespace RCBACEF.QueryOptions
+﻿using RCBACEF.Models;
+
+namespace RCBACEF.QueryOptions
 {
     public class RoleXUserQueryOptions : ImmutableQueryOptions
     {

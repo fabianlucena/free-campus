@@ -1,9 +1,10 @@
 ﻿using RCBACEF.Models;
+using RCBACEF.QueryOptions;
 
 namespace RCBACEF.IServices
 {
     public interface IRoleXUserService : IImmutableService<RoleXUser>
     {
-        Task <IEnumerable<string>> GetAllRolesNameByUserIdAsync(Int64 UserId);
+        Task <IEnumerable<string>> GetAllRolesNameByUserIdAsync(Int64 UserId, RoleXUserQueryOptions? options = null);
     }
 }

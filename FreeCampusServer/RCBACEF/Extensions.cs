@@ -14,12 +14,18 @@ namespace RCBACEF
             services.AddScoped<IDeviceService, DeviceService>();
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ILoginService, LoginService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IPermissionService, PermissionService>();
+            services.AddScoped<IRoleIncludeService, RoleParentService>();
             services.AddScoped<IRoleXUserService, RoleXUserService>();
             services.AddScoped<IPermissionXRoleService, PermissionXRoleService>();
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IDeviceRepository, DeviceRepository>();
             services.AddScoped<ISessionRepository, SessionRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IPermissionRepository, PermissionRepository>();
+            services.AddScoped<IRoleIncludeRepository, RoleIncludeRepository>();
             services.AddScoped<IRoleXUserRepository, RoleXUserRepository>();
             services.AddScoped<IPermissionXRoleRepository, PermissionXRoleRepository>();
 

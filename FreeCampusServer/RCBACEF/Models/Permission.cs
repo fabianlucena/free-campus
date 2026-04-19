@@ -1,6 +1,6 @@
 ﻿namespace RCBACEF.Models
 {
-    public class Role : SoftDeletable
+    public class Permission : SoftDeletable
     {
         public string Name { get; set; } = string.Empty;
 

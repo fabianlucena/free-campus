@@ -12,7 +12,7 @@ namespace RCBACEF.Repository
         {
         }
 
-        public override IQueryable<RoleXUser> CreateDBSet(BaseQueryOptions? options)
+        public override IQueryable<RoleXUser> CreateDBSet(BaseQueryOptions? options = null)
         {
             var quereable = base.CreateDBSet(options ?? new BaseQueryOptions());
 
@@ -35,6 +35,18 @@ namespace RCBACEF.Repository
             }
 
             return quereable;
+        }
+
+        public async Task<IEnumerable<Int64>> GetListIdByUserIdAsync(long userId, RoleXUserQueryOptions? options = null)
+        {
+            var set = CreateDBSet(options);
+
+            var list = await set
+                .Where(e => e.UserId == userId)
+                .Select(e => e.Id)
+                .ToListAsync();
+
+            return list;
         }
     }
 }

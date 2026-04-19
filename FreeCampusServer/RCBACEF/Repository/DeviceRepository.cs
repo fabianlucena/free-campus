@@ -1,12 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RCBACEF.IRepository;
 using RCBACEF.Models;
-
 namespace RCBACEF.Repository
 {
     public class DeviceRepository : BaseRepository<Device>, IDeviceRepository
     {
-        public DeviceRepository(DbContext _context) : base(_context)
+        public DeviceRepository(DbContext context) : base(context)
         {
         }
 
