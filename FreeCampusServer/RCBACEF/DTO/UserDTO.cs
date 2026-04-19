@@ -8,7 +8,7 @@ namespace RCBACEF.DTO
 
         public bool IsActive { get; } = user.IsActive;
         public bool CanLogin { get; } = user.CanLogin;
-        public DateTime? LastLogin { get; } = user.LastLogin;
+        public DateTime? LastLoginAt { get; } = user.LastLoginAt;
 
         public DateTime CreatedAt { get; } = user.CreatedAt;
         public DateTime UpdatedAt { get; } = user.UpdatedAt;

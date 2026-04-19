@@ -22,7 +22,7 @@ BEGIN
 		PasswordHash VARCHAR(256) NOT NULL,
 		IsActive BIT NOT NULL,
 		CanLogin BIT NOT NULL,
-		LastLogin DATETIME2 NULL
+		LastLoginAt DATETIME2 NULL
 	);
 
 	INSERT INTO auth.Users (

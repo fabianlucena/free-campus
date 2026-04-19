@@ -92,5 +92,16 @@ namespace RCBACEF.Services
             var systemUser = await GetSystemUserAsync();
             return systemUser.Id;
         }
+    
+        public async Task UpdateLastLoginAsync(Int64 userId)
+        {
+            var data = new Dictionary<string, object>
+            {
+                { "LastLoginAt", DateTime.UtcNow },
+                { "UpdatedById", userId },
+            };
+
+            await UpdateByIdAsync(userId, data);
+        }
     }
 }

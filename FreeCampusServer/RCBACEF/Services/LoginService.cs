@@ -35,6 +35,8 @@ namespace RCBACEF.Services
 
             var session = await sessionService.CreateAsync(user.Id, device.Id);
 
+            await userService.UpdateLastLoginAsync(user.Id);
+
             return session;
         }
     }

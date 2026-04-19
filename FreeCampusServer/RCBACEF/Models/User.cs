@@ -17,6 +17,6 @@ namespace RCBACEF.Models
 
         public bool CanLogin { get; set; } = true;
 
-        public DateTime? LastLogin { get; set; }
+        public DateTime? LastLoginAt { get; set; }
     }
 }
