@@ -1,6 +1,6 @@
 ﻿namespace RCBACEF.QueryOptions
 {
-    public class UserQueryOptions : SoftDeletableQueryOptions
+    public class UserQueryOptions : SoftDeletableEntityQueryOptions
     {
     }
 }

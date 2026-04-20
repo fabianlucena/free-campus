@@ -14,7 +14,7 @@ namespace RCBACEF.Repository
         {
             var quereable = base.CreateDBSet(options ?? new BaseQueryOptions());
 
-            if (options is SoftDeletableQueryOptions softDeletableOptions)
+            if (options is SoftDeletableEntityQueryOptions softDeletableOptions)
             {
                 if (!softDeletableOptions.IncludeDeleted)
                 {

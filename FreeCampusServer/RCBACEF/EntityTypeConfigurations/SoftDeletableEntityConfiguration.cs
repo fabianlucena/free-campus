@@ -4,9 +4,9 @@ using RCBACEF.Models;
 
 namespace RCBACEF.EntityTypeConfigurations
 {
-    public class SoftDeletableConfiguration<T>
+    public class SoftDeletableEntityConfiguration<T>
         : AuditableEntityConfiguration<T>
-        where T : SoftDeletable
+        where T : SoftDeletableEntity
     {
         public override void Configure(EntityTypeBuilder<T> entity)
         {

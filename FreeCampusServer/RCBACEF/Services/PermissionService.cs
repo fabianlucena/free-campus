@@ -5,7 +5,7 @@ using RCBACEF.Models;
 namespace RCBACEF.Services
 {
     public class PermissionService(IPermissionRepository permissionRepository)
-        : SoftDeletableService<Permission>(permissionRepository),
+        : SoftDeletableEntityService<Permission>(permissionRepository),
         IPermissionService
     {
     }

@@ -6,7 +6,7 @@ using RCBACEF.QueryOptions;
 namespace RCBACEF.Services
 {
     public class RoleService(IRoleRepository roleRepository)
-        : SoftDeletableService<Role>(roleRepository),
+        : SoftDeletableEntityService<Role>(roleRepository),
         IRoleService
     {
         public async Task<IEnumerable<string>> GetListNameByIdAsync(IEnumerable<Int64> ids, RoleQueryOptions? options = null)

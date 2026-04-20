@@ -12,7 +12,7 @@ namespace RCBACEF.Services
         IUserRepository userRepository,
         IHttpContextAccessor contextAccessor
     )
-        : SoftDeletableService<User>(userRepository),
+        : SoftDeletableEntityService<User>(userRepository),
         IUserService
     {
         private const int SaltSize = 16; // 128 bits

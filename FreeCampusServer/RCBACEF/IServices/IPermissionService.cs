@@ -2,7 +2,7 @@
 
 namespace RCBACEF.IServices
 {
-    public interface IPermissionService : ISoftDeletableService<Permission>
+    public interface IPermissionService : ISoftDeletableEntityService<Permission>
     {
     }
 }

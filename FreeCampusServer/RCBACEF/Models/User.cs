@@ -3,7 +3,7 @@
 namespace RCBACEF.Models
 {
     [Table("Users", Schema = "auth")]
-    public class User : SoftDeletable
+    public class User : SoftDeletableEntity
     {
         public string Username { get; set; } = string.Empty;
         

@@ -2,7 +2,7 @@
 
 namespace RCBACEF.IRepository
 {
-    public interface IPermissionRepository : ISoftDeletableRepository<Permission>
+    public interface IPermissionRepository : ISoftDeletableEntityRepository<Permission>
     {
     }
 }

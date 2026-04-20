@@ -3,7 +3,7 @@ using RCBACEF.QueryOptions;
 
 namespace RCBACEF.IServices
 {
-    public interface IUserService : ISoftDeletableService<User>
+    public interface IUserService : ISoftDeletableEntityService<User>
     {
         string HashPassword(string password);
         bool CheckPassword(User user, string password);

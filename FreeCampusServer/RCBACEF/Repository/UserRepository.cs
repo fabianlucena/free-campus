@@ -5,7 +5,7 @@ using RCBACEF.QueryOptions;
 
 namespace RCBACEF.Repository
 {
-    public class UserRepository : SoftDeletableRepository<User>, IUserRepository
+    public class UserRepository : SoftDeletableEntityRepository<User>, IUserRepository
     {
         public UserRepository(DbContext context) : base(context) { }
 
