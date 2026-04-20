@@ -115,3 +115,73 @@ BEGIN
 	);
 END
 GO
+
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE t.name = 'Roles'
+      AND s.name = 'auth'
+)
+BEGIN
+	CREATE TABLE auth.Roles (
+		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+		Uuid UNIQUEIDENTIFIER NOT NULL,
+
+		CreatedAt DATETIME2 NOT NULL,
+		UpdatedAt DATETIME2 NOT NULL,
+		DeletedAt DATETIME2 NULL,
+
+		CreatedById BIGINT NOT NULL,
+		UpdatedById BIGINT NOT NULL,
+		DeletedById BIGINT NULL,
+
+		Name VARCHAR(128) NOT NULL,
+		Description VARCHAR(256) NULL,
+
+		CONSTRAINT FK_Roles_CreatedBy FOREIGN KEY (CreatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_Roles_UpdatedBy FOREIGN KEY (UpdatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_Roles_DeletedBy FOREIGN KEY (DeletedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+	);
+END
+GO
+
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE t.name = 'RolesXUsers'
+      AND s.name = 'auth'
+)
+BEGIN
+	CREATE TABLE auth.RolesXUsers (
+		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+		Uuid UNIQUEIDENTIFIER NOT NULL,
+
+		CreatedAt DATETIME2 NOT NULL,
+		UpdatedAt DATETIME2 NOT NULL,
+		DeletedAt DATETIME2 NULL,
+
+		CreatedById BIGINT NOT NULL,
+		UpdatedById BIGINT NOT NULL,
+		DeletedById BIGINT NULL,
+
+		Name VARCHAR(128) NOT NULL,
+		Description VARCHAR(256) NULL,
+
+		CONSTRAINT FK_Roles_CreatedBy FOREIGN KEY (CreatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_Roles_UpdatedBy FOREIGN KEY (UpdatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_Roles_DeletedBy FOREIGN KEY (DeletedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+	);
+END
+GO
