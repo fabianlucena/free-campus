@@ -1,0 +1,8 @@
+body {
+  background-color: #7c778d;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 0;
+  margin: 0;
+}
