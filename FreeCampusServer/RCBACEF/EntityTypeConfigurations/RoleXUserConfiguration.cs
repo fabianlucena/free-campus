@@ -4,11 +4,10 @@ using RCBACEF.Models;
 
 namespace RCBACEF.EntityTypeConfigurations
 {
-    public class RoleXUserConfiguration<T>
-        : SoftDeletableJoinConfiguration<T>
-        where T : RoleXUser
+    public class RoleXUserConfiguration
+        : SoftDeletableJoinConfiguration<RoleXUser>
     {
-        public override void Configure(EntityTypeBuilder<T> entity)
+        public override void Configure(EntityTypeBuilder<RoleXUser> entity)
         {
             base.Configure(entity);
 
