@@ -3,7 +3,7 @@
 namespace RCBACEF.IServices
 {
     public interface ISoftDeletableService<T>
-        : IAuditableService<T>
+        : IAuditableEntityService<T>
         where T : SoftDeletable, new()
     {
     }

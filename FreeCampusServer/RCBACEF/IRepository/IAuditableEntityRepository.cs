@@ -2,9 +2,9 @@
 
 namespace RCBACEF.IRepository
 {
-    public interface IAuditableRepository<T>
+    public interface IAuditableEntityRepository<T>
         : ICreatableEntityRepository<T>
-        where T : Auditable, new()
+        where T : AuditableEntity, new()
     {
     }
 }

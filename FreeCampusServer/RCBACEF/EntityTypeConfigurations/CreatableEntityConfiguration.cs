@@ -4,7 +4,7 @@ using RCBACEF.Models;
 
 namespace RCBACEF.EntityTypeConfigurations
 {
-    public class CreatableConfiguration<T>
+    public class CreatableEntityConfiguration<T>
         : EntityConfiguration<T>
         where T : CreatableEntity
     {

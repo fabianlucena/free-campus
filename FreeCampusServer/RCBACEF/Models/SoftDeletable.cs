@@ -1,6 +1,6 @@
 ﻿namespace RCBACEF.Models
 {
-    public class SoftDeletable : Auditable
+    public class SoftDeletable : AuditableEntity
     {
         public DateTime? DeletedAt { get; set; } = null;
 

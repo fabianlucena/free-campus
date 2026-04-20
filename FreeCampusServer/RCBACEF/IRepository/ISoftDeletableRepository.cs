@@ -3,7 +3,7 @@
 namespace RCBACEF.IRepository
 {
     public interface ISoftDeletableRepository<T>
-        : IAuditableRepository<T>
+        : IAuditableEntityRepository<T>
         where T : SoftDeletable, new()
     {
     }

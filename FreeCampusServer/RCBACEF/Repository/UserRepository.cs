@@ -7,9 +7,7 @@ namespace RCBACEF.Repository
 {
     public class UserRepository : SoftDeletableRepository<User>, IUserRepository
     {
-        public UserRepository(DbContext _context) : base(_context)
-        {
-        }
+        public UserRepository(DbContext context) : base(context) { }
 
         public async Task<User> GetSingleByUsernameAsync(string username, UserQueryOptions? options = null)
         {

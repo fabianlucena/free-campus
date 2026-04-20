@@ -5,7 +5,7 @@ using RCBACEF.Models;
 namespace RCBACEF.Services
 {
     public class SoftDeletableService<T>(ISoftDeletableRepository<T> repository)
-        : AuditableService<T>(repository),
+        : AuditableEntityService<T>(repository),
         ISoftDeletableService<T>
         where T : SoftDeletable, new()
     {

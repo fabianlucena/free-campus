@@ -4,9 +4,11 @@ using RCBACEF.QueryOptions;
 
 namespace RCBACEF.Repository
 {
-    public class AuditableRepository<T> : CreatableEntityRepository<T> where T : Auditable, new()
+    public class AuditableEntityRepository<T>
+        : CreatableEntityRepository<T>
+        where T : AuditableEntity, new()
     {
-        public AuditableRepository(DbContext context) : base(context) { }
+        public AuditableEntityRepository(DbContext context) : base(context) { }
 
         public override IQueryable<T> CreateDBSet(BaseQueryOptions? options)
         {

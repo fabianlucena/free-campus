@@ -2,9 +2,9 @@
 
 namespace RCBACEF.IServices
 {
-    public interface IAuditableService<T>
+    public interface IAuditableEntityService<T>
         : ICreatableEntityService<T>
-        where T : Auditable, new()
+        where T : AuditableEntity, new()
     {
     }
 }

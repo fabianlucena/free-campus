@@ -4,11 +4,11 @@ using RCBACEF.QueryOptions;
 
 namespace RCBACEF.Repository
 {
-    public class SoftDeletableRepository<T> : AuditableRepository<T> where T : SoftDeletable, new()
+    public class SoftDeletableRepository<T>
+        : AuditableEntityRepository<T>
+        where T : SoftDeletable, new()
     {
-        public SoftDeletableRepository(DbContext context) : base(context)
-        {
-        }
+        public SoftDeletableRepository(DbContext context) : base(context) { }
 
         public override IQueryable<T> CreateDBSet(BaseQueryOptions? options)
         {

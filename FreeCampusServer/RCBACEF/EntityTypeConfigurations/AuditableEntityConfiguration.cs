@@ -4,7 +4,9 @@ using RCBACEF.Models;
 
 namespace RCBACEF.EntityTypeConfigurations
 {
-    public class AuditableConfiguration<T> : BaseConfiguration<T> where T : Auditable
+    public class AuditableEntityConfiguration<T>
+        : CreatableEntityConfiguration<T>
+        where T : AuditableEntity
     {
         public override void Configure(EntityTypeBuilder<T> entity)
         {
