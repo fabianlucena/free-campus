@@ -11,7 +11,7 @@ namespace RCBACEF.Controllers
     public class UserController(IUserService userService) : ControllerBase
     {
         [HttpGet]
-        [Permission("user.read")]
+        [Permission("user.get")]
         public async Task<IActionResult> Get()
         {
             var users = await userService.GetListAsync(new UserQueryOptions
