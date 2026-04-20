@@ -4,7 +4,12 @@ using RCBACEF.Models;
 
 namespace RCBACEF.Services
 {
-    public class LoginService(IUserService userService, ISessionService sessionService, IDeviceService deviceService) : ILoginService
+    public class LoginService(
+        IUserService userService,
+        ISessionService sessionService,
+        IDeviceService deviceService,
+        IRoleXUserService roleXUserService
+    ) : ILoginService
     {
         public async Task<Session> LoginAsync(LoginRequest request)
         {
@@ -32,10 +37,13 @@ namespace RCBACEF.Services
             }
 
             var device = await deviceService.GetFirstOrCreateByTokenAsync(request.DeviceToken);
+            var companies = await roleXUserService.GetCompaniesListByUserIdAsync(user.Id);
+            var currentCompany = companies.Count() == 1?
+                companies.First() : null;
 
-            var session = await sessionService.CreateAsync(user.Id, device.Id);
+            var session = await sessionService.CreateAsync(user.Id, device.Id, currentCompany?.Id);
 
-            await userService.UpdateLastLoginAsync(user.Id);
+            await userService.UpdateLastLoginAtByUserIdAsync(user.Id);
 
             return session;
         }

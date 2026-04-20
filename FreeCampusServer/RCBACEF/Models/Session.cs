@@ -15,5 +15,8 @@ namespace RCBACEF.Models
 
         public Int64 DeviceId { get; set; }
         public Device? Device { get; set; }
+
+        public Int64? CompanyId { get; set; }
+        public Company? Company { get; set; }
     }
 }

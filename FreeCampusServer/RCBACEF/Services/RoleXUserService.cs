@@ -13,12 +13,12 @@ namespace RCBACEF.Services
         : SoftDeletableJoinService<RoleXUser>(roleXUserRepository),
         IRoleXUserService
     {
-        public async Task<IEnumerable<Int64>> GetRolesIdByUserIdCompanyIdAsync(Int64 userId, Int64? companyId, RoleXUserQueryOptions? options = null)
+        public async Task<IEnumerable<long>> GetRolesIdByUserIdCompanyIdAsync(long userId, long companyId, RoleXUserQueryOptions? options = null)
         {
             return await roleXUserRepository.GetListIdByUserIdAndCompanyIdAsync(userId, companyId, options);
         }
 
-        public async Task<IEnumerable<Int64>> GetAllRolesIdByUserIdAndCompanyIdAsync(Int64 userId, Int64? companyId, RoleXUserQueryOptions? options = null)
+        public async Task<IEnumerable<long>> GetAllRolesIdByUserIdAndCompanyIdAsync(long userId, long companyId, RoleXUserQueryOptions? options = null)
         {
             var rolesId = await GetRolesIdByUserIdCompanyIdAsync(userId, companyId, options);
             var allRolesId = await roleParentService.GetAllRolesIdByRolesIdAsync(rolesId);
@@ -26,9 +26,14 @@ namespace RCBACEF.Services
             return allRolesId;
         }
 
-        public async Task<IEnumerable<string>> GetAllRolesNameByRolesIdAsync(IEnumerable<Int64> rolesId, RoleXUserQueryOptions? options = null)
+        public async Task<IEnumerable<string>> GetAllRolesNameByRolesIdAsync(IEnumerable<long> rolesId, RoleXUserQueryOptions? options = null)
         {
             return await roleService.GetListNameByIdAsync(rolesId);
+        }
+
+        public async Task<IEnumerable<Company>> GetCompaniesListByUserIdAsync(long userId, RoleXUserQueryOptions? options = null)
+        {
+            return await roleXUserRepository.GetCompaniesListByUserIdAsync(userId, options);
         }
     }
 }

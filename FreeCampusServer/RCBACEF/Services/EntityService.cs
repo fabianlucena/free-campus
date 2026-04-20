@@ -39,6 +39,11 @@ namespace RCBACEF.Services
             return await repository.GetListIdAsync(options);
         }
 
+        public async Task<T> GetSingleByIdAsync(long id, BaseQueryOptions? options = null)
+        {
+            return await repository.GetSingleByIdAsync(id, options);
+        }
+
         public async Task<T?> GetFirstOrDefaultByUuidAsync(Guid uuid)
         {
             return await repository.GetFirstOrDefaultByUuidAsync(uuid);

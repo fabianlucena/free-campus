@@ -8,8 +8,8 @@ namespace RCBACEF.Authorization
     public class SessionCache
     {
         public required string Token { get; set; }
-        public required Int64 SessionId { get; set; }
-        public required Int64 UserId { get; set; }
+        public required long SessionId { get; set; }
+        public required long UserId { get; set; }
         public required Session Session { get; set; }
         public required User User { get; set; }
         public required Device Device { get; set; }
@@ -35,9 +35,9 @@ namespace RCBACEF.Authorization
                         || cachedSession is null)
                     {
                         var session = await sessionService.GetFirstOrDefaultByTokenAsync(token, new SessionQueryOptions { IncludeUser = true, IncludeDevice = true });
-                        if (session != null)
+                        if (session?.CompanyId != null)
                         {
-                            var rolesId = await roleXUserService.GetAllRolesIdByUserIdAndCompanyIdAsync(session.UserId, null);
+                            var rolesId = await roleXUserService.GetAllRolesIdByUserIdAndCompanyIdAsync(session.UserId, session.CompanyId.Value);
                             var roles = await roleXUserService.GetAllRolesNameByRolesIdAsync(rolesId);
 
                             var permissions = await permissionXRoleService.GetAllPermissionsNameForRolesIdAsync(rolesId);

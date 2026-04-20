@@ -61,7 +61,7 @@ namespace RCBACEF.Services
             return data;
         }
 
-        public async Task<Session> CreateAsync(long userId, long deviceId)
+        public async Task<Session> CreateAsync(long userId, long deviceId, long? companyId = null)
         {
             var session = new Session
             {
@@ -72,9 +72,18 @@ namespace RCBACEF.Services
                 DeviceId = deviceId,
                 Device = null,
                 CreatedById = userId,
+                CompanyId = companyId,
+                Company = null,
             };
 
-            return await CreateAsync(session);
+            session = await CreateAsync(session);
+            session = await GetSingleByIdAsync(session.Id, new SessionQueryOptions
+            {
+                IncludeUser = true,
+                IncludeDevice = true,
+            });
+
+            return session;
         }
     
         public async Task<Session?> GetFirstOrDefaultByTokenAsync(string token, SessionQueryOptions? options = null)
@@ -82,7 +91,7 @@ namespace RCBACEF.Services
             return await sessionRepository.GetFirstOrDefaultByTokenAsync(token, options);
         }
 
-        public Task UpdateLastUsageAsync(Int64 sessionId)
+        public Task UpdateLastUsageAsync(long sessionId)
         {
             return UpdateByIdAsync(sessionId, []);
         }

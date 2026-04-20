@@ -2,6 +2,7 @@
 using RCBACEF.IRepository;
 using RCBACEF.Models;
 using RCBACEF.QueryOptions;
+using System.ComponentModel.Design;
 
 namespace RCBACEF.Repository
 {
@@ -37,13 +38,27 @@ namespace RCBACEF.Repository
             return quereable;
         }
 
-        public async Task<IEnumerable<Int64>> GetListIdByUserIdAndCompanyIdAsync(Int64 userId, Int64? companyId, RoleXUserQueryOptions? options = null)
+        public async Task<IEnumerable<long>> GetListIdByUserIdAndCompanyIdAsync(long userId, long? companyId, RoleXUserQueryOptions? options = null)
         {
             var set = CreateDBSet(options);
 
             var list = await set
                 .Where(e => e.UserId == userId && (companyId == null || e.CompanyId == companyId))
                 .Select(e => e.RoleId)
+                .ToListAsync();
+
+            return list;
+        }
+
+        public async Task<IEnumerable<Company>> GetCompaniesListByUserIdAsync(long userId, RoleXUserQueryOptions? options = null)
+        {
+            var set = CreateDBSet(options);
+
+            var list = await set
+                .Where(e => e.UserId == userId)
+                .Select(e => e.Company)
+                .Where(c => c != null)
+                .Select(c => c!)
                 .ToListAsync();
 
             return list;

@@ -12,7 +12,7 @@ namespace RCBACEF.Services
     )
         : BaseService<Device>(deviceRepository),
         IDeviceService
-    {   
+    {
         public int TokenSize { get; set; } = 64;
 
         public override async Task<Device> ValidateForCreateAsync(Device device)

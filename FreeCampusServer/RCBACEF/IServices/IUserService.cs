@@ -16,8 +16,8 @@ namespace RCBACEF.IServices
 
         Task<User> GetCurrentOrSystemUserAsync();
 
-        Task<Int64> GetCurrentOrSystemUserIdAsync();
+        Task<long> GetCurrentOrSystemUserIdAsync();
 
-        Task UpdateLastLoginAsync(Int64 userId);
+        Task UpdateLastLoginAtByUserIdAsync(long userId);
     }
 }

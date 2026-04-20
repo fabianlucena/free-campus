@@ -3,10 +3,10 @@ using RCBACEF.QueryOptions;
 
 namespace RCBACEF.IServices
 {
-    public interface ISessionService : IBaseService<Session>
+    public interface ISessionService : ICreatableEntityService<Session>
     {
-        Task<Session> CreateAsync(Int64 userId, Int64 deviceId);
+        Task<Session> CreateAsync(long userId, long deviceId, long? companyId = null);
         Task<Session?> GetFirstOrDefaultByTokenAsync(string token, SessionQueryOptions? options = null);
-        Task UpdateLastUsageAsync(Int64 sessionId);
+        Task UpdateLastUsageAsync(long sessionId);
     }
 }

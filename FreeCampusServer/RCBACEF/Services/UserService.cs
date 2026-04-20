@@ -83,11 +83,11 @@ namespace RCBACEF.Services
             return await GetSystemUserAsync();
         }
 
-        public async Task<Int64> GetCurrentOrSystemUserIdAsync()
+        public async Task<long> GetCurrentOrSystemUserIdAsync()
         {
             var items = contextAccessor.HttpContext?.Items;
             if (items?.TryGetValue("CurrentUserId", out var idCurrentUserData) == true
-                && idCurrentUserData is Int64 idCurrentUser
+                && idCurrentUserData is long idCurrentUser
                 && idCurrentUser > 0
             )
             {
@@ -98,7 +98,7 @@ namespace RCBACEF.Services
             return systemUser.Id;
         }
     
-        public async Task UpdateLastLoginAsync(Int64 userId)
+        public async Task UpdateLastLoginAtByUserIdAsync(long userId)
         {
             var data = new Dictionary<string, object>
             {

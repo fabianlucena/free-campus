@@ -28,6 +28,28 @@ namespace RCBACEF.Repository
             return list;
         }
 
+        public virtual async Task<T> GetSingleByIdAsync(long id, BaseQueryOptions? options = null)
+        {
+            options ??= new BaseQueryOptions();
+            options.Take = 2;
+            var set = CreateDBSet(options);
+            var list = await set
+                .Where(e => e.Id == id)
+                .ToListAsync();
+
+            if (list.Count == 0)
+            {
+                throw new KeyNotFoundException($"Entity with id {id} not found.");
+
+            }
+            else if (list.Count > 1)
+            {
+                throw new InvalidOperationException($"Multiple entities with id {id} found.");
+            }
+
+            return list[0];
+        }
+
         public virtual async Task<T?> GetFirstOrDefaultByUuidAsync(Guid uuid)
         {
             var table = context.Set<T>();

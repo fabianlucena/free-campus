@@ -7,10 +7,12 @@ namespace RCBACEF.IRepository
         : IBaseRepository<T>
         where T : Entity, new()
     {
-        Task<IEnumerable<Int64>> GetListIdAsync(BaseQueryOptions? options = null);
+        Task<IEnumerable<long>> GetListIdAsync(BaseQueryOptions? options = null);
+
+        Task<T> GetSingleByIdAsync(long id, BaseQueryOptions? options = null);
 
         Task<T?> GetFirstOrDefaultByUuidAsync(Guid uuid);
 
-        Task<bool> UpdateByIdAsync(Int64 id, Dictionary<string, object> data);
+        Task<bool> UpdateByIdAsync(long id, Dictionary<string, object> data);
     }
 }
