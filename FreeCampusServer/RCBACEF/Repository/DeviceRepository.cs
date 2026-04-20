@@ -3,11 +3,9 @@ using RCBACEF.IRepository;
 using RCBACEF.Models;
 namespace RCBACEF.Repository
 {
-    public class DeviceRepository : BaseRepository<Device>, IDeviceRepository
+    public class DeviceRepository : CreatableEntityRepository<Device>, IDeviceRepository
     {
-        public DeviceRepository(DbContext context) : base(context)
-        {
-        }
+        public DeviceRepository(DbContext context) : base(context) { }
 
         public async Task<Device?> GetFirstOrDefaultByTokenAsync(string token)
         {

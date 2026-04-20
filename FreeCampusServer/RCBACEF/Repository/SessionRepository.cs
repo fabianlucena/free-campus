@@ -6,11 +6,9 @@ using RCBACEF.QueryOptions;
 namespace RCBACEF.Repository
 {
 
-    public class SessionRepository : BaseRepository<Session>, ISessionRepository
+    public class SessionRepository : CreatableEntityRepository<Session>, ISessionRepository
     {
-        public SessionRepository(DbContext _context) : base(_context)
-        {
-        }
+        public SessionRepository(DbContext context) : base(context) { }
 
         public override IQueryable<Session> CreateDBSet(BaseQueryOptions? options)
         {

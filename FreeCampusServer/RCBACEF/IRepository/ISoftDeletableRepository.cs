@@ -2,7 +2,9 @@
 
 namespace RCBACEF.IRepository
 {
-    public interface ISoftDeletableRepository<T> : IAuditableRepository<T> where T : SoftDeletable
+    public interface ISoftDeletableRepository<T>
+        : IAuditableRepository<T>
+        where T : SoftDeletable, new()
     {
     }
 }

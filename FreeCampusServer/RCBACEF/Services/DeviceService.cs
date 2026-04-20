@@ -6,7 +6,12 @@ using System.Security.Cryptography;
 
 namespace RCBACEF.Services
 {
-    public class DeviceService(IDeviceRepository deviceRepository, IServiceProvider serviceProvider) : BaseService<Device>(deviceRepository), IDeviceService
+    public class DeviceService(
+        IDeviceRepository deviceRepository,
+        IServiceProvider serviceProvider
+    )
+        : BaseService<Device>(deviceRepository),
+        IDeviceService
     {   
         public int TokenSize { get; set; } = 64;
 

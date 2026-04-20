@@ -8,7 +8,12 @@ using System.Security.Cryptography;
 
 namespace RCBACEF.Services
 {
-    public class UserService(IUserRepository userRepository, IHttpContextAccessor contextAccessor) : SoftDeletableService<User>(userRepository), IUserService
+    public class UserService(
+        IUserRepository userRepository,
+        IHttpContextAccessor contextAccessor
+    )
+        : SoftDeletableService<User>(userRepository),
+        IUserService
     {
         private const int SaltSize = 16; // 128 bits
         private const int KeySize = 32;  // 256 bits

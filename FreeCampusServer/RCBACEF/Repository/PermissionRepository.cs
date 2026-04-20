@@ -4,10 +4,10 @@ using RCBACEF.Models;
 
 namespace RCBACEF.Repository
 {
-    public class PermissionRepository : BaseRepository<Permission>, IPermissionRepository
+    public class PermissionRepository
+        : CreatableEntityRepository<Permission>,
+        IPermissionRepository
     {
-        public PermissionRepository(DbContext context) : base(context)
-        {
-        }
+        public PermissionRepository(DbContext context) : base(context) { }
     }
 }

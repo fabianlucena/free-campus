@@ -3,7 +3,7 @@
 namespace RCBACEF.Models
 {
     [Table("Sessions", Schema = "auth")]
-    public class Session : Base
+    public class Session : CreatableEntity
     {
         public string Token { get; set; } = string.Empty;
         public DateTime ExpireAt { get; set; } = DateTime.MinValue;

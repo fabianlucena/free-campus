@@ -2,7 +2,9 @@
 
 namespace RCBACEF.IServices
 {
-    public interface ISoftDeletableService<T> : IAuditableService<T> where T : SoftDeletable
+    public interface ISoftDeletableService<T>
+        : IAuditableService<T>
+        where T : SoftDeletable, new()
     {
     }
 }

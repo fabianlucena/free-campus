@@ -4,7 +4,10 @@ using RCBACEF.Models;
 
 namespace RCBACEF.Services
 {
-    public class AuditableService<T>(IAuditableRepository<T> repository) : BaseService<T>(repository), IAuditableService<T> where T : Auditable
+    public class AuditableService<T>(IAuditableRepository<T> repository)
+        : CreatableEntityService<T>(repository),
+        IAuditableService<T>
+        where T : Auditable, new()
     {
         public override async Task<T> ValidateForCreateAsync(T entity)
         {

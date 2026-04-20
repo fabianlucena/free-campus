@@ -3,7 +3,7 @@
 namespace RCBACEF.Models
 {
     [Table("Devices", Schema = "auth")]
-    public class Device : Base
+    public class Device : CreatableEntity
     {
         public string Token { get; set; } = string.Empty;
     }

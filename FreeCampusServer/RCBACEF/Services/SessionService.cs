@@ -6,7 +6,9 @@ using System.Security.Cryptography;
 
 namespace RCBACEF.Services
 {
-    public class SessionService(ISessionRepository sessionRepository) : BaseService<Session>(sessionRepository), ISessionService
+    public class SessionService(ISessionRepository sessionRepository)
+        : CreatableEntityService<Session>(sessionRepository),
+        ISessionService
     {
         public int TokenSize { get; set; } = 64;
 

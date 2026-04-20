@@ -5,11 +5,11 @@ using RCBACEF.QueryOptions;
 
 namespace RCBACEF.Repository
 {
-    public class RoleRepository : BaseRepository<Role>, IRoleRepository
+    public class RoleRepository
+        : CreatableEntityRepository<Role>,
+        IRoleRepository
     {
-        public RoleRepository(DbContext context) : base(context)
-        {
-        }
+        public RoleRepository(DbContext context) : base(context) { }
 
         public async Task<IEnumerable<string>> GetListNameByIdAsync(IEnumerable<Int64> ids, RoleQueryOptions? options = null)
         {
