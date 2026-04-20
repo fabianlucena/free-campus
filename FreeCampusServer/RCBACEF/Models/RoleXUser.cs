@@ -9,7 +9,7 @@ namespace RCBACEF.Models
 
         public Int64 UserId { get; set; }
 
-        public Int64 CompanyId { get; set; }
+        public Int64? CompanyId { get; set; }
 
 
         public Role? Role { get; set; }

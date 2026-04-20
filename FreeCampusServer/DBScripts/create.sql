@@ -1,3 +1,4 @@
+/* Users table */
 IF NOT EXISTS (
     SELECT 1
     FROM sys.tables t
@@ -58,6 +59,7 @@ BEGIN
 END
 GO
 
+/* Devices table */
 IF NOT EXISTS (
     SELECT 1
     FROM sys.tables t
@@ -81,6 +83,7 @@ BEGIN
 END
 GO
 
+/* Sessions table */
 IF NOT EXISTS (
     SELECT 1
     FROM sys.tables t
@@ -116,6 +119,7 @@ BEGIN
 END
 GO
 
+/* Roles table */
 IF NOT EXISTS (
     SELECT 1
     FROM sys.tables t
@@ -151,15 +155,16 @@ BEGIN
 END
 GO
 
+/* Companies table */
 IF NOT EXISTS (
     SELECT 1
     FROM sys.tables t
     JOIN sys.schemas s ON t.schema_id = s.schema_id
-    WHERE t.name = 'RolesXUsers'
+    WHERE t.name = 'Companies'
       AND s.name = 'auth'
 )
 BEGIN
-	CREATE TABLE auth.RolesXUsers (
+	CREATE TABLE auth.Companies (
 		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 		Uuid UNIQUEIDENTIFIER NOT NULL,
 
@@ -174,13 +179,51 @@ BEGIN
 		Name VARCHAR(128) NOT NULL,
 		Description VARCHAR(256) NULL,
 
-		CONSTRAINT FK_Roles_CreatedBy FOREIGN KEY (CreatedById)
+		CONSTRAINT FK_Companies_CreatedBy FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_Roles_UpdatedBy FOREIGN KEY (UpdatedById)
+		CONSTRAINT FK_Companies_UpdatedBy FOREIGN KEY (UpdatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_Roles_DeletedBy FOREIGN KEY (DeletedById)
+		CONSTRAINT FK_Companies_DeletedBy FOREIGN KEY (DeletedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+	);
+END
+GO
+
+/* RolesXUsers table */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE t.name = 'RolesXUsers'
+      AND s.name = 'auth'
+)
+BEGIN
+	CREATE TABLE auth.RolesXUsers (
+		RoleId BIGINT NOT NULL,
+		UserId BIGINT NOT NULL,
+		CompanyId BIGINT NOT NULL,
+
+		CreatedAt DATETIME2 NOT NULL,
+		DeletedAt DATETIME2 NULL,
+
+		CreatedById BIGINT NOT NULL,
+		DeletedById BIGINT NULL,
+
+		CONSTRAINT FK_RolesXUsers_Role FOREIGN KEY (RoleId)
+			REFERENCES auth.Roles(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_RolesXUsers_User FOREIGN KEY (UserId)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_RolesXUsers_Company FOREIGN KEY (CompanyId)
+			REFERENCES auth.Companies(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_RolesXUsers_CreatedBy FOREIGN KEY (CreatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_RolesXUsers_DeletedBy FOREIGN KEY (DeletedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 	);
 END
