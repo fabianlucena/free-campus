@@ -42,7 +42,7 @@ namespace RCBACEF.Repository
             {
                 lastResult = await set
                     .Where(r => lastResult.Contains(r.RoleId)
-                        && !result.Contains(r.RoleId)
+                        && !result.Contains(r.IncludeId)
                     )
                     .Select(r => r.IncludeId)
                     .ToListAsync();
