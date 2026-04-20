@@ -6,9 +6,11 @@ using RCBACEF.QueryOptions;
 namespace RCBACEF.Repository
 {
 
-    public class RoleIncludeRepository : ImmutableRepository<RoleInclude>, IRoleIncludeRepository
+    public class RoleIncludeRepository
+        : SoftDeletableJoinRepository<RoleInclude>,
+        IRoleIncludeRepository
     {
-        public RoleIncludeRepository(DbContext _context) : base(_context)
+        public RoleIncludeRepository(DbContext context) : base(context)
         {
         }
 
@@ -41,8 +43,8 @@ namespace RCBACEF.Repository
             do
             {
                 lastResult = await set
-                    .Where(r => lastResult.Contains(r.Id)
-                        && !result.Contains(r.Id)
+                    .Where(r => lastResult.Contains(r.RoleId)
+                        && !result.Contains(r.RoleId)
                     )
                     .Select(r => r.IncludeId)
                     .ToListAsync();

@@ -3,7 +3,7 @@
 namespace RCBACEF.Models
 {
     [Table("PermissionsXRoles", Schema = "auth")]
-    public class PermissionXRole : Immutable
+    public class PermissionXRole : SoftDeletableJoin
     {
         public Int64 PermissionId { get; set; }
 

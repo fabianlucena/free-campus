@@ -6,11 +6,11 @@ using RCBACEF.QueryOptions;
 namespace RCBACEF.Repository
 {
 
-    public class RoleXUserRepository : ImmutableRepository<RoleXUser>, IRoleXUserRepository
+    public class RoleXUserRepository
+        : SoftDeletableJoinRepository<RoleXUser>,
+        IRoleXUserRepository
     {
-        public RoleXUserRepository(DbContext _context) : base(_context)
-        {
-        }
+        public RoleXUserRepository(DbContext context) : base(context) { }
 
         public override IQueryable<RoleXUser> CreateDBSet(BaseQueryOptions? options = null)
         {
@@ -37,13 +37,13 @@ namespace RCBACEF.Repository
             return quereable;
         }
 
-        public async Task<IEnumerable<Int64>> GetListIdByUserIdAsync(long userId, RoleXUserQueryOptions? options = null)
+        public async Task<IEnumerable<Int64>> GetListIdByUserIdAsync(Int64 userId, RoleXUserQueryOptions? options = null)
         {
             var set = CreateDBSet(options);
 
             var list = await set
                 .Where(e => e.UserId == userId)
-                .Select(e => e.Id)
+                .Select(e => e.RoleId)
                 .ToListAsync();
 
             return list;

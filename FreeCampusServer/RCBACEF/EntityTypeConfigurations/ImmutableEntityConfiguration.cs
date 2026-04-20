@@ -4,7 +4,9 @@ using RCBACEF.Models;
 
 namespace RCBACEF.EntityTypeConfigurations
 {
-    public class ImmutableConfiguration<T> : BaseConfiguration<T> where T : Immutable
+    public class ImmutableEntityConfiguration<T>
+        : CreatableEntityConfiguration<T>
+        where T : ImmutableEntity
     {
         public override void Configure(EntityTypeBuilder<T> entity)
         {

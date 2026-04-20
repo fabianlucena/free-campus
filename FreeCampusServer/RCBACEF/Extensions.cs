@@ -16,7 +16,7 @@ namespace RCBACEF
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IPermissionService, PermissionService>();
-            services.AddScoped<IRoleIncludeService, RoleParentService>();
+            services.AddScoped<IRoleIncludeService, RoleIncludeService>();
             services.AddScoped<IRoleXUserService, RoleXUserService>();
             services.AddScoped<IPermissionXRoleService, PermissionXRoleService>();
 

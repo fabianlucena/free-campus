@@ -4,9 +4,11 @@ using RCBACEF.QueryOptions;
 
 namespace RCBACEF.Repository
 {
-    public class ImmutableRepository<T> : BaseRepository<T> where T : Immutable, new()
+    public class ImmutableEntityRepository<T>
+        : BaseRepository<T>
+        where T : ImmutableEntity, new()
     {
-        public ImmutableRepository(DbContext context) : base(context)
+        public ImmutableEntityRepository(DbContext context) : base(context)
         {
         }
 

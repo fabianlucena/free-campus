@@ -2,7 +2,8 @@
 
 namespace RCBACEF.IRepository
 {
-    public interface IPermissionXRoleRepository : IImmutableRepository<PermissionXRole>
+    public interface IPermissionXRoleRepository
+        : ISoftDeletableJoinRepository<PermissionXRole>
     {
     }
 }

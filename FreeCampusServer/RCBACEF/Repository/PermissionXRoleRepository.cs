@@ -6,7 +6,9 @@ using RCBACEF.QueryOptions;
 namespace RCBACEF.Repository
 {
 
-    public class PermissionXRoleRepository : ImmutableRepository<PermissionXRole>, IPermissionXRoleRepository
+    public class PermissionXRoleRepository
+        : SoftDeletableJoinRepository<PermissionXRole>,
+        IPermissionXRoleRepository
     {
         public PermissionXRoleRepository(DbContext _context) : base(_context)
         {

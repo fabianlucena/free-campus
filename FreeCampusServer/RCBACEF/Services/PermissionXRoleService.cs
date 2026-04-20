@@ -4,7 +4,9 @@ using RCBACEF.Models;
 
 namespace RCBACEF.Services
 {
-    public class PermissionXRoleService(IPermissionXRoleRepository permissionXRoleRepository) : ImmutableService<PermissionXRole>(permissionXRoleRepository), IPermissionXRoleService
+    public class PermissionXRoleService(IPermissionXRoleRepository permissionXRoleRepository)
+        : SoftDeletableJoinService<PermissionXRole>(permissionXRoleRepository),
+        IPermissionXRoleService
     {
         public Task<IEnumerable<string>> GetAllPermissionsNameForUserIdAsync(long UserId)
         {

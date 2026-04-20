@@ -5,7 +5,13 @@ using RCBACEF.QueryOptions;
 
 namespace RCBACEF.Services
 {
-    public class RoleXUserService(IRoleXUserRepository roleXUserRepository, IRoleIncludeService roleParentService, IRoleService roleService) : ImmutableService<RoleXUser>(roleXUserRepository), IRoleXUserService
+    public class RoleXUserService(
+        IRoleXUserRepository roleXUserRepository,
+        IRoleIncludeService roleParentService,
+        IRoleService roleService
+    )
+        : SoftDeletableJoinService<RoleXUser>(roleXUserRepository),
+        IRoleXUserService
     {
         public async Task<IEnumerable<Int64>> GetRolesIdByUserIdAsync(Int64 userId, RoleXUserQueryOptions? options = null)
         {

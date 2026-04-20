@@ -1,6 +1,6 @@
 ﻿namespace RCBACEF.Models
 {
-    public class Immutable : CreatableEntity
+    public class ImmutableEntity : CreatableEntity
     {
         public DateTime? DeletedAt { get; set; } = null;
 
