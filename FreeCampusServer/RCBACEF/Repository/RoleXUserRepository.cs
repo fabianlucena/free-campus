@@ -37,12 +37,12 @@ namespace RCBACEF.Repository
             return quereable;
         }
 
-        public async Task<IEnumerable<Int64>> GetListIdByUserIdAsync(Int64 userId, RoleXUserQueryOptions? options = null)
+        public async Task<IEnumerable<Int64>> GetListIdByUserIdAndCompanyIdAsync(Int64 userId, Int64? companyId, RoleXUserQueryOptions? options = null)
         {
             var set = CreateDBSet(options);
 
             var list = await set
-                .Where(e => e.UserId == userId)
+                .Where(e => e.UserId == userId && (companyId == null || e.CompanyId == companyId))
                 .Select(e => e.RoleId)
                 .ToListAsync();
 

@@ -6,6 +6,6 @@ namespace RCBACEF.IServices
     public interface IRoleXUserService
         : ISoftDeletableJoinService<RoleXUser>
     {
-        Task <IEnumerable<string>> GetAllRolesNameByUserIdAsync(Int64 UserId, RoleXUserQueryOptions? options = null);
+        Task <IEnumerable<string>> GetAllRolesNameByUserIdAndCompanyIdAsync(Int64 UserId, Int64? CompanyId, RoleXUserQueryOptions? options = null);
     }
 }

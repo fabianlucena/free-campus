@@ -12,6 +12,8 @@ namespace RCBACEF.EntityTypeConfigurations
         {
             base.Configure(entity);
 
+            entity.HasNoKey();
+
             entity.HasOne(u => u.DeletedBy)
                   .WithMany()
                   .HasForeignKey(u => u.DeletedById)

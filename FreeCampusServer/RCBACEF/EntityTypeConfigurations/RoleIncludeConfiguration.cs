@@ -4,10 +4,10 @@ using RCBACEF.Models;
 
 namespace RCBACEF.EntityTypeConfigurations
 {
-    public class RoleXUserConfiguration
-        : SoftDeletableJoinConfiguration<RoleXUser>
+    public class RoleIncludeConfiguration
+        : SoftDeletableJoinConfiguration<RoleInclude>
     {
-        public override void Configure(EntityTypeBuilder<RoleXUser> entity)
+        public override void Configure(EntityTypeBuilder<RoleInclude> entity)
         {
             base.Configure(entity);
 
@@ -16,14 +16,9 @@ namespace RCBACEF.EntityTypeConfigurations
                   .HasForeignKey(u => u.RoleId)
                   .OnDelete(DeleteBehavior.Restrict);
 
-            entity.HasOne(u => u.User)
+            entity.HasOne(u => u.Include)
                   .WithMany()
-                  .HasForeignKey(u => u.UserId)
-                  .OnDelete(DeleteBehavior.Restrict);
-
-            entity.HasOne(u => u.Company)
-                  .WithMany()
-                  .HasForeignKey(u => u.CompanyId)
+                  .HasForeignKey(u => u.IncludeId)
                   .OnDelete(DeleteBehavior.Restrict);
         }
     }

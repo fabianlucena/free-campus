@@ -6,6 +6,6 @@ namespace RCBACEF.IRepository
     public interface IRoleXUserRepository
         : ISoftDeletableJoinRepository<RoleXUser>
     {
-        Task<IEnumerable<Int64>> GetListIdByUserIdAsync(Int64 userId, RoleXUserQueryOptions? options = null);
+        Task<IEnumerable<Int64>> GetListIdByUserIdAndCompanyIdAsync(Int64 userId, Int64? companyId, RoleXUserQueryOptions? options = null);
     }
 }

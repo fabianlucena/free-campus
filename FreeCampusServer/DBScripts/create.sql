@@ -228,3 +228,37 @@ BEGIN
 	);
 END
 GO
+
+/* RolesIncludes table */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE t.name = 'RolesIncludes'
+      AND s.name = 'auth'
+)
+BEGIN
+	CREATE TABLE auth.RolesIncludes (
+		RoleId BIGINT NOT NULL,
+		IncludeId BIGINT NOT NULL,
+
+		CreatedAt DATETIME2 NOT NULL,
+		DeletedAt DATETIME2 NULL,
+
+		CreatedById BIGINT NOT NULL,
+		DeletedById BIGINT NULL,
+
+		CONSTRAINT FK_RolesIncludes_Role FOREIGN KEY (RoleId)
+			REFERENCES auth.Roles(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_RolesIncludes_Include FOREIGN KEY (IncludeId)
+			REFERENCES auth.Roles(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_RolesIncludes_CreatedBy FOREIGN KEY (CreatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_RolesIncludes_DeletedBy FOREIGN KEY (DeletedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+	);
+END
+GO
