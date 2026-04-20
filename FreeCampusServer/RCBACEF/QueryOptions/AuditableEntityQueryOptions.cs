@@ -1,7 +1,7 @@
 ﻿namespace RCBACEF.QueryOptions
 {
-    public class AuditableEntityQueryOptions : BaseQueryOptions
+    public class AuditableEntityQueryOptions : CreatableEntityQueryOptions
     {
-        public bool IncludeUpdatedBy { get; set; } = false;
+        public bool IncludeUpdatedBy { get; set; }
     }
 }

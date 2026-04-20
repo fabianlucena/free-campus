@@ -2,7 +2,7 @@
 
 namespace RCBACEF.QueryOptions
 {
-    public class RoleXUserQueryOptions : ImmutableQueryOptions
+    public class RoleXUserQueryOptions : SoftDeletableJoinQueryOptions
     {
         public bool IncludeRole { get; set; } = false;
         public bool IncludeUser { get; set; } = false;

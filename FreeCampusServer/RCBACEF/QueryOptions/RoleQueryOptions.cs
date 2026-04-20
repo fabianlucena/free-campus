@@ -1,8 +1,6 @@
-﻿using RCBACEF.Models;
-
-namespace RCBACEF.QueryOptions
+﻿namespace RCBACEF.QueryOptions
 {
-    public class RoleQueryOptions : ImmutableQueryOptions
+    public class RoleQueryOptions : SoftDeletableEntityQueryOptions
     {
     }
 }

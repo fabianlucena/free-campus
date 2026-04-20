@@ -14,9 +14,9 @@ namespace RCBACEF.Repository
         {
             var quereable = base.CreateDBSet(options);
 
-            if (options is BaseQueryOptions baseOptions)
+            if (options is CreatableEntityQueryOptions creatableOptions)
             {
-                if (baseOptions.IncludeCreatedBy)
+                if (creatableOptions.IncludeCreatedBy)
                 {
                     quereable = quereable.Include(u => u.CreatedBy);
                 }
