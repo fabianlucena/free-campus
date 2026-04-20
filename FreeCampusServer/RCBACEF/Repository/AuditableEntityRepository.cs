@@ -14,7 +14,7 @@ namespace RCBACEF.Repository
         {
             var quereable = base.CreateDBSet(options ?? new BaseQueryOptions());
 
-            if (options is AuditableQueryOptions auditableOptions)
+            if (options is AuditableEntityQueryOptions auditableOptions)
             {
                 if (auditableOptions.IncludeUpdatedBy)
                 {
