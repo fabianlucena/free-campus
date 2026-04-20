@@ -40,7 +40,7 @@ namespace RCBACEF.Authorization
                             var rolesId = await roleXUserService.GetAllRolesIdByUserIdAndCompanyIdAsync(session.UserId, null);
                             var roles = await roleXUserService.GetAllRolesNameByRolesIdAsync(rolesId);
 
-                            var permissions = await permissionXRoleService.GetAllPermissionsNameForRolesIdAsync(session.UserId);
+                            var permissions = await permissionXRoleService.GetAllPermissionsNameForRolesIdAsync(rolesId);
 
                             if (!roles.Any())
                                 roles = ["user"];

@@ -30,7 +30,7 @@ BEGIN
 		Uuid, CreatedAt, UpdatedAt, DeletedAt,
 		CreatedById, UpdatedById, DeletedById,
 		Username, DisplayName, Email, PasswordHash,
-		IsActive, CanLogin, LastLogin
+		IsActive, CanLogin, LastLoginAt
 	)
 	VALUES (
 		NEWID(), GETUTCDATE(), GETUTCDATE(), NULL,
@@ -57,6 +57,31 @@ BEGIN
 	ADD CONSTRAINT FK_Users_DeletedBy
 		FOREIGN KEY (DeletedById) REFERENCES auth.Users(Id) ON DELETE NO ACTION;
 END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM auth.Users WHERE Username = 'system')
+    THROW 50000, 'El usuario system no existe.', 1;
+GO
+
+/* Insert default admin user */
+DECLARE @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
+	@1234hash NVARCHAR(255) = '100000.He2nIoHKO5PDiudeF3GV1Q==.OXZML34kQ8gPcsX01odwNpaNmNMkMzlggv5pLKqzekg=';
+MERGE auth.Users AS target
+USING (VALUES ('admin')) AS source(Username)
+    ON target.Username = source.Username
+WHEN NOT MATCHED THEN
+    INSERT (
+        Uuid, CreatedAt, UpdatedAt, DeletedAt,
+        CreatedById, UpdatedById, DeletedById,
+        Username, DisplayName, Email, PasswordHash,
+        IsActive, CanLogin, LastLoginAt
+    )
+    VALUES (
+        NEWID(), GETUTCDATE(), GETUTCDATE(), NULL,
+        @systemUserId, @systemUserId, NULL,
+        source.Username, 'Administrator', 'admin@example.com', @1234hash,
+        1, 1, NULL
+    );
 GO
 
 /* Devices table */
@@ -155,6 +180,24 @@ BEGIN
 END
 GO
 
+/* Insert default admin role */
+DECLARE @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system' );
+MERGE auth.Roles AS target
+USING (VALUES ('admin')) AS source(Name)
+    ON target.Name = source.Name
+WHEN NOT MATCHED THEN
+    INSERT (
+        Uuid, CreatedAt, UpdatedAt, DeletedAt,
+        CreatedById, UpdatedById, DeletedById,
+        Name, Description
+    )
+    VALUES (
+        NEWID(), GETUTCDATE(), GETUTCDATE(), NULL,
+        @systemUserId, @systemUserId, NULL,
+        source.Name, 'Administrator role with full privileges'
+    );
+GO
+
 /* Companies table */
 IF NOT EXISTS (
     SELECT 1
@@ -189,6 +232,24 @@ BEGIN
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 	);
 END
+GO
+
+/* Insert default system company */
+DECLARE @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system');
+MERGE auth.Companies AS target
+USING (VALUES ('system')) AS source(Name)
+    ON target.Name = source.Name
+WHEN NOT MATCHED THEN
+    INSERT (
+        Uuid, CreatedAt, UpdatedAt, DeletedAt,
+        CreatedById, UpdatedById, DeletedById,
+        Name, Description
+    )
+    VALUES (
+        NEWID(), GETUTCDATE(), GETUTCDATE(), NULL,
+        @systemUserId, @systemUserId, NULL,
+        source.Name, 'System company for administrator purposes'
+    );
 GO
 
 /* RolesXUsers table */
@@ -227,6 +288,27 @@ BEGIN
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 	);
 END
+GO
+
+/* Insert default admin user's role */
+DECLARE @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
+	@adminUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'admin'),
+	@adminRoleId BIGINT = (SELECT Id FROM auth.Roles WHERE Name = 'admin'),
+	@systemCompanyId BIGINT = (SELECT Id FROM auth.Companies WHERE Name = 'system');
+MERGE auth.RolesXUsers AS target
+USING (VALUES (@adminRoleId, @adminUserId, @systemCompanyId)) AS source(RoleId, UserId, CompanyId)
+    ON target.RoleId = source.RoleId AND target.UserId = source.UserId AND target.CompanyId = source.CompanyId
+WHEN NOT MATCHED THEN
+    INSERT (
+        CreatedAt, DeletedAt,
+        CreatedById, DeletedById,
+        RoleId, UserId, CompanyId
+    )
+    VALUES (
+        GETUTCDATE(), NULL,
+        @systemUserId, NULL,
+        source.RoleId, source.UserId, source.CompanyId
+    );
 GO
 
 /* RolesIncludes table */

@@ -10,9 +10,7 @@ namespace RCBACEF.Repository
         : SoftDeletableJoinRepository<PermissionXRole>,
         IPermissionXRoleRepository
     {
-        public PermissionXRoleRepository(DbContext _context) : base(_context)
-        {
-        }
+        public PermissionXRoleRepository(DbContext context) : base(context) { }
 
         public override IQueryable<PermissionXRole> CreateDBSet(BaseQueryOptions? options)
         {
@@ -32,6 +30,17 @@ namespace RCBACEF.Repository
             }
 
             return quereable;
+        }
+
+        public async Task<IEnumerable<Int64>> GetAllPermissionsIdByRolesIdAsync(IEnumerable<Int64> rolesId, PermissionXRoleQueryOptions? options = null)
+        {
+            var set = CreateDBSet(options);
+            var result = await set
+                .Where(r => rolesId.Contains(r.RoleId))
+                .Select(r => r.PermissionId)
+                .ToListAsync();
+
+            return result;
         }
     }
 }

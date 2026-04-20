@@ -10,9 +10,7 @@ namespace RCBACEF.Repository
         : SoftDeletableJoinRepository<RoleInclude>,
         IRoleIncludeRepository
     {
-        public RoleIncludeRepository(DbContext context) : base(context)
-        {
-        }
+        public RoleIncludeRepository(DbContext context) : base(context) { }
 
         public override IQueryable<RoleInclude> CreateDBSet(BaseQueryOptions? options = null)
         {

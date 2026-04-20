@@ -1,6 +1,6 @@
 ﻿namespace RCBACEF.Models
 {
-    public class Permission : SoftDeletableEntity
+    public class Permission : ImmutableEntity
     {
         public string Name { get; set; } = string.Empty;
 
