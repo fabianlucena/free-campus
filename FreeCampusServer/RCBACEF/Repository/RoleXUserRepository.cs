@@ -57,6 +57,7 @@ namespace RCBACEF.Repository
             var list = await set
                 .Where(e => e.UserId == userId)
                 .Select(e => e.Company)
+                .Distinct()
                 .Where(c => c != null)
                 .Select(c => c!)
                 .ToListAsync();
