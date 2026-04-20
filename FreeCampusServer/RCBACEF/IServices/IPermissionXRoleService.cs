@@ -6,6 +6,7 @@ namespace RCBACEF.IServices
     public interface IPermissionXRoleService
         : ISoftDeletableJoinService<PermissionXRole>
     {
-        Task<IEnumerable<string>> GetAllPermissionsNameForUserIdAsync(Int64 UserId, PermissionXRoleQueryOptions? options = null);
+        Task<IEnumerable<Int64>> GetAllPermissionsIdForRolesIdAsync(IEnumerable<Int64> rolesId, PermissionXRoleQueryOptions? options = null);
+        Task<IEnumerable<string>> GetAllPermissionsNameForRolesIdAsync(IEnumerable<Int64> rolesId, PermissionXRoleQueryOptions? options = null);
     }
 }

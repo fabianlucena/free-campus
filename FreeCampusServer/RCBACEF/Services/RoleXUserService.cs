@@ -26,11 +26,9 @@ namespace RCBACEF.Services
             return allRolesId;
         }
 
-        public async Task<IEnumerable<string>> GetAllRolesNameByUserIdAndCompanyIdAsync(Int64 userId, Int64? companyId, RoleXUserQueryOptions? options = null)
+        public async Task<IEnumerable<string>> GetAllRolesNameByRolesIdAsync(IEnumerable<Int64> rolesId, RoleXUserQueryOptions? options = null)
         {
-            var allRolesId = await GetAllRolesIdByUserIdAndCompanyIdAsync(userId, companyId, options);
-
-            return await roleService.GetListNameByIdAsync(allRolesId);
+            return await roleService.GetListNameByIdAsync(rolesId);
         }
     }
 }

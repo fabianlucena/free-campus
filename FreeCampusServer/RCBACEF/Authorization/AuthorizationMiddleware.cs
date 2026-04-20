@@ -37,8 +37,10 @@ namespace RCBACEF.Authorization
                         var session = await sessionService.GetFirstOrDefaultByTokenAsync(token, new SessionQueryOptions { IncludeUser = true, IncludeDevice = true });
                         if (session != null)
                         {
-                            var roles = await roleXUserService.GetAllRolesNameByUserIdAndCompanyIdAsync(session.UserId, null);
-                            var permissions = await permissionXRoleService.GetAllPermissionsNameForUserIdAsync(session.UserId);
+                            var rolesId = await roleXUserService.GetAllRolesIdByUserIdAndCompanyIdAsync(session.UserId, null);
+                            var roles = await roleXUserService.GetAllRolesNameByRolesIdAsync(rolesId);
+
+                            var permissions = await permissionXRoleService.GetAllPermissionsNameForRolesIdAsync(session.UserId);
 
                             if (!roles.Any())
                                 roles = ["user"];
