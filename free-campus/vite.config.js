@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      '@vc': path.resolve(__dirname, './../../vue-comp/components')
-    }
-  }
-})
+      '@vc': path.resolve(__dirname, './../../vue-comp/components'),
+    },
+  },
+});

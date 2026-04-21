@@ -1,5 +1,8 @@
-import { createApp } from 'vue'
-import './style.css'
-import App from './App.vue'
+import { createApp } from 'vue';
+import './style.css';
+import App from './App.vue';
+//import { style } from './Style';
 
-createApp(App).mount('#app')
+const app = createApp(App);
+//app.provide('style', style);
+app.mount('#app');

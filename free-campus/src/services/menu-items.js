@@ -1,6 +1,6 @@
-import { ref } from 'vue';
+import { reactive } from 'vue';
 
-export var menuItems = ref([
+export var menuItems = reactive([
   {
     name: 'Home',
     items: [

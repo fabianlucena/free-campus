@@ -1,5 +1,6 @@
+@import url(@vc/style.css);
+
 body {
-  background-color: #7c778d;
   display: flex;
   flex-direction: column;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
