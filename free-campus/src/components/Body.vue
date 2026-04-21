@@ -12,5 +12,6 @@
 .body {
   overflow: auto;
   flex: 1;
+  padding: 1em;
 }
 </style>

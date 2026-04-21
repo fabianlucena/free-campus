@@ -1,5 +1,14 @@
 @import url(@vc/style.css);
 
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: auto;
+  color: var(--primary-color);
+  background-color: var(--primary-background-color);
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -7,12 +16,5 @@ body {
   padding: 0;
   margin: 0;
   height: 100vh;
-  overflow: auto;
-}
-
-#app {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
   overflow: auto;
 }
