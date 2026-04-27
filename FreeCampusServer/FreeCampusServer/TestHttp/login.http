@@ -1,4 +1,5 @@
 @host = http://localhost:5256
+@token = 0rUH/4F+0kBMroVNRfg84EQk1yOJka1KdHo+0fBHAVJ2otTmoYZ7E+OB0ll4QaKh
 
 POST {{host}}/login/
 Accept: application/json
@@ -11,3 +12,18 @@ Content-Type: application/json
 }
 
 ###
+
+POST {{host}}/auto-login/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "autoLoginToken": "LB6z3f4EQ+OfJIYP8Tv59BdYQO3Ds/wFE8KN0jbFzUpUXUMXdSmS5ne3BmKT3GX8",
+  "deviceToken": "tOq0z2Eo8Qlg3y8JNxd1i0KZdhK8TkQVmlPuDnP8fhc="
+}
+
+###
+
+POST {{host}}/login-check/
+Accept: application/json
+Authorization: Bearer {{token}}

@@ -19,8 +19,6 @@ BEGIN
 
 		Username VARCHAR(64) NOT NULL,
 		DisplayName VARCHAR(128) NOT NULL,
-		Email VARCHAR(256) NOT NULL,
-		PasswordHash VARCHAR(256) NOT NULL,
 		IsActive BIT NOT NULL,
 		CanLogin BIT NOT NULL,
 		LastLoginAt DATETIME2 NULL
@@ -59,6 +57,43 @@ BEGIN
 END
 GO
 
+/* UsersPasswords table */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE t.name = 'UsersPasswords'
+      AND s.name = 'auth'
+)
+BEGIN
+	CREATE TABLE auth.UsersPasswords (
+		UserId BIGINT NOT NULL PRIMARY KEY,
+
+		CreatedAt DATETIME2 NOT NULL,
+		UpdatedAt DATETIME2 NOT NULL,
+		DeletedAt DATETIME2 NULL,
+
+		CreatedById BIGINT NOT NULL,
+		UpdatedById BIGINT NOT NULL,
+		DeletedById BIGINT NULL,
+
+		Hash VARCHAR(64) NOT NULL,
+
+		CONSTRAINT FK_UsersPasswords_UserId
+			FOREIGN KEY (UserId) REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_UsersPasswords_CreatedBy
+			FOREIGN KEY (CreatedById) REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_UsersPasswords_UpdatedBy
+			FOREIGN KEY (UpdatedById) REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_UsersPasswords_DeletedBy
+			FOREIGN KEY (DeletedById) REFERENCES auth.Users(Id) ON DELETE NO ACTION
+	);
+END
+GO
+
 IF NOT EXISTS (SELECT 1 FROM auth.Users WHERE Username = 'system')
     THROW 50000, 'El usuario system no existe.', 1;
 GO
@@ -73,14 +108,43 @@ WHEN NOT MATCHED THEN
     INSERT (
         Uuid, CreatedAt, UpdatedAt, DeletedAt,
         CreatedById, UpdatedById, DeletedById,
-        Username, DisplayName, Email, PasswordHash,
+        Username, DisplayName,
         IsActive, CanLogin, LastLoginAt
     )
     VALUES (
         NEWID(), GETUTCDATE(), GETUTCDATE(), NULL,
         @systemUserId, @systemUserId, NULL,
-        source.Username, 'Administrator', 'admin@example.com', @1234hash,
+        source.Username, 'Administrator',
         1, 1, NULL
+    );
+GO
+
+/* Insert default admin user password */
+DECLARE @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
+	@1234hash NVARCHAR(255) = '100000.He2nIoHKO5PDiudeF3GV1Q==.OXZML34kQ8gPcsX01odwNpaNmNMkMzlggv5pLKqzekg=';
+MERGE auth.UsersPassword AS target
+USING (SELECT u.Id
+	FROM auth.Users u
+	WHERE NOT EXISTS(
+			SELECT *
+			FROM auth.UsersPasswords p
+			WHERE p.UserId = u.Id
+		)
+		AND u.Username = 'admin'
+	) AS source(UserId)
+    ON target.UserId = source.UserId
+WHEN NOT MATCHED THEN
+    INSERT (
+		UserId,
+        CreatedAt, UpdatedAt, DeletedAt,
+        CreatedById, UpdatedById, DeletedById,
+        Hash
+    )
+    VALUES (
+		source.UserId
+        GETUTCDATE(), GETUTCDATE(), NULL,
+        @systemUserId, @systemUserId, NULL,
+		@1234hash
     );
 GO
 
@@ -128,6 +192,7 @@ BEGIN
 		ExpireAt DATETIME2 NOT NULL,
 		AutoLoginToken VARCHAR(64) NOT NULL,
 		LastUsedAt DATETIME2 NOT NULL,
+		ClosedAt DATETIME2 NULL,
 
 		UserId BIGINT NOT NULL,
 		DeviceId BIGINT NOT NULL,
@@ -181,16 +246,16 @@ BEGIN
 END
 GO
 
-/* SessionCompanies table */
+/* SessionsCompanies table */
 IF NOT EXISTS (
     SELECT 1
     FROM sys.tables t
     JOIN sys.schemas s ON t.schema_id = s.schema_id
-    WHERE t.name = 'SessionCompanies'
+    WHERE t.name = 'SessionsCompanies'
       AND s.name = 'auth'
 )
 BEGIN
-	CREATE TABLE auth.SessionCompanies (
+	CREATE TABLE auth.SessionsCompanies (
 		SessionId BIGINT NOT NULL,
 		CompanyId BIGINT NOT NULL,
 
@@ -202,19 +267,19 @@ BEGIN
 		UpdatedById BIGINT NOT NULL,
 		DeletedById BIGINT NULL,
 
-		CONSTRAINT FK_SessionCompanies_Session FOREIGN KEY (SessionId)
+		CONSTRAINT FK_SessionsCompanies_Session FOREIGN KEY (SessionId)
 			REFERENCES auth.Sessions(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_SessionCompanies_Company FOREIGN KEY (CompanyId)
+		CONSTRAINT FK_SessionsCompanies_Company FOREIGN KEY (CompanyId)
 			REFERENCES auth.Companies(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_SessionCompanies_CreatedBy FOREIGN KEY (CreatedById)
+		CONSTRAINT FK_SessionsCompanies_CreatedBy FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_SessionCompanies_UpdatedBy FOREIGN KEY (UpdatedById)
+		CONSTRAINT FK_SessionsCompanies_UpdatedBy FOREIGN KEY (UpdatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_SessionCompanies_DeletedBy FOREIGN KEY (DeletedById)
+		CONSTRAINT FK_SessionsCompanies_DeletedBy FOREIGN KEY (DeletedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 	);
 END
