@@ -1,4 +1,42 @@
 <Solution>
+  <Folder Name="/RF Nugets/">
+    <Project Path="../../rf-nugets_v2/RFHttpExceptions/RFHttpExceptions.csproj" Id="9bcf18f1-07cd-4c59-9a77-372304699af1" />
+  </Folder>
+  <Folder Name="/RF Nugets/RFAuth/">
+    <Project Path="../../rf-nugets_v2/RFAuthControllers/RFAuthControllers.csproj" Id="d1c898b4-bd22-4b61-80e8-6e1bc6ef9749" />
+    <Project Path="../../rf-nugets_v2/RFAuthEF/RFAuthEF.csproj" Id="ed6061fa-948e-47dd-a3be-b63e9e4d5dd4" />
+    <Project Path="../../rf-nugets_v2/RFAuthEntities/RFAuthEntities.csproj" Id="cfbe1f58-8629-42bd-9766-ae573db72019" />
+    <Project Path="../../rf-nugets_v2/RFAuthIRepositories/RFAuthIRepositories.csproj" Id="9fe4800d-e0c0-4ee1-a709-919efc031249" />
+    <Project Path="../../rf-nugets_v2/RFAuthIServices/RFAuthIServices.csproj" Id="3095d16d-eefd-4d62-9b4a-a13e3e78acad" />
+    <Project Path="../../rf-nugets_v2/RFAuthServices/RFAuthServices.csproj" Id="b732d85d-dda2-4b23-a4ba-ddc75903280f" />
+  </Folder>
+  <Folder Name="/RF Nugets/RFBase/">
+    <Project Path="../../rf-nugets_v2/RFBaseEF/RFBaseEF.csproj" Id="667d68b4-e1b5-49d4-8e3c-be8f2b2539cc" />
+    <Project Path="../../rf-nugets_v2/RFBaseEntities/RFBaseEntities.csproj" Id="f33a0bcc-e2e9-4535-84f4-9f46587aad08" />
+    <Project Path="../../rf-nugets_v2/RFBaseIRepositories/RFBaseIRepositories.csproj" Id="ecaf4584-7e60-4a8f-8b5b-1b460b38bbcd" />
+    <Project Path="../../rf-nugets_v2/RFBaseIServices/RFBaseIServices.csproj" Id="d0f9be3b-7db8-49bc-bdf9-2433a0aba4f4" />
+    <Project Path="../../rf-nugets_v2/RFBaseServices/RFBaseServices.csproj" Id="c6e939b5-1b85-4473-afc0-cde3b5012828" />
+  </Folder>
+  <Folder Name="/RF Nugets/RFPermissions/">
+    <Project Path="../../rf-nugets_v2/RFPermissionsEF/RFPermissionsEF.csproj" Id="f799cc0b-2c82-45b0-8818-aa1686d7342f" />
+    <Project Path="../../rf-nugets_v2/RFPermissionsEntities/RFPermissionsEntities.csproj" Id="6e5cdce7-bca3-40aa-ab40-93c739851240" />
+    <Project Path="../../rf-nugets_v2/RFPermissionsIRepositories/RFPermissionsIRepositories.csproj" Id="ab077c95-0f07-4eeb-bf5f-21d9d49915a5" />
+    <Project Path="../../rf-nugets_v2/RFPermissionsIServices/RFPermissionsIServices.csproj" Id="6a18f84d-aead-4b85-8b43-e5d3b2788b71" />
+    <Project Path="../../rf-nugets_v2/RFPermissionsServices/RFPermissionsServices.csproj" Id="cf5a41d7-77c3-43cb-bfc4-bb9844ce09d3" />
+  </Folder>
+  <Folder Name="/RF Nugets/RFRBAC/">
+    <Project Path="../../rf-nugets_v2/RFRBACEF/RFRBACEF.csproj" />
+    <Project Path="../../rf-nugets_v2/RFRBACEntities/RFRBACEntities.csproj" Id="b66a0748-e02a-44b4-b403-3eab50697ae0" />
+    <Project Path="../../rf-nugets_v2/RFRBACIRepositories/RFRBACIRepositories.csproj" Id="915b712f-1469-4c28-9cd7-09883fe1240f" />
+    <Project Path="../../rf-nugets_v2/RFRBACIServices/RFRBACIServices.csproj" Id="4ce40715-e1b7-48f9-90e7-0d8727249c08" />
+    <Project Path="../../rf-nugets_v2/RFRBACServices/RFRBACServices.csproj" Id="ab25e5c3-7bb0-49d2-aa8d-d173bb9fb6d4" />
+  </Folder>
+  <Folder Name="/RF Nugets/RFRGCBAC/">
+    <Project Path="../../rf-nugets_v2/RFRGCBACEF/RFRGCBACEF.csproj" Id="22d9f5c3-94ac-474e-9fad-f0394be8a4d7" />
+    <Project Path="../../rf-nugets_v2/RFRGCBACEntities/RFRGCBACEntities.csproj" Id="85840329-6158-41b4-9207-222fa2ba14fe" />
+    <Project Path="../../rf-nugets_v2/RFRGCBACIRepositories/RFRGCBACIRepositories.csproj" Id="8badc001-56b9-4771-9ad5-f8176072f123" />
+    <Project Path="../../rf-nugets_v2/RFRGCBACIServices/RFRGCBACIServices.csproj" Id="55287687-95dd-4f39-8727-60a07df35160" />
+    <Project Path="../../rf-nugets_v2/RFRGCBACServices/RFRGCBACServices.csproj" Id="fb3b5d39-91eb-41a4-8a06-1fe5c96d1929" />
+  </Folder>
   <Project Path="FreeCampusServer/FreeCampusServer.csproj" />
-  <Project Path="RCBACEF/RCBACEF.csproj" Id="e7cadd99-a47e-4acc-9915-1edc650ac6df" />
 </Solution>

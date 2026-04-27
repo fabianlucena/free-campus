@@ -1,0 +1,8 @@
+@host = http://localhost:5256
+@token = 0rUH/4F+0kBMroVNRfg84EQk1yOJka1KdHo+0fBHAVJ2otTmoYZ7E+OB0ll4QaKh
+
+GET {{host}}/user/
+Accept: application/json
+Authorization: Bearer {{token}}
+
+###

@@ -108,6 +108,43 @@ BEGIN
 END
 GO
 
+/* Sessions table */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE t.name = 'Sessions'
+      AND s.name = 'auth'
+)
+BEGIN
+	CREATE TABLE auth.Sessions (
+		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+		Uuid UNIQUEIDENTIFIER NOT NULL,
+
+		CreatedAt DATETIME2 NOT NULL,
+		CreatedById BIGINT NOT NULL,
+
+		Token VARCHAR(64) NOT NULL,
+		ExpireAt DATETIME2 NOT NULL,
+		AutoLoginToken VARCHAR(64) NOT NULL,
+		LastUsedAt DATETIME2 NOT NULL,
+
+		UserId BIGINT NOT NULL,
+		DeviceId BIGINT NOT NULL,
+		DataJson NVARCHAR(MAX) NULL,
+
+		CONSTRAINT FK_Sessions_CreatedBy FOREIGN KEY (CreatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+		
+		CONSTRAINT FK_Sessions_User FOREIGN KEY (UserId)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+			
+		CONSTRAINT FK_Sessions_Device FOREIGN KEY (DeviceId)
+			REFERENCES auth.Devices(Id) ON DELETE NO ACTION,
+	);
+END
+GO
+
 /* Companies table */
 IF NOT EXISTS (
     SELECT 1
@@ -144,43 +181,41 @@ BEGIN
 END
 GO
 
-/* Sessions table */
+/* SessionCompanies table */
 IF NOT EXISTS (
     SELECT 1
     FROM sys.tables t
     JOIN sys.schemas s ON t.schema_id = s.schema_id
-    WHERE t.name = 'Sessions'
+    WHERE t.name = 'SessionCompanies'
       AND s.name = 'auth'
 )
 BEGIN
-	CREATE TABLE auth.Sessions (
-		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-		Uuid UNIQUEIDENTIFIER NOT NULL,
+	CREATE TABLE auth.SessionCompanies (
+		SessionId BIGINT NOT NULL,
+		CompanyId BIGINT NOT NULL,
 
 		CreatedAt DATETIME2 NOT NULL,
-		CreatedById BIGINT NOT NULL,
-
-		Token VARCHAR(64) NOT NULL,
-		ExpireAt DATETIME2 NOT NULL,
-		AutoLoginToken VARCHAR(64) NOT NULL,
-		LastUsedAt DATETIME2 NOT NULL,
-
-		UserId BIGINT NOT NULL,
-		DeviceId BIGINT NOT NULL,
-		CompanyId BIGINT NULL,
-
-		CONSTRAINT FK_Sessions_CreatedBy FOREIGN KEY (CreatedById)
-			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+		UpdatedAt DATETIME2 NOT NULL,
+		DeletedAt DATETIME2 NULL,
 		
-		CONSTRAINT FK_Sessions_User FOREIGN KEY (UserId)
-			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
-			
-		CONSTRAINT FK_Sessions_Device FOREIGN KEY (DeviceId)
-			REFERENCES auth.Devices(Id) ON DELETE NO ACTION,
+		CreatedById BIGINT NOT NULL,
+		UpdatedById BIGINT NOT NULL,
+		DeletedById BIGINT NULL,
 
-		CONSTRAINT FK_Sessions_Company FOREIGN KEY (CompanyId)
+		CONSTRAINT FK_SessionCompanies_Session FOREIGN KEY (SessionId)
+			REFERENCES auth.Sessions(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_SessionCompanies_Company FOREIGN KEY (CompanyId)
 			REFERENCES auth.Companies(Id) ON DELETE NO ACTION,
 
+		CONSTRAINT FK_SessionCompanies_CreatedBy FOREIGN KEY (CreatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_SessionCompanies_UpdatedBy FOREIGN KEY (UpdatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_SessionCompanies_DeletedBy FOREIGN KEY (DeletedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 	);
 END
 GO
@@ -246,8 +281,9 @@ USING (VALUES ('system')) AS source(Name)
     ON target.Name = source.Name
 WHEN NOT MATCHED THEN
     INSERT (
-        Uuid, CreatedAt, UpdatedAt, DeletedAt,
-        CreatedById, UpdatedById, DeletedById,
+        Uuid,
+		CreatedAt, UpdatedAt, DeletedAt,
+		CreatedById, UpdatedById, DeletedById,
         Name, Description
     )
     VALUES (
@@ -257,16 +293,16 @@ WHEN NOT MATCHED THEN
     );
 GO
 
-/* RolesXUsers table */
+/* RolesXUsersXCompanies table */
 IF NOT EXISTS (
     SELECT 1
     FROM sys.tables t
     JOIN sys.schemas s ON t.schema_id = s.schema_id
-    WHERE t.name = 'RolesXUsers'
+    WHERE t.name = 'RolesXUsersXCompanies'
       AND s.name = 'auth'
 )
 BEGIN
-	CREATE TABLE auth.RolesXUsers (
+	CREATE TABLE auth.RolesXUsersXCompanies (
 		RoleId BIGINT NOT NULL,
 		UserId BIGINT NOT NULL,
 		CompanyId BIGINT NOT NULL,
@@ -277,19 +313,19 @@ BEGIN
 		CreatedById BIGINT NOT NULL,
 		DeletedById BIGINT NULL,
 
-		CONSTRAINT FK_RolesXUsers_Role FOREIGN KEY (RoleId)
+		CONSTRAINT FK_RolesXUsersXCompanies_Role FOREIGN KEY (RoleId)
 			REFERENCES auth.Roles(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_RolesXUsers_User FOREIGN KEY (UserId)
+		CONSTRAINT FK_RolesXUsersXCompanies_User FOREIGN KEY (UserId)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_RolesXUsers_Company FOREIGN KEY (CompanyId)
+		CONSTRAINT FK_RolesXUsersXCompanies_Company FOREIGN KEY (CompanyId)
 			REFERENCES auth.Companies(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_RolesXUsers_CreatedBy FOREIGN KEY (CreatedById)
+		CONSTRAINT FK_RolesXUsersXCompanies_CreatedBy FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_RolesXUsers_DeletedBy FOREIGN KEY (DeletedById)
+		CONSTRAINT FK_RolesXUsersXCompanies_DeletedBy FOREIGN KEY (DeletedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 	);
 END
@@ -300,7 +336,7 @@ DECLARE @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'syst
 	@adminUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'admin'),
 	@adminRoleId BIGINT = (SELECT Id FROM auth.Roles WHERE Name = 'admin'),
 	@systemCompanyId BIGINT = (SELECT Id FROM auth.Companies WHERE Name = 'system');
-MERGE auth.RolesXUsers AS target
+MERGE auth.RolesXUsersXCompanies AS target
 USING (VALUES (@adminRoleId, @adminUserId, @systemCompanyId)) AS source(RoleId, UserId, CompanyId)
     ON target.RoleId = source.RoleId AND target.UserId = source.UserId AND target.CompanyId = source.CompanyId
 WHEN NOT MATCHED THEN

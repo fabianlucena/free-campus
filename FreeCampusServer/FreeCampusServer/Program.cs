@@ -1,6 +1,18 @@
-using RCBACEF;
 using Microsoft.EntityFrameworkCore;
-using RCBACEF.Authorization;
+using RFAuthControllers;
+using RFAuthEF;
+using RFAuthServices;
+using RFAuthServices.Filters;
+using RFAuthServices.Middlewares;
+using RFBaseEF;
+using RFBaseEntities;
+using RFBaseServices;
+using RFPermissionsEF;
+using RFPermissionsServices;
+using RFRBACEF;
+using RFRBACServices;
+using RFRGCBACEF;
+using RFRGCBACServices;
 
 namespace FreeCampusServer
 {
@@ -23,11 +35,27 @@ namespace FreeCampusServer
 
             builder.Services.AddHttpContextAccessor();
 
-            builder.Services.AddRCBACEF();
+            builder.Services.AddRFBaseEntitiesServices();
+            builder.Services.AddRFBaseServices();
+            builder.Services.AddRFBaseEF();
+
+            builder.Services.AddRFAuthServices();
+            builder.Services.AddRFAuthEF();
+            
+            builder.Services.AddRFPermissionsServices();
+            builder.Services.AddRFPermissionsEF();
+            
+            builder.Services.AddRFRBACServices();
+            builder.Services.AddRFRBACEF();
+            
+            builder.Services.AddRFRGCBACServices();
+            builder.Services.AddRFRGCBACEF();
 
             // Add services to the container.
 
-            builder.Services.AddControllers(options => options.Filters.Add<AuthorizationFilter>());
+            builder.Services
+                .AddControllers(options => options.Filters.Add<AuthorizationFilter>())
+                .AddRFAuthControllers();
 
             var app = builder.Build();
 
