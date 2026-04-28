@@ -8,5 +8,6 @@ export const translations = {
   'Login': 'Iniciar sesión',
   'Logout': 'Cerrar sesión',
   'Password': 'Contraseña',
+  'Standalone courses': 'Cursos independientes',
   'Username': 'Nombre de usuario',
 };

@@ -63,7 +63,7 @@ namespace FreeCampusServer
             builder.Services.AddRFRGCBACServices();
             builder.Services.AddRFRGCBACEF();
 
-            // Add services to the container.
+            builder.Services.AddFCServices();
 
             builder.Services
                 .AddControllers(options => {

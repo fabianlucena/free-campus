@@ -11,6 +11,12 @@ var rawMenu = [
     condition: () => authState.isLoggedIn,
   },
   {
+    name: 'courses',
+    label: _('Standalone courses'),
+    to: '/standalone-courses',
+    condition: () => authState.permissions.includes('standaloneCourses.view'),
+  },
+  {
     name: 'logout',
     label: _('Logout'),
     action: logout,

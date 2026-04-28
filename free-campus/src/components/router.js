@@ -5,6 +5,7 @@ import HomeView from '../views/HomeView.vue';
 import AboutView from '../views/AboutView.vue';
 import LoginView from '../views/LoginView.vue';
 import DashboardView from '../views/DashboardView.vue';
+import StandaloneCoursesView from '../views/StandaloneCoursesView.vue';
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: '/dashboard',
     component: DashboardView,
     condition: () => authState.isLoggedIn,
+  },
+  {
+    path: '/standalone-courses',
+    component: StandaloneCoursesView,
+    condition: () => authState.permissions.includes('standaloneCourses.view'),
   },
 ];
 

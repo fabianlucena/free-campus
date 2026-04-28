@@ -4,141 +4,80 @@ GO
 
 DECLARE 
     @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
-    @now DATETIME2 = GETUTCDATE(),
-    @1234hash NVARCHAR(255) = '100000.He2nIoHKO5PDiudeF3GV1Q==.OXZML34kQ8gPcsX01odwNpaNmNMkMzlggv5pLKqzekg=';
+    @now DATETIME2 = GETUTCDATE();
 MERGE auth.Users AS target
 USING (VALUES
-    ('jdoe',    'John Doe',   'jdoe@example.com'),
-    ('mgarcia', 'María García','mgarcia@example.com')
-) AS source (Username, DisplayName, Email)
+    ('jdoe',    'John Doe'),
+    ('mgarcia', 'María García'),
+    ('student', 'Student'),
+    ('creator', 'Creator')
+) AS source (Username, DisplayName)
     ON target.Username = source.Username
 WHEN NOT MATCHED THEN
     INSERT (
         Uuid, CreatedAt, UpdatedAt, DeletedAt,
         CreatedById, UpdatedById, DeletedById,
-        Username, DisplayName, Email, PasswordHash,
+        Username, DisplayName,
         IsActive, CanLogin, LastLoginAt
     )
     VALUES (
         NEWID(), @now, @now, NULL,
         @systemUserId, @systemUserId, NULL,
-        source.Username, source.DisplayName, source.Email, @1234hash,
+        source.Username, source.DisplayName,
         1, 1, NULL
     );
 GO
 
-DECLARE 
-    @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
-    @now DATETIME2 = GETUTCDATE();
-MERGE auth.Roles AS target
-USING (VALUES
-    ('role1', 'Role 1'),
-    ('role2', 'Role 2'),
-    ('role3', 'Role 3'),
-    ('role4', 'Role 4'),
-    ('role5', 'Role 5'),
-    ('role1-1', 'Subrole 1 of role 1'),
-    ('role1-2', 'Subrole 2 of role 1'),
-    ('role1-3', 'Subrole 3 of role 1'),
-    ('role1-2-1', 'Subrole 1 of subrole 2 of role 1'),
-    ('role1-2-2', 'Subrole 2 of subrole 2 of role 1')
-) AS source (Name, Description)
-    ON target.Name = source.Name
+DECLARE @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
+	@1234hash NVARCHAR(255) = '100000.He2nIoHKO5PDiudeF3GV1Q==.OXZML34kQ8gPcsX01odwNpaNmNMkMzlggv5pLKqzekg=';
+MERGE auth.UsersPasswords AS target
+USING (SELECT u.Id
+	FROM auth.Users u
+	WHERE NOT EXISTS(
+			SELECT *
+			FROM auth.UsersPasswords p
+			WHERE p.UserId = u.Id
+		)
+		AND u.Username IN('creator', 'student')
+	) AS source(UserId)
+    ON target.UserId = source.UserId
 WHEN NOT MATCHED THEN
     INSERT (
-        Uuid, CreatedAt, UpdatedAt, DeletedAt,
+		UserId,
+        CreatedAt, UpdatedAt, DeletedAt,
         CreatedById, UpdatedById, DeletedById,
-        Name, Description
+        Hash
     )
     VALUES (
-        NEWID(), @now, @now, NULL,
+        source.UserId,
+        GETUTCDATE(), GETUTCDATE(), NULL,
         @systemUserId, @systemUserId, NULL,
-        source.Name, source.Description
+		@1234hash
     );
 GO
 
-DECLARE 
-    @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
-    @now DATETIME2 = GETUTCDATE();
-MERGE auth.RolesIncludes AS target
-USING (SELECT r1.Id, r2.Id
-	FROM auth.Roles r1,
-		auth.Roles r2
-	WHERE CONCAT(r1.Name, '*', r2.Name)
-		IN(
-		'role1-1*role1',
-		'role1-2*role1',
-		'role1-3*role1',
-		'role1-2-1*role1-2',
-		'role1-2-2*role1-2')
-) AS source (RoleId, IncludeId)
-    ON target.RoleId = source.RoleId AND target.IncludeId = source.IncludeId
+/* Add Role for creator */
+DECLARE @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
+	@creatorUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'creator'),
+	@studentUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'student'),
+	@creatorRoleId BIGINT = (SELECT Id FROM auth.Roles WHERE Name = 'creator'),
+	@studentRoleId BIGINT = (SELECT Id FROM auth.Roles WHERE Name = 'student'),
+	@freeCampusCompanyId BIGINT = (SELECT Id FROM auth.Companies WHERE Name = 'freeCampus');
+MERGE auth.RolesXUsersXCompanies AS target
+USING (VALUES 
+		(@creatorRoleId, @creatorUserId, @freeCampusCompanyId),
+		(@studentRoleId, @studentUserId, @freeCampusCompanyId)
+	) AS source(RoleId, UserId, CompanyId)	
+    ON target.RoleId = source.RoleId AND target.UserId = source.UserId AND target.CompanyId = source.CompanyId
 WHEN NOT MATCHED THEN
     INSERT (
-		RoleId, IncludeId,
         CreatedAt, DeletedAt,
-        CreatedById, DeletedById
-    )
-    VALUES (
-		source.RoleId, source.IncludeId,
-        @now, @now,
-        @systemUserId, @systemUserId
-    );
-GO
-
-DECLARE 
-    @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
-    @now DATETIME2 = GETUTCDATE();
-MERGE auth.Permissions AS target
-USING (VALUES
-    ('permission1-role1'),
-    ('permission2-role1'),
-    ('permission3-role1'),
-    ('permission4-role2'),
-    ('permission5-role2'),
-    ('permission6-role3'),
-    ('permission7-role3'),
-    ('permission8-role4')
-) AS source (Name)
-    ON target.Name = source.Name
-WHEN NOT MATCHED THEN
-    INSERT (
-        Uuid, CreatedAt, DeletedAt,
         CreatedById, DeletedById,
-        Name
+        RoleId, UserId, CompanyId
     )
     VALUES (
-        NEWID(), @now, NULL,
+        GETUTCDATE(), NULL,
         @systemUserId, NULL,
-        source.Name
-    );
-GO
-
-DECLARE 
-    @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
-    @now DATETIME2 = GETUTCDATE();
-MERGE auth.PermissionsXRoles AS target
-USING (SELECT r1.Id, r2.Id
-	FROM auth.Roles r1,
-		auth.Roles r2
-	WHERE CONCAT(r1.Name, '*', r2.Name)
-		IN(
-		'role1-1*role1',
-		'role1-2*role1',
-		'role1-3*role1',
-		'role1-2-1*role1-2',
-		'role1-2-2*role1-2')
-) AS source (RoleId, IncludeId)
-    ON target.RoleId = source.RoleId AND target.IncludeId = source.IncludeId
-WHEN NOT MATCHED THEN
-    INSERT (
-		RoleId, IncludeId,
-        CreatedAt, DeletedAt,
-        CreatedById, DeletedById
-    )
-    VALUES (
-		source.RoleId, source.IncludeId,
-        @now, @now,
-        @systemUserId, @systemUserId
+        source.RoleId, source.UserId, source.CompanyId
     );
 GO

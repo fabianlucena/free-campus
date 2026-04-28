@@ -1,0 +1,50 @@
+﻿using FreeCampusServer.Entities;
+using FreeCampusServer.IRepository;
+using FreeCampusServer.QueryOptions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using RFAuthEntities.Entities;
+using RFAuthEntities.QueryOptions;
+using RFBaseEF.Repositories;
+using RFBaseEntities.QueryOptions;
+using RFRBACEntities.QueryOptions;
+
+namespace FreeCampusServer.Repository
+{
+    public class CourseRepository
+        : CreatableEntityRepository<Course>,
+        ICourseRepository
+    {
+        public CourseRepository(DbContext context) : base(context) { }
+
+        public override IQueryable<Course> CreateDBSet(BaseQueryOptions? options)
+        {
+            var quereable = base.CreateDBSet(options ?? new BaseQueryOptions());
+
+            if (options is CourseQueryOptions courseOptions)
+            {
+                if (courseOptions.IncludeType)
+                {
+                    quereable = quereable.Include(c => c.Type);
+                }
+
+                if (courseOptions.IncludeProgram)
+                {
+                    quereable = quereable.Include(c => c.Program);
+                }
+            }
+
+            return quereable;
+        }
+
+        public async Task<IEnumerable<Course>> GetListByStandaloneAsync(CourseQueryOptions? options = null)
+        {
+            var set = CreateDBSet(options);
+            var session = await set
+                .Where(c => c.ProgramId == null)
+                .ToListAsync();
+
+            return session;
+        }
+    }
+}
