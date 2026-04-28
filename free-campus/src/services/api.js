@@ -1,22 +1,32 @@
 import { authState } from '@/state/auth.js';
 
-const baseURL = 'https://localhost:7140/';
+const baseUrl = import.meta.env.VITE_API_BASE_URL.replace(/\/+$/, '');
 
 export async function requestJson(service, options) {
-  if (options.body && typeof options.body === 'object') {
-    options.body = JSON.stringify(options.body);
+  let { baseUrl: optionsBaseUrl, ...fetchOptions } = options;
+
+  if (fetchOptions.body && typeof fetchOptions.body === 'object') {
+    fetchOptions.body = JSON.stringify(fetchOptions.body);
   }
 
-  options.headers = {
+  fetchOptions.headers = {
     'Content-Type': 'application/json',
-    ...options.headers,
+    ...fetchOptions.headers,
   };
 
   if (authState.sessionToken) {
-    options.headers['Authorization'] = `Bearer ${authState.sessionToken}`;
+    fetchOptions.headers['Authorization'] = `Bearer ${authState.sessionToken}`;
   }
 
-  const response = await fetch(`${baseURL}${service}`, options);
+  if (optionsBaseUrl) {
+    if (optionsBaseUrl.endsWith('/')) {
+      optionsBaseUrl = optionsBaseUrl.slice(0, -1);
+    }
+  } else {
+    optionsBaseUrl = baseUrl;
+  }
+
+  const response = await fetch(`${optionsBaseUrl}${service}`, fetchOptions);
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }

@@ -19,7 +19,7 @@ async function doLogin(service, data) {
 }
 
 export async function login(data) {
-  await doLogin('login', data);
+  await doLogin('/v1/login', data);
 }
 
 export async function autoLogin() {
@@ -33,7 +33,7 @@ export async function autoLogin() {
     return;
   }
 
-  await doLogin('auto-login', { deviceToken, autoLoginToken });
+  await doLogin('/v1/auto-login', { deviceToken, autoLoginToken });
 }
 
 export async function tryAutoLogin() {
@@ -44,7 +44,7 @@ export async function tryAutoLogin() {
 
 export async function logout() {
   try {
-    await postJson('logout');
+    await postJson('/v1/logout');
   } catch (error) {
     console.warn('Logout request failed:', error);
   }
