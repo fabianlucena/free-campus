@@ -9,7 +9,7 @@
 <script setup>
 import { RouterLink } from 'vue-router';
 import MenuBar from '@vc/MenuBar.vue';
-import { menuItems } from '../services/menu-items.js';
+import { menuItems } from '../state/menu-items.js';
 </script>
 
 <style scoped>

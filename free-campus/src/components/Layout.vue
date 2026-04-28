@@ -1,9 +1,10 @@
 <template>
   <Header
+    :showMenuButton="authState.isLoggedIn"
     @toggleMenu="showMenu = !showMenu"
   />
   <div class="main">
-    <MainMenu v-if="showMenu" />
+    <MainMenu v-if="authState.isLoggedIn &&showMenu" />
     <Body />
   </div>
 </template>
@@ -13,6 +14,7 @@ import { ref } from 'vue';
 import MainMenu from './MainMenu.vue';
 import Header from './Header.vue';
 import Body from './Body.vue';
+import { authState } from '@/state/auth.js';
 
 const showMenu = ref(true);
 </script>
