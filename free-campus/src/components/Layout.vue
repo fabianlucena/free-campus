@@ -4,7 +4,7 @@
     @toggleMenu="showMenu = !showMenu"
   />
   <div class="main">
-    <MainMenu v-if="authState.isLoggedIn &&showMenu" />
+    <MainMenu v-if="authState.isLoggedIn && showMenu" />
     <Body />
   </div>
 </template>

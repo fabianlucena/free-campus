@@ -2,14 +2,29 @@
   <MenuBar
     class="vertical"
     :items="menuItems"
-    :itemType="RouterLink"
+    @action="onAction"
   />
 </template>
 
 <script setup>
-import { RouterLink } from 'vue-router';
 import MenuBar from '@vc/MenuBar.vue';
-import { menuItems } from '../state/menu-items.js';
+import { menuItems } from '@/state/menu-items.js';
+import { router } from '@/components/router.js';
+
+function onAction(evt, item) {
+  evt.preventDefault();
+  evt.stopPropagation();
+
+  if (item.action) {
+    item.action();
+  }
+
+  if (item.to) {
+    router.push(item.to);
+    return;
+  }
+}
+
 </script>
 
 <style scoped>

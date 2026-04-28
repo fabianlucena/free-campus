@@ -1,8 +1,9 @@
-import { reactive } from 'vue';
+import { computed } from 'vue';
 import { _ } from '@vc/locale.js';
 import { authState } from '@/state/auth';
+import { logout } from '@/services/login-service';
 
-export var menuItems = reactive([
+var rawMenu = [
   {
     name: _('Dashboard'),
     to: '/dashboard',
@@ -10,12 +11,15 @@ export var menuItems = reactive([
   },
   {
     name: _('Logout'),
-    to: '/logout',
+    action: logout,
     condition: () => authState.isLoggedIn,
   },
   {
     name: _('About'),
     to: '/about',
-    condition: () => authState.isLoggedIn,
   },
-]);
+];
+
+export var menuItems = computed(() =>
+  rawMenu.filter(item => !item.condition || item.condition())
+);

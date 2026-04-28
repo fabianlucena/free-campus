@@ -3,7 +3,13 @@ import { authState, setAuthState } from '@/state/auth.js';
 import { router } from '@/components/router.js';
 
 export async function logout() {
-  await postJson('logout');
+  try {
+    await postJson('logout');
+  } catch (error) {
+    console.warn('Logout request failed:', error);
+  }
+
+  sessionStorage.removeItem('sessionToken');
   setAuthState();
   router.push('/');
 }

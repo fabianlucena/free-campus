@@ -25,9 +25,16 @@ const routes = [
     component: DashboardView,
     condition: () => authState.isLoggedIn,
   },
-].filter(route => !route.condition || route.condition());
+];
 
 export const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
 })
+
+router.beforeEach((to, from) => {
+  const condition = to.matched[0]?.condition;
+  if (condition && !condition()) {
+    return authState.isLoggedIn ? '/dashboard' : '/';
+  }
+});
