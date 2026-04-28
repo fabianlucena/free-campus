@@ -1,11 +1,11 @@
 //@host = http://localhost:5256
-@host = https://localhost:7140
+@host = https://localhost:7140/api
 @token = 0rUH/4F+0kBMroVNRfg84EQk1yOJka1KdHo+0fBHAVJ2otTmoYZ7E+OB0ll4QaKh
 
-POST {{host}}/login/
+POST {{host}}/v1/login/
 Accept: application/json
 Content-Type: application/json
-
+  
 {
   "username": "admin",
   "password": "1234",
@@ -14,7 +14,7 @@ Content-Type: application/json
 
 ###
 
-POST {{host}}/auto-login/
+POST {{host}}/v1/auto-login/
 Accept: application/json
 Content-Type: application/json
 
@@ -25,6 +25,6 @@ Content-Type: application/json
 
 ###
 
-POST {{host}}/login-check/
+POST {{host}}/v1/login-check/
 Accept: application/json
 Authorization: Bearer {{token}}

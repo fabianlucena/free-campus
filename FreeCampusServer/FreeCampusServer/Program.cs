@@ -66,7 +66,10 @@ namespace FreeCampusServer
             // Add services to the container.
 
             builder.Services
-                .AddControllers(options => options.Filters.Add<AuthorizationFilter>())
+                .AddControllers(options => {
+                    options.UseGeneralRoutePrefix("api");
+                    options.Filters.Add<AuthorizationFilter>();
+                })
                 .AddRFAuthControllers();
 
             var app = builder.Build();
