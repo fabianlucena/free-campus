@@ -12,9 +12,9 @@ namespace FreeCampusServer
             services.AddScoped<ICourseService, CourseService>();
 
             services.AddScoped<ICourseRepository, CourseRepository>();
+            services.AddScoped<ICourseTypeRepository, CourseTypeRepository>();
 
             return services;
         }
-
     }
 }
