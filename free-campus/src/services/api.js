@@ -42,6 +42,12 @@ export async function requestJson(service, options) {
   return await response.json();
 }
 
+export async function getJson(service) {
+  return await requestJson(service, {
+    method: 'GET',
+  });
+}
+
 export async function postJson(service, body) {
   return await requestJson(service, {
     method: 'POST',
