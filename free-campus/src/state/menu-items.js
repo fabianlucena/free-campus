@@ -5,17 +5,20 @@ import { logout } from '@/services/login-service';
 
 var rawMenu = [
   {
-    name: _('Dashboard'),
+    name: 'dashboard',
+    label: _('Dashboard'),
     to: '/dashboard',
     condition: () => authState.isLoggedIn,
   },
   {
-    name: _('Logout'),
+    name: 'logout',
+    label: _('Logout'),
     action: logout,
     condition: () => authState.isLoggedIn,
   },
   {
-    name: _('About'),
+    name: 'about',
+    label: _('About'),
     to: '/about',
   },
 ];

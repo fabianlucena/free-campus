@@ -2,7 +2,7 @@
   <Form
     @submit.prevent="onSubmit"
   >
-    <h2>Login</h2>
+    <h2>{{ _('Login') }}</h2>
     <InputField :label="_('Username')" name="username" v-model="data.username"/>
     <InputField :label="_('Password')" name="password" type="password" v-model="data.password"/>
   </Form>
