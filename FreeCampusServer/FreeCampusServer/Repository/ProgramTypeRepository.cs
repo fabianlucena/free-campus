@@ -6,13 +6,13 @@ using RFBaseEntities.QueryOptions;
 
 namespace FreeCampusServer.Repository
 {
-    public class CourseTypeRepository
-        : CreatableEntityRepository<CourseType>,
-        ICourseTypeRepository
+    public class ProgramTypeRepository
+        : CreatableEntityRepository<ProgramType>,
+        IProgramTypeRepository
     {
-        public CourseTypeRepository(DbContext context) : base(context) { }
+        public ProgramTypeRepository(DbContext context) : base(context) { }
 
-        public override IQueryable<CourseType> CreateDBSet(BaseQueryOptions? options)
+        public override IQueryable<ProgramType> CreateDBSet(BaseQueryOptions? options)
         {
             var quereable = base.CreateDBSet(options ?? new BaseQueryOptions());
 

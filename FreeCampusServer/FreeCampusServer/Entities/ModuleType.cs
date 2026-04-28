@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FreeCampusServer.Entities
 {
-    [Table("ModulesTypes", Schema = "fc")]
+    [Table("ModuleTypes", Schema = "fc")]
     public class ModuleType : CommonEntity
     {
         public string Title { get; set; } = string.Empty;

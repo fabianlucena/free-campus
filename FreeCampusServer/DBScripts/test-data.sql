@@ -30,12 +30,12 @@ GO
 
 DECLARE @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
 	@1234hash NVARCHAR(255) = '100000.He2nIoHKO5PDiudeF3GV1Q==.OXZML34kQ8gPcsX01odwNpaNmNMkMzlggv5pLKqzekg=';
-MERGE auth.UsersPasswords AS target
+MERGE auth.UserPasswords AS target
 USING (SELECT u.Id
 	FROM auth.Users u
 	WHERE NOT EXISTS(
 			SELECT *
-			FROM auth.UsersPasswords p
+			FROM auth.UserPasswords p
 			WHERE p.UserId = u.Id
 		)
 		AND u.Username IN('creator', 'student')
@@ -67,6 +67,26 @@ MERGE auth.RolesXUsersXCompanies AS target
 USING (VALUES 
 		(@creatorRoleId, @creatorUserId, @freeCampusCompanyId),
 		(@studentRoleId, @studentUserId, @freeCampusCompanyId)
+	) AS source(RoleId, UserId, CompanyId)	
+    ON target.RoleId = source.RoleId AND target.UserId = source.UserId AND target.CompanyId = source.CompanyId
+WHEN NOT MATCHED THEN
+    INSERT (
+        CreatedAt, DeletedAt,
+        CreatedById, DeletedById,
+        RoleId, UserId, CompanyId
+    )
+    VALUES (
+        GETUTCDATE(), NULL,
+        @systemUserId, NULL,
+        source.RoleId, source.UserId, source.CompanyId
+    );
+GO
+
+/* Add programs types */
+DECLARE @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system');
+MERGE fc.ProgramTypes AS target
+USING (VALUES 
+		('Independiente', 'Programa para cursos independientes')
 	) AS source(RoleId, UserId, CompanyId)	
     ON target.RoleId = source.RoleId AND target.UserId = source.UserId AND target.CompanyId = source.CompanyId
 WHEN NOT MATCHED THEN

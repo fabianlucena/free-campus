@@ -57,16 +57,16 @@ BEGIN
 END
 GO
 
-/* UsersPasswords table */
+/* UserPasswords table */
 IF NOT EXISTS (
     SELECT 1
     FROM sys.tables t
     JOIN sys.schemas s ON t.schema_id = s.schema_id
-    WHERE t.name = 'UsersPasswords'
+    WHERE t.name = 'UserPasswords'
       AND s.name = 'auth'
 )
 BEGIN
-	CREATE TABLE auth.UsersPasswords (
+	CREATE TABLE auth.UserPasswords (
 		UserId BIGINT NOT NULL PRIMARY KEY,
 
 		CreatedAt DATETIME2 NOT NULL,
@@ -79,16 +79,16 @@ BEGIN
 
 		Hash VARCHAR(64) NOT NULL,
 
-		CONSTRAINT FK_UsersPasswords_UserId
+		CONSTRAINT FK_UserPasswords_UserId
 			FOREIGN KEY (UserId) REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_UsersPasswords_CreatedBy
+		CONSTRAINT FK_UserPasswords_CreatedById
 			FOREIGN KEY (CreatedById) REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_UsersPasswords_UpdatedBy
+		CONSTRAINT FK_UserPasswords_UpdatedById
 			FOREIGN KEY (UpdatedById) REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_UsersPasswords_DeletedBy
+		CONSTRAINT FK_UserPasswords_DeletedById
 			FOREIGN KEY (DeletedById) REFERENCES auth.Users(Id) ON DELETE NO ACTION
 	);
 END
@@ -122,12 +122,12 @@ GO
 /* Insert default admin user password */
 DECLARE @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
 	@1234hash NVARCHAR(255) = '100000.He2nIoHKO5PDiudeF3GV1Q==.OXZML34kQ8gPcsX01odwNpaNmNMkMzlggv5pLKqzekg=';
-MERGE auth.UsersPasswords AS target
+MERGE auth.UserPasswords AS target
 USING (SELECT u.Id
 	FROM auth.Users u
 	WHERE NOT EXISTS(
 			SELECT *
-			FROM auth.UsersPasswords p
+			FROM auth.UserPasswords p
 			WHERE p.UserId = u.Id
 		)
 		AND u.Username = 'admin'
@@ -246,16 +246,16 @@ BEGIN
 END
 GO
 
-/* SessionsCompanies table */
+/* SessionCompanies table */
 IF NOT EXISTS (
     SELECT 1
     FROM sys.tables t
     JOIN sys.schemas s ON t.schema_id = s.schema_id
-    WHERE t.name = 'SessionsCompanies'
+    WHERE t.name = 'SessionCompanies'
       AND s.name = 'auth'
 )
 BEGIN
-	CREATE TABLE auth.SessionsCompanies (
+	CREATE TABLE auth.SessionCompanies (
 		SessionId BIGINT NOT NULL,
 		CompanyId BIGINT NOT NULL,
 
@@ -267,19 +267,19 @@ BEGIN
 		UpdatedById BIGINT NOT NULL,
 		DeletedById BIGINT NULL,
 
-		CONSTRAINT FK_SessionsCompanies_Session FOREIGN KEY (SessionId)
+		CONSTRAINT FK_SessionCompanies_SessionId FOREIGN KEY (SessionId)
 			REFERENCES auth.Sessions(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_SessionsCompanies_Company FOREIGN KEY (CompanyId)
+		CONSTRAINT FK_SessionCompanies_CompanyId FOREIGN KEY (CompanyId)
 			REFERENCES auth.Companies(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_SessionsCompanies_CreatedBy FOREIGN KEY (CreatedById)
+		CONSTRAINT FK_SessionCompanies_CreatedById FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_SessionsCompanies_UpdatedBy FOREIGN KEY (UpdatedById)
+		CONSTRAINT FK_SessionCompanies_UpdatedById FOREIGN KEY (UpdatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_SessionsCompanies_DeletedBy FOREIGN KEY (DeletedById)
+		CONSTRAINT FK_SessionCompanies_DeletedById FOREIGN KEY (DeletedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 	);
 END
@@ -526,16 +526,16 @@ BEGIN
 END
 GO
 
-/* ProgramsTypes table */
+/* ProgramTypes table */
 IF NOT EXISTS (
     SELECT 1
     FROM sys.tables t
     JOIN sys.schemas s ON t.schema_id = s.schema_id
-    WHERE t.name = 'ProgramsTypes'
+    WHERE t.name = 'ProgramTypes'
       AND s.name = 'fc'
 )
 BEGIN
-	CREATE TABLE fc.ProgramsTypes(
+	CREATE TABLE fc.ProgramTypes(
 		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 		Uuid UNIQUEIDENTIFIER NOT NULL,
 
@@ -551,13 +551,13 @@ BEGIN
 		DeletedAt DATETIME2 NULL,
 		DeletedById BIGINT NULL,
 
-		CONSTRAINT FK_fc_ProgramsTypes_CreatedById FOREIGN KEY (CreatedById)
+		CONSTRAINT FK_fc_ProgramTypes_CreatedById FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_fc_ProgramsTypes_UpdatedById FOREIGN KEY (UpdatedById)
+		CONSTRAINT FK_fc_ProgramTypes_UpdatedById FOREIGN KEY (UpdatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_fc_ProgramsTypes_DeletedById FOREIGN KEY (DeletedById)
+		CONSTRAINT FK_fc_ProgramTypes_DeletedById FOREIGN KEY (DeletedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 	);
 END
@@ -580,6 +580,8 @@ BEGIN
 		Description VARCHAR(MAX) NULL,
 
 		TypeId BIGINT NOT NULL,
+		
+		CompanyId BIGINT NULL,
 
 		CreatedAt DATETIME2 NOT NULL,
 		CreatedById BIGINT NOT NULL,
@@ -591,7 +593,10 @@ BEGIN
 		DeletedById BIGINT NULL,
 
 		CONSTRAINT FK_fc_Programs_TypeId FOREIGN KEY (TypeId)
-			REFERENCES fc.ProgramsTypes(Id) ON DELETE NO ACTION,
+			REFERENCES fc.ProgramTypes(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_Programs_CompanyId FOREIGN KEY (CompanyId)
+			REFERENCES auth.Companies(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_Programs_CreatedById FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
@@ -605,16 +610,16 @@ BEGIN
 END
 GO
 
-/* CoursesTypes table */
+/* CourseTypes table */
 IF NOT EXISTS (
     SELECT 1
     FROM sys.tables t
     JOIN sys.schemas s ON t.schema_id = s.schema_id
-    WHERE t.name = 'CoursesTypes'
+    WHERE t.name = 'CourseTypes'
       AND s.name = 'fc'
 )
 BEGIN
-	CREATE TABLE fc.CoursesTypes(
+	CREATE TABLE fc.CourseTypes(
 		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 		Uuid UNIQUEIDENTIFIER NOT NULL,
 
@@ -630,13 +635,13 @@ BEGIN
 		DeletedAt DATETIME2 NULL,
 		DeletedById BIGINT NULL,
 
-		CONSTRAINT FK_fc_CoursesTypes_CreatedById FOREIGN KEY (CreatedById)
+		CONSTRAINT FK_fc_CourseTypes_CreatedById FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_fc_CoursesTypes_UpdatedById FOREIGN KEY (UpdatedById)
+		CONSTRAINT FK_fc_CourseTypes_UpdatedById FOREIGN KEY (UpdatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_fc_CoursesTypes_DeletedById FOREIGN KEY (DeletedById)
+		CONSTRAINT FK_fc_CourseTypes_DeletedById FOREIGN KEY (DeletedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 	);
 END
@@ -660,7 +665,7 @@ BEGIN
 
 		TypeId BIGINT NOT NULL,
 		
-		ProgramId BIGINT NULL,
+		ProgramId BIGINT NOT NULL,
 
 		CreatedAt DATETIME2 NOT NULL,
 		CreatedById BIGINT NOT NULL,
@@ -672,7 +677,7 @@ BEGIN
 		DeletedById BIGINT NULL,
 
 		CONSTRAINT FK_fc_Courses_TypeId FOREIGN KEY (TypeId)
-			REFERENCES fc.CoursesTypes(Id) ON DELETE NO ACTION,
+			REFERENCES fc.CourseTypes(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_Courses_ProgramId FOREIGN KEY (ProgramId)
 			REFERENCES fc.Programs(Id) ON DELETE NO ACTION,
@@ -689,16 +694,16 @@ BEGIN
 END
 GO
 
-/* ModulesTypes table */
+/* ModuleTypes table */
 IF NOT EXISTS (
     SELECT 1
     FROM sys.tables t
     JOIN sys.schemas s ON t.schema_id = s.schema_id
-    WHERE t.name = 'ModulesTypes'
+    WHERE t.name = 'ModuleTypes'
       AND s.name = 'fc'
 )
 BEGIN
-	CREATE TABLE fc.ModulesTypes(
+	CREATE TABLE fc.ModuleTypes(
 		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 		Uuid UNIQUEIDENTIFIER NOT NULL,
 
@@ -714,13 +719,13 @@ BEGIN
 		DeletedAt DATETIME2 NULL,
 		DeletedById BIGINT NULL,
 
-		CONSTRAINT FK_fc_ModulesTypes_CreatedById FOREIGN KEY (CreatedById)
+		CONSTRAINT FK_fc_ModuleTypes_CreatedById FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_fc_ModulesTypes_UpdatedById FOREIGN KEY (UpdatedById)
+		CONSTRAINT FK_fc_ModuleTypes_UpdatedById FOREIGN KEY (UpdatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_fc_ModulesTypes_DeletedById FOREIGN KEY (DeletedById)
+		CONSTRAINT FK_fc_ModuleTypes_DeletedById FOREIGN KEY (DeletedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 	);
 END
@@ -756,7 +761,7 @@ BEGIN
 		DeletedById BIGINT NULL,
 
 		CONSTRAINT FK_fc_Modules_TypeId FOREIGN KEY (TypeId)
-			REFERENCES fc.ModulesTypes(Id) ON DELETE NO ACTION,
+			REFERENCES fc.ModuleTypes(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_Modules_CourseId FOREIGN KEY (CourseId)
 			REFERENCES fc.Courses(Id) ON DELETE NO ACTION,

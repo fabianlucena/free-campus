@@ -2,12 +2,8 @@
 using FreeCampusServer.IRepository;
 using FreeCampusServer.QueryOptions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using RFAuthEntities.Entities;
-using RFAuthEntities.QueryOptions;
 using RFBaseEF.Repositories;
 using RFBaseEntities.QueryOptions;
-using RFRBACEntities.QueryOptions;
 
 namespace FreeCampusServer.Repository
 {

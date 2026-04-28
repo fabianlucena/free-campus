@@ -1,4 +1,5 @@
 ﻿using RFBaseEntities.Entities;
+using RFRGCBACEntities.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FreeCampusServer.Entities
@@ -12,5 +13,7 @@ namespace FreeCampusServer.Entities
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
 
+        public long CompanyId { get; set; }
+        public Company? Company { get; set; }
     }
 }
