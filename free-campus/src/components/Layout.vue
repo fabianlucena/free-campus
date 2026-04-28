@@ -3,10 +3,7 @@
     @toggleMenu="showMenu = !showMenu"
   />
   <div class="main">
-    <MainMenu
-      v-if="showMenu"
-      :items="menuItems"
-    />
+    <MainMenu v-if="showMenu" />
     <Body />
   </div>
 </template>
@@ -16,7 +13,6 @@ import { ref } from 'vue';
 import MainMenu from './MainMenu.vue';
 import Header from './Header.vue';
 import Body from './Body.vue';
-import { menuItems } from '../services/menu-items.js';
 
 const showMenu = ref(true);
 </script>

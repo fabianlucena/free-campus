@@ -2,10 +2,12 @@
   <MenuBar
     class="vertical"
     :items="menuItems"
+    :itemType="RouterLink"
   />
 </template>
 
 <script setup>
+import { RouterLink } from 'vue-router';
 import MenuBar from '@vc/MenuBar.vue';
 import { menuItems } from '../services/menu-items.js';
 </script>

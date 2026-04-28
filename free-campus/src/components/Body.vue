@@ -1,7 +1,6 @@
 <template>
   <section class="body">
-    <h2>Welcome to Free Campus</h2>
-    <p>This is the body of the Free Campus application.</p>
+    <RouterView />
   </section>
 </template>
 
