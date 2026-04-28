@@ -1,13 +1,18 @@
 <template>
-  <Header >
-    <ButtonMenu v-if="showMenuButton" @click="emit('toggleMenu')" />
-    <span class="title">Free Campus</span>
-    <span class="right">
-      <ButtonLightDark />
-      <ButtonUser v-if="authState.isLoggedIn" @click="emit('userClick')" />
-      <ButtonLogin v-else @click="router.push('/login')" />
-    </span>
-  </Header>
+  <a
+    href="#"
+    @click.prevent.stop="() => router.push('/')"
+  >
+    <Header>
+      <ButtonMenu v-if="showMenuButton" @click="emit('toggleMenu')" />
+      <span class="title">Free Campus</span>
+      <span class="right">
+        <ButtonLightDark />
+        <ButtonUser v-if="authState.isLoggedIn" @click="emit('userClick')" />
+        <ButtonLogin v-else @click.prevent.stop="router.push('/login')" />
+      </span>
+    </Header>
+  </a>
 </template>
 
 <script setup>
@@ -44,5 +49,10 @@ defineProps({
 .right {
   display: flex;
   gap: .3em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }
 </style>
