@@ -3,7 +3,7 @@ import { translations as vcTranslations } from '@vc/locale/es.js';
 export const translations = {
   ...vcTranslations,
   'About': 'Acerca de',
-  'Dashboard': 'Tablero',
+  'Dashboard': 'Panel',
   'Home': 'Inicio',
   'Login': 'Iniciar sesión',
   'Logout': 'Cerrar sesión',
