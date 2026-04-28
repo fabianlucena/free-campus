@@ -122,7 +122,7 @@ GO
 /* Insert default admin user password */
 DECLARE @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
 	@1234hash NVARCHAR(255) = '100000.He2nIoHKO5PDiudeF3GV1Q==.OXZML34kQ8gPcsX01odwNpaNmNMkMzlggv5pLKqzekg=';
-MERGE auth.UsersPassword AS target
+MERGE auth.UsersPasswords AS target
 USING (SELECT u.Id
 	FROM auth.Users u
 	WHERE NOT EXISTS(
@@ -141,7 +141,7 @@ WHEN NOT MATCHED THEN
         Hash
     )
     VALUES (
-		source.UserId
+        source.UserId,
         GETUTCDATE(), GETUTCDATE(), NULL,
         @systemUserId, @systemUserId, NULL,
 		@1234hash
