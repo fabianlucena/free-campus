@@ -33,6 +33,18 @@ namespace FreeCampusServer
 
             builder.Services.AddScoped<DbContext, AppDbContext>();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("Frontend", policy =>
+                {
+                    policy
+                        //.AllowAnyOrigin()
+                        .WithOrigins("http://localhost:5173")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
+
             builder.Services.AddHttpContextAccessor();
 
             builder.Services.AddRFBaseEntitiesServices();
@@ -58,6 +70,8 @@ namespace FreeCampusServer
                 .AddRFAuthControllers();
 
             var app = builder.Build();
+
+            app.UseCors("Frontend");
 
             // Configure the HTTP request pipeline.
 

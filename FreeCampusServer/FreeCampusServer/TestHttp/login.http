@@ -1,4 +1,5 @@
-@host = http://localhost:5256
+//@host = http://localhost:5256
+@host = https://localhost:7140
 @token = 0rUH/4F+0kBMroVNRfg84EQk1yOJka1KdHo+0fBHAVJ2otTmoYZ7E+OB0ll4QaKh
 
 POST {{host}}/login/
