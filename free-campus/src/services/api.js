@@ -1,3 +1,5 @@
+import { authState } from '@/state/auth.js';
+
 const baseURL = 'https://localhost:7140/';
 
 export async function requestJson(service, options) {
@@ -9,6 +11,10 @@ export async function requestJson(service, options) {
     'Content-Type': 'application/json',
     ...options.headers,
   };
+
+  if (authState.sessionToken) {
+    options.headers['Authorization'] = `Bearer ${authState.sessionToken}`;
+  }
 
   const response = await fetch(`${baseURL}${service}`, options);
   if (!response.ok) {
