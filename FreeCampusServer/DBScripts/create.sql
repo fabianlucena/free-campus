@@ -542,6 +542,8 @@ BEGIN
 		Title VARCHAR(256) NOT NULL,
 		Description VARCHAR(MAX) NULL,
 
+		CompanyId BIGINT NOT NULL,
+
 		CreatedAt DATETIME2 NOT NULL,
 		CreatedById BIGINT NOT NULL,
 
@@ -550,6 +552,9 @@ BEGIN
 
 		DeletedAt DATETIME2 NULL,
 		DeletedById BIGINT NULL,
+
+		CONSTRAINT FK_fc_ProgramTypes_CompanyId FOREIGN KEY (CompanyId)
+			REFERENCES auth.Companies(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_ProgramTypes_CreatedById FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
@@ -580,8 +585,6 @@ BEGIN
 		Description VARCHAR(MAX) NULL,
 
 		TypeId BIGINT NOT NULL,
-		
-		CompanyId BIGINT NULL,
 
 		CreatedAt DATETIME2 NOT NULL,
 		CreatedById BIGINT NOT NULL,
@@ -594,9 +597,6 @@ BEGIN
 
 		CONSTRAINT FK_fc_Programs_TypeId FOREIGN KEY (TypeId)
 			REFERENCES fc.ProgramTypes(Id) ON DELETE NO ACTION,
-
-		CONSTRAINT FK_fc_Programs_CompanyId FOREIGN KEY (CompanyId)
-			REFERENCES auth.Companies(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_Programs_CreatedById FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
@@ -626,6 +626,8 @@ BEGIN
 		Title VARCHAR(256) NOT NULL,
 		Description VARCHAR(MAX) NULL,
 
+		CompanyId BIGINT NOT NULL,
+
 		CreatedAt DATETIME2 NOT NULL,
 		CreatedById BIGINT NOT NULL,
 
@@ -634,6 +636,9 @@ BEGIN
 
 		DeletedAt DATETIME2 NULL,
 		DeletedById BIGINT NULL,
+
+		CONSTRAINT FK_fc_CourseTypes_CompanyId FOREIGN KEY (CompanyId)
+			REFERENCES auth.Companies(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_CourseTypes_CreatedById FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
@@ -664,7 +669,6 @@ BEGIN
 		Description VARCHAR(MAX) NULL,
 
 		TypeId BIGINT NOT NULL,
-		
 		ProgramId BIGINT NOT NULL,
 
 		CreatedAt DATETIME2 NOT NULL,
@@ -710,6 +714,8 @@ BEGIN
 		Title VARCHAR(256) NOT NULL,
 		Description VARCHAR(MAX) NULL,
 
+		CompanyId BIGINT NOT NULL,
+
 		CreatedAt DATETIME2 NOT NULL,
 		CreatedById BIGINT NOT NULL,
 
@@ -718,6 +724,9 @@ BEGIN
 
 		DeletedAt DATETIME2 NULL,
 		DeletedById BIGINT NULL,
+
+		CONSTRAINT FK_fc_ModuleTypes_CompanyId FOREIGN KEY (CompanyId)
+			REFERENCES auth.Companies(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_ModuleTypes_CreatedById FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
@@ -748,7 +757,6 @@ BEGIN
 		Description VARCHAR(MAX) NULL,
 
 		TypeId BIGINT NOT NULL,
-
 		CourseId BIGINT NOT NULL,
 
 		CreatedAt DATETIME2 NOT NULL,

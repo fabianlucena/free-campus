@@ -82,22 +82,103 @@ WHEN NOT MATCHED THEN
     );
 GO
 
-/* Add programs types */
-DECLARE @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system');
+/* Add program types */
+DECLARE
+	@systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
+	@freeCampusId BIGINT = (SELECT Id FROM auth.Companies WHERE Name = 'freeCampus'),
+	@now DATETIME2 = GETUTCDATE();
 MERGE fc.ProgramTypes AS target
 USING (VALUES 
-		('Independiente', 'Programa para cursos independientes')
-	) AS source(RoleId, UserId, CompanyId)	
-    ON target.RoleId = source.RoleId AND target.UserId = source.UserId AND target.CompanyId = source.CompanyId
+		('Independiente', 'Programa para cursos independientes', @freeCampusId)
+	) AS source(Title, Description, CompanyId)	
+    ON target.Title = source.Title AND target.Description = source.Description AND target.CompanyId = source.CompanyId
 WHEN NOT MATCHED THEN
     INSERT (
-        CreatedAt, DeletedAt,
-        CreatedById, DeletedById,
-        RoleId, UserId, CompanyId
+		Uuid,
+        CreatedAt, UpdatedAt, DeletedAt,
+        CreatedById, UpdatedById, DeletedById,
+        Title, Description, CompanyId
     )
     VALUES (
-        GETUTCDATE(), NULL,
-        @systemUserId, NULL,
-        source.RoleId, source.UserId, source.CompanyId
+		NEWID(),
+        @now, @now, NULL,
+        @systemUserId, @systemUserId, NULL,
+        source.Title, source.Description, source.CompanyId
+    );
+GO
+
+/* Add independiente program */
+DECLARE
+	@systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
+	@independienteId BIGINT = (SELECT Id FROM fc.ProgramTypes WHERE Title = 'Independiente'),
+	@now DATETIME2 = GETUTCDATE();
+MERGE fc.Programs AS target
+USING (VALUES 
+		('Independiente', 'Programa para cursos independientes', @independienteId)
+	) AS source(Title, Description, TypeId)	
+    ON target.Title = source.Title AND target.Description = source.Description AND target.TypeId = source.TypeId
+WHEN NOT MATCHED THEN
+    INSERT (
+		Uuid,
+        CreatedAt, UpdatedAt, DeletedAt,
+        CreatedById, UpdatedById, DeletedById,
+        Title, Description, TypeId
+    )
+    VALUES (
+		NEWID(),
+        @now, @now, NULL,
+        @systemUserId, @systemUserId, NULL,
+        source.Title, source.Description, source.TypeId
+    );
+GO
+
+/* Add course types */
+DECLARE
+	@systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
+	@freeCampusId BIGINT = (SELECT Id FROM auth.Companies WHERE Name = 'freeCampus'),
+	@now DATETIME2 = GETUTCDATE();
+MERGE fc.CourseTypes AS target
+USING (VALUES 
+		('Independiente', 'Cursos independiente', @freeCampusId)
+	) AS source(Title, Description, CompanyId)	
+    ON target.Title = source.Title AND target.Description = source.Description AND target.CompanyId = source.CompanyId
+WHEN NOT MATCHED THEN
+    INSERT (
+		Uuid,
+        CreatedAt, UpdatedAt, DeletedAt,
+        CreatedById, UpdatedById, DeletedById,
+        Title, Description, CompanyId
+    )
+    VALUES (
+		NEWID(),
+        @now, @now, NULL,
+        @systemUserId, @systemUserId, NULL,
+        source.Title, source.Description, source.CompanyId
+    );
+GO
+
+/* Add prueba 1 course */
+DECLARE
+	@systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
+	@courseTypeIndependienteId BIGINT = (SELECT Id FROM fc.CourseTypes WHERE Title = 'Independiente'),
+	@programIndependienteId BIGINT = (SELECT Id FROM fc.Programs WHERE Title = 'Independiente'),
+	@now DATETIME2 = GETUTCDATE();
+MERGE fc.Courses AS target
+USING (VALUES 
+		('Prueba 1', 'Curso de prueba 1', @courseTypeIndependienteId, @programIndependienteId)
+	) AS source(Title, Description, TypeId, ProgramId)	
+    ON target.Title = source.Title AND target.Description = source.Description AND target.TypeId = source.TypeId
+WHEN NOT MATCHED THEN
+    INSERT (
+		Uuid,
+        CreatedAt, UpdatedAt, DeletedAt,
+        CreatedById, UpdatedById, DeletedById,
+        Title, Description, TypeId, ProgramId
+    )
+    VALUES (
+		NEWID(),
+        @now, @now, NULL,
+        @systemUserId, @systemUserId, NULL,
+        source.Title, source.Description, source.TypeId, source.ProgramId
     );
 GO
