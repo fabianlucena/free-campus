@@ -1,3 +1,14 @@
+/* auth schema */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.schemas
+    WHERE name = 'auth'
+)
+BEGIN
+    EXEC('CREATE SCHEMA auth');
+END
+GO
+
 /* Users table */
 IF NOT EXISTS (
     SELECT 1
@@ -27,13 +38,13 @@ BEGIN
 	INSERT INTO auth.Users (
 		Uuid, CreatedAt, UpdatedAt, DeletedAt,
 		CreatedById, UpdatedById, DeletedById,
-		Username, DisplayName, Email, PasswordHash,
+		Username, DisplayName,
 		IsActive, CanLogin, LastLoginAt
 	)
 	VALUES (
 		NEWID(), GETUTCDATE(), GETUTCDATE(), NULL,
 		0, 0, NULL,
-		'system', 'System', '', '',
+		'system', 'System',
 		1, 1, NULL
 	);
 
@@ -77,7 +88,7 @@ BEGIN
 		UpdatedById BIGINT NOT NULL,
 		DeletedById BIGINT NULL,
 
-		Hash VARCHAR(64) NOT NULL,
+		Hash VARCHAR(254) NOT NULL,
 
 		CONSTRAINT FK_UserPasswords_UserId
 			FOREIGN KEY (UserId) REFERENCES auth.Users(Id) ON DELETE NO ACTION,
@@ -642,7 +653,7 @@ BEGIN
 		DeletedById BIGINT NULL,
 
 		CONSTRAINT FK_fc_CourseTypes_OrganizationId FOREIGN KEY (OrganizationId)
-			REFERENCES auth.Organzation(Id) ON DELETE NO ACTION,
+			REFERENCES auth.Organizations(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_CourseTypes_CreatedById FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
@@ -685,7 +696,7 @@ BEGIN
 		DeletedById BIGINT NULL,
 
 		CONSTRAINT FK_fc_Courses_OrganizationId FOREIGN KEY (OrganizationId)
-			REFERENCES auth.Organization(Id) ON DELETE NO ACTION,
+			REFERENCES auth.Organizations(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_Courses_TypeId FOREIGN KEY (TypeId)
 			REFERENCES fc.CourseTypes(Id) ON DELETE NO ACTION,
@@ -773,7 +784,7 @@ BEGIN
 		DeletedById BIGINT NULL,
 
 		CONSTRAINT FK_fc_Modules_OrganizationId FOREIGN KEY (OrganizationId)
-			REFERENCES auth.Organization(Id) ON DELETE NO ACTION,
+			REFERENCES auth.Organizations(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_Modules_TypeId FOREIGN KEY (TypeId)
 			REFERENCES fc.ModuleTypes(Id) ON DELETE NO ACTION,
