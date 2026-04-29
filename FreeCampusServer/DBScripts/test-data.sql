@@ -89,46 +89,47 @@ DECLARE
 	@now DATETIME2 = GETUTCDATE();
 MERGE fc.ProgramTypes AS target
 USING (VALUES 
-		('Independiente', 'Programa para cursos independientes', @freeCampusId)
-	) AS source(Title, Description, OrganizationId)	
-    ON target.Title = source.Title AND target.Description = source.Description AND target.OrganizationId = source.OrganizationId
+		(@freeCampusId, 'Independiente', 'Programa para cursos independientes')
+	) AS source(OrganizationId, Title, Description)	
+    ON target.OrganizationId = source.OrganizationId AND target.Title = source.Title AND target.Description = source.Description
 WHEN NOT MATCHED THEN
     INSERT (
-		Uuid,
+		Uuid, OrganizationId,
         CreatedAt, UpdatedAt, DeletedAt,
         CreatedById, UpdatedById, DeletedById,
-        Title, Description, OrganizationId
+        Title, Description
     )
     VALUES (
-		NEWID(),
+		NEWID(), source.OrganizationId,
         @now, @now, NULL,
         @systemUserId, @systemUserId, NULL,
-        source.Title, source.Description, source.OrganizationId
+        source.Title, source.Description
     );
 GO
 
 /* Add independiente program */
 DECLARE
 	@systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
+	@freeCampusId BIGINT = (SELECT Id FROM auth.Organizations WHERE Name = 'freeCampus'),
 	@independienteId BIGINT = (SELECT Id FROM fc.ProgramTypes WHERE Title = 'Independiente'),
 	@now DATETIME2 = GETUTCDATE();
 MERGE fc.Programs AS target
 USING (VALUES 
-		('Independiente', 'Programa para cursos independientes', @independienteId)
-	) AS source(Title, Description, TypeId)	
-    ON target.Title = source.Title AND target.Description = source.Description AND target.TypeId = source.TypeId
+		(@freeCampusId, @independienteId, 'Independiente', 'Programa para cursos independientes')
+	) AS source(OrganizationId, TypeId, Title, Description)	
+    ON target.OrganizationId = source.OrganizationId AND target.TypeId = source.TypeId AND target.Title = source.Title AND target.Description = source.Description
 WHEN NOT MATCHED THEN
     INSERT (
-		Uuid,
+		Uuid, source.OrganizationId, TypeId,
         CreatedAt, UpdatedAt, DeletedAt,
         CreatedById, UpdatedById, DeletedById,
-        Title, Description, TypeId
+        Title, Description
     )
     VALUES (
-		NEWID(),
+		NEWID(), source.OrganizationId, source.TypeId,
         @now, @now, NULL,
         @systemUserId, @systemUserId, NULL,
-        source.Title, source.Description, source.TypeId
+        source.Title, source.Description
     );
 GO
 
@@ -139,46 +140,46 @@ DECLARE
 	@now DATETIME2 = GETUTCDATE();
 MERGE fc.CourseTypes AS target
 USING (VALUES 
-		('Independiente', 'Cursos independiente', @freeCampusId)
-	) AS source(Title, Description, OrganizationId)	
-    ON target.Title = source.Title AND target.Description = source.Description AND target.OrganizationId = source.OrganizationId
+		(@freeCampusId, 'Independiente', 'Cursos independiente')
+	) AS source(OrganizationId, Title, Description)	
+    ON target.OrganizationId = source.OrganizationId, target.Title = source.Title AND target.Description = source.Description
 WHEN NOT MATCHED THEN
     INSERT (
-		Uuid,
+		Uuid, OrganizationId,
         CreatedAt, UpdatedAt, DeletedAt,
         CreatedById, UpdatedById, DeletedById,
-        Title, Description, OrganizationId
+        Title, Description
     )
     VALUES (
-		NEWID(),
+		NEWID(), source.OrganizationId,
         @now, @now, NULL,
         @systemUserId, @systemUserId, NULL,
-        source.Title, source.Description, source.OrganizationId
+        source.Title, source.Description
     );
 GO
 
 /* Add prueba 1 course */
 DECLARE
 	@systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
+	@freeCampusId BIGINT = (SELECT Id FROM auth.Organizations WHERE Name = 'freeCampus'),
 	@courseTypeIndependienteId BIGINT = (SELECT Id FROM fc.CourseTypes WHERE Title = 'Independiente'),
-	@programIndependienteId BIGINT = (SELECT Id FROM fc.Programs WHERE Title = 'Independiente'),
 	@now DATETIME2 = GETUTCDATE();
 MERGE fc.Courses AS target
 USING (VALUES 
-		('Prueba 1', 'Curso de prueba 1', @courseTypeIndependienteId, @programIndependienteId)
+		(@freeCampusId, @courseTypeIndependienteId, 'Prueba 1', 'Curso de prueba 1')
 	) AS source(Title, Description, TypeId, ProgramId)	
-    ON target.Title = source.Title AND target.Description = source.Description AND target.TypeId = source.TypeId
+    ON target.OrganizationId = source.OrganizationId AND target.TypeId = source.TypeId AND target.Title = source.Title AND target.Description = source.Description
 WHEN NOT MATCHED THEN
     INSERT (
-		Uuid,
+		Uuid, OrganizationId, TypeId,
         CreatedAt, UpdatedAt, DeletedAt,
         CreatedById, UpdatedById, DeletedById,
-        Title, Description, TypeId, ProgramId
+        Title, Description
     )
     VALUES (
-		NEWID(),
+		NEWID(), source.OrganizationId, source.TypeId,
         @now, @now, NULL,
         @systemUserId, @systemUserId, NULL,
-        source.Title, source.Description, source.TypeId, source.ProgramId
+        source.Title, source.Description
     );
 GO
