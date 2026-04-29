@@ -9,7 +9,7 @@ export function setAuthState(newState) {
   authState.isLoggedIn = !!newState.user;
   authState.user = newState.user;
   authState.companies = newState.companies || [];
-  authState.currentCompany = newState.currentCompany || null;
+  authState.currentOrganization = newState.currentOrganization || null;
   authState.roles = newState.roles || [];
   authState.permissions = newState.permissions || [];
 }

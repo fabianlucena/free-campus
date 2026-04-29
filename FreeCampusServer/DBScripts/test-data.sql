@@ -62,23 +62,23 @@ DECLARE @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'syst
 	@studentUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'student'),
 	@creatorRoleId BIGINT = (SELECT Id FROM auth.Roles WHERE Name = 'creator'),
 	@studentRoleId BIGINT = (SELECT Id FROM auth.Roles WHERE Name = 'student'),
-	@freeCampusCompanyId BIGINT = (SELECT Id FROM auth.Companies WHERE Name = 'freeCampus');
+	@freeCampusOrganizationId BIGINT = (SELECT Id FROM auth.Companies WHERE Name = 'freeCampus');
 MERGE auth.RolesXUsersXCompanies AS target
 USING (VALUES 
-		(@creatorRoleId, @creatorUserId, @freeCampusCompanyId),
-		(@studentRoleId, @studentUserId, @freeCampusCompanyId)
-	) AS source(RoleId, UserId, CompanyId)	
-    ON target.RoleId = source.RoleId AND target.UserId = source.UserId AND target.CompanyId = source.CompanyId
+		(@creatorRoleId, @creatorUserId, @freeCampusOrganizationId),
+		(@studentRoleId, @studentUserId, @freeCampusOrganizationId)
+	) AS source(RoleId, UserId, OrganizationId)	
+    ON target.RoleId = source.RoleId AND target.UserId = source.UserId AND target.OrganizationId = source.OrganizationId
 WHEN NOT MATCHED THEN
     INSERT (
         CreatedAt, DeletedAt,
         CreatedById, DeletedById,
-        RoleId, UserId, CompanyId
+        RoleId, UserId, OrganizationId
     )
     VALUES (
         GETUTCDATE(), NULL,
         @systemUserId, NULL,
-        source.RoleId, source.UserId, source.CompanyId
+        source.RoleId, source.UserId, source.OrganizationId
     );
 GO
 
@@ -90,20 +90,20 @@ DECLARE
 MERGE fc.ProgramTypes AS target
 USING (VALUES 
 		('Independiente', 'Programa para cursos independientes', @freeCampusId)
-	) AS source(Title, Description, CompanyId)	
-    ON target.Title = source.Title AND target.Description = source.Description AND target.CompanyId = source.CompanyId
+	) AS source(Title, Description, OrganizationId)	
+    ON target.Title = source.Title AND target.Description = source.Description AND target.OrganizationId = source.OrganizationId
 WHEN NOT MATCHED THEN
     INSERT (
 		Uuid,
         CreatedAt, UpdatedAt, DeletedAt,
         CreatedById, UpdatedById, DeletedById,
-        Title, Description, CompanyId
+        Title, Description, OrganizationId
     )
     VALUES (
 		NEWID(),
         @now, @now, NULL,
         @systemUserId, @systemUserId, NULL,
-        source.Title, source.Description, source.CompanyId
+        source.Title, source.Description, source.OrganizationId
     );
 GO
 
@@ -140,20 +140,20 @@ DECLARE
 MERGE fc.CourseTypes AS target
 USING (VALUES 
 		('Independiente', 'Cursos independiente', @freeCampusId)
-	) AS source(Title, Description, CompanyId)	
-    ON target.Title = source.Title AND target.Description = source.Description AND target.CompanyId = source.CompanyId
+	) AS source(Title, Description, OrganizationId)	
+    ON target.Title = source.Title AND target.Description = source.Description AND target.OrganizationId = source.OrganizationId
 WHEN NOT MATCHED THEN
     INSERT (
 		Uuid,
         CreatedAt, UpdatedAt, DeletedAt,
         CreatedById, UpdatedById, DeletedById,
-        Title, Description, CompanyId
+        Title, Description, OrganizationId
     )
     VALUES (
 		NEWID(),
         @now, @now, NULL,
         @systemUserId, @systemUserId, NULL,
-        source.Title, source.Description, source.CompanyId
+        source.Title, source.Description, source.OrganizationId
     );
 GO
 

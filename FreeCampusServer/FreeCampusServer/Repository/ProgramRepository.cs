@@ -23,9 +23,9 @@ namespace FreeCampusServer.Repository
                     quereable = quereable.Include(p => p.Type);
                 }
 
-                if (programOptions.IncludeCompany)
+                if (programOptions.IncludeOrganization)
                 {
-                    quereable = quereable.Include(p => p.Company);
+                    quereable = quereable.Include(p => p.Organization);
                 }
             }
 

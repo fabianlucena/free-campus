@@ -20,8 +20,8 @@
     <ProjectReference Include="..\..\..\rf-nugets_v2\RFPermissionsServices\RFPermissionsServices.csproj" />
     <ProjectReference Include="..\..\..\rf-nugets_v2\RFRBACEF\RFRBACEF.csproj" />
     <ProjectReference Include="..\..\..\rf-nugets_v2\RFRBACServices\RFRBACServices.csproj" />
-    <ProjectReference Include="..\..\..\rf-nugets_v2\RFRGCBACEF\RFRGCBACEF.csproj" />
-    <ProjectReference Include="..\..\..\rf-nugets_v2\RFRGCBACServices\RFRGCBACServices.csproj" />
+    <ProjectReference Include="..\..\..\rf-nugets_v2\RFRGOBACEF\RFRGOBACEF.csproj" />
+    <ProjectReference Include="..\..\..\rf-nugets_v2\RFRGOBACServices\RFRGOBACServices.csproj" />
   </ItemGroup>
 
 </Project>

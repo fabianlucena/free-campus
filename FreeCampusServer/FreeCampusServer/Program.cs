@@ -11,8 +11,8 @@ using RFPermissionsEF;
 using RFPermissionsServices;
 using RFRBACEF;
 using RFRBACServices;
-using RFRGCBACEF;
-using RFRGCBACServices;
+using RFRGOBACEF;
+using RFRGOBACServices;
 
 namespace FreeCampusServer
 {
@@ -60,8 +60,8 @@ namespace FreeCampusServer
             builder.Services.AddRFRBACServices();
             builder.Services.AddRFRBACEF();
             
-            builder.Services.AddRFRGCBACServices();
-            builder.Services.AddRFRGCBACEF();
+            builder.Services.AddRFRGOBACServices();
+            builder.Services.AddRFRGOBACEF();
 
             builder.Services.AddFCServices();
 

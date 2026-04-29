@@ -11,7 +11,7 @@ async function doLogin(service, data) {
     sessionToken: session.token,
     user: session.user,
     companies: session.data.companies,
-    currentCompany: session.data.currentCompany,
+    currentOrganization: session.data.currentOrganization,
     roles: session.data.roles,
     permissions: session.data.permissions
   });
