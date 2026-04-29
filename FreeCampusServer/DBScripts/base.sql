@@ -99,7 +99,7 @@ GO
 
 /* Insert freeCampus system Organization */
 DECLARE @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system');
-MERGE auth.Companies AS target
+MERGE auth.Organizations AS target
 USING (VALUES ('freeCampus')) AS source(Name)
     ON target.Name = source.Name
 WHEN NOT MATCHED THEN

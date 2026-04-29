@@ -10,7 +10,7 @@ async function doLogin(service, data) {
   setAuthState({
     sessionToken: session.token,
     user: session.user,
-    companies: session.data.companies,
+    Organizations: session.data.Organizations,
     currentOrganization: session.data.currentOrganization,
     roles: session.data.roles,
     permissions: session.data.permissions

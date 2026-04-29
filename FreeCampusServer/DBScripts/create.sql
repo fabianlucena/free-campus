@@ -210,16 +210,16 @@ BEGIN
 END
 GO
 
-/* Companies table */
+/* Organizations table */
 IF NOT EXISTS (
     SELECT 1
     FROM sys.tables t
     JOIN sys.schemas s ON t.schema_id = s.schema_id
-    WHERE t.name = 'Companies'
+    WHERE t.name = 'Organizations'
       AND s.name = 'auth'
 )
 BEGIN
-	CREATE TABLE auth.Companies (
+	CREATE TABLE auth.Organizations (
 		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 		Uuid UNIQUEIDENTIFIER NOT NULL,
 
@@ -234,28 +234,28 @@ BEGIN
 		Name VARCHAR(128) NOT NULL,
 		Description VARCHAR(256) NULL,
 
-		CONSTRAINT FK_Companies_CreatedBy FOREIGN KEY (CreatedById)
+		CONSTRAINT FK_Organizations_CreatedBy FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_Companies_UpdatedBy FOREIGN KEY (UpdatedById)
+		CONSTRAINT FK_Organizations_UpdatedBy FOREIGN KEY (UpdatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_Companies_DeletedBy FOREIGN KEY (DeletedById)
+		CONSTRAINT FK_Organizations_DeletedBy FOREIGN KEY (DeletedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 	);
 END
 GO
 
-/* SessionCompanies table */
+/* SessionOrganizations table */
 IF NOT EXISTS (
     SELECT 1
     FROM sys.tables t
     JOIN sys.schemas s ON t.schema_id = s.schema_id
-    WHERE t.name = 'SessionCompanies'
+    WHERE t.name = 'SessionOrganizations'
       AND s.name = 'auth'
 )
 BEGIN
-	CREATE TABLE auth.SessionCompanies (
+	CREATE TABLE auth.SessionOrganizations (
 		SessionId BIGINT NOT NULL,
 		OrganizationId BIGINT NOT NULL,
 
@@ -267,19 +267,19 @@ BEGIN
 		UpdatedById BIGINT NOT NULL,
 		DeletedById BIGINT NULL,
 
-		CONSTRAINT FK_SessionCompanies_SessionId FOREIGN KEY (SessionId)
+		CONSTRAINT FK_SessionOrganizations_SessionId FOREIGN KEY (SessionId)
 			REFERENCES auth.Sessions(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_SessionCompanies_OrganizationId FOREIGN KEY (OrganizationId)
-			REFERENCES auth.Companies(Id) ON DELETE NO ACTION,
+		CONSTRAINT FK_SessionOrganizations_OrganizationId FOREIGN KEY (OrganizationId)
+			REFERENCES auth.Organizations(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_SessionCompanies_CreatedById FOREIGN KEY (CreatedById)
+		CONSTRAINT FK_SessionOrganizations_CreatedById FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_SessionCompanies_UpdatedById FOREIGN KEY (UpdatedById)
+		CONSTRAINT FK_SessionOrganizations_UpdatedById FOREIGN KEY (UpdatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_SessionCompanies_DeletedById FOREIGN KEY (DeletedById)
+		CONSTRAINT FK_SessionOrganizations_DeletedById FOREIGN KEY (DeletedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 	);
 END
@@ -341,7 +341,7 @@ GO
 
 /* Insert default system Organization */
 DECLARE @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system');
-MERGE auth.Companies AS target
+MERGE auth.Organizations AS target
 USING (VALUES ('system')) AS source(Name)
     ON target.Name = source.Name
 WHEN NOT MATCHED THEN
@@ -358,16 +358,16 @@ WHEN NOT MATCHED THEN
     );
 GO
 
-/* RolesXUsersXCompanies table */
+/* RolesXUsersXOrganizations table */
 IF NOT EXISTS (
     SELECT 1
     FROM sys.tables t
     JOIN sys.schemas s ON t.schema_id = s.schema_id
-    WHERE t.name = 'RolesXUsersXCompanies'
+    WHERE t.name = 'RolesXUsersXOrganizations'
       AND s.name = 'auth'
 )
 BEGIN
-	CREATE TABLE auth.RolesXUsersXCompanies (
+	CREATE TABLE auth.RolesXUsersXOrganizations (
 		RoleId BIGINT NOT NULL,
 		UserId BIGINT NOT NULL,
 		OrganizationId BIGINT NOT NULL,
@@ -378,19 +378,19 @@ BEGIN
 		CreatedById BIGINT NOT NULL,
 		DeletedById BIGINT NULL,
 
-		CONSTRAINT FK_RolesXUsersXCompanies_Role FOREIGN KEY (RoleId)
+		CONSTRAINT FK_RolesXUsersXOrganizations_Role FOREIGN KEY (RoleId)
 			REFERENCES auth.Roles(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_RolesXUsersXCompanies_User FOREIGN KEY (UserId)
+		CONSTRAINT FK_RolesXUsersXOrganizations_User FOREIGN KEY (UserId)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_RolesXUsersXCompanies_Organization FOREIGN KEY (OrganizationId)
-			REFERENCES auth.Companies(Id) ON DELETE NO ACTION,
+		CONSTRAINT FK_RolesXUsersXOrganizations_Organization FOREIGN KEY (OrganizationId)
+			REFERENCES auth.Organizations(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_RolesXUsersXCompanies_CreatedBy FOREIGN KEY (CreatedById)
+		CONSTRAINT FK_RolesXUsersXOrganizations_CreatedBy FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_RolesXUsersXCompanies_DeletedBy FOREIGN KEY (DeletedById)
+		CONSTRAINT FK_RolesXUsersXOrganizations_DeletedBy FOREIGN KEY (DeletedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 	);
 END
@@ -400,8 +400,8 @@ GO
 DECLARE @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
 	@adminUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'admin'),
 	@adminRoleId BIGINT = (SELECT Id FROM auth.Roles WHERE Name = 'admin'),
-	@systemOrganizationId BIGINT = (SELECT Id FROM auth.Companies WHERE Name = 'system');
-MERGE auth.RolesXUsersXCompanies AS target
+	@systemOrganizationId BIGINT = (SELECT Id FROM auth.Organizations WHERE Name = 'system');
+MERGE auth.RolesXUsersXOrganizations AS target
 USING (VALUES (@adminRoleId, @adminUserId, @systemOrganizationId)) AS source(RoleId, UserId, OrganizationId)
     ON target.RoleId = source.RoleId AND target.UserId = source.UserId AND target.OrganizationId = source.OrganizationId
 WHEN NOT MATCHED THEN
@@ -539,10 +539,10 @@ BEGIN
 		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 		Uuid UNIQUEIDENTIFIER NOT NULL,
 
+		OrganizationId BIGINT NOT NULL,
+
 		Title VARCHAR(256) NOT NULL,
 		Description VARCHAR(MAX) NULL,
-
-		OrganizationId BIGINT NOT NULL,
 
 		CreatedAt DATETIME2 NOT NULL,
 		CreatedById BIGINT NOT NULL,
@@ -554,7 +554,7 @@ BEGIN
 		DeletedById BIGINT NULL,
 
 		CONSTRAINT FK_fc_ProgramTypes_OrganizationId FOREIGN KEY (OrganizationId)
-			REFERENCES auth.Companies(Id) ON DELETE NO ACTION,
+			REFERENCES auth.Organizations(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_ProgramTypes_CreatedById FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
@@ -581,10 +581,11 @@ BEGIN
 		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 		Uuid UNIQUEIDENTIFIER NOT NULL,
 
+		OrganizationId BIGINT NOT NULL,
+		TypeId BIGINT NOT NULL,
+
 		Title VARCHAR(256) NOT NULL,
 		Description VARCHAR(MAX) NULL,
-
-		TypeId BIGINT NOT NULL,
 
 		CreatedAt DATETIME2 NOT NULL,
 		CreatedById BIGINT NOT NULL,
@@ -594,6 +595,9 @@ BEGIN
 
 		DeletedAt DATETIME2 NULL,
 		DeletedById BIGINT NULL,
+
+		CONSTRAINT FK_fc_Programs_OrganizationId FOREIGN KEY (TypeId)
+			REFERENCES auth.Organizations(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_Programs_TypeId FOREIGN KEY (TypeId)
 			REFERENCES fc.ProgramTypes(Id) ON DELETE NO ACTION,
@@ -623,10 +627,10 @@ BEGIN
 		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 		Uuid UNIQUEIDENTIFIER NOT NULL,
 
+		OrganizationId BIGINT NOT NULL,
+
 		Title VARCHAR(256) NOT NULL,
 		Description VARCHAR(MAX) NULL,
-
-		OrganizationId BIGINT NOT NULL,
 
 		CreatedAt DATETIME2 NOT NULL,
 		CreatedById BIGINT NOT NULL,
@@ -638,7 +642,7 @@ BEGIN
 		DeletedById BIGINT NULL,
 
 		CONSTRAINT FK_fc_CourseTypes_OrganizationId FOREIGN KEY (OrganizationId)
-			REFERENCES auth.Companies(Id) ON DELETE NO ACTION,
+			REFERENCES auth.Organzation(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_CourseTypes_CreatedById FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
@@ -665,12 +669,12 @@ BEGIN
 		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 		Uuid UNIQUEIDENTIFIER NOT NULL,
 
+		OrganizationId BIGINT NOT NULL,
+		TypeId BIGINT NOT NULL,
+
 		Title VARCHAR(256) NOT NULL,
 		Description VARCHAR(MAX) NULL,
-
-		TypeId BIGINT NOT NULL,
-		ProgramId BIGINT NOT NULL,
-
+		
 		CreatedAt DATETIME2 NOT NULL,
 		CreatedById BIGINT NOT NULL,
 
@@ -680,11 +684,11 @@ BEGIN
 		DeletedAt DATETIME2 NULL,
 		DeletedById BIGINT NULL,
 
+		CONSTRAINT FK_fc_Courses_OrganizationId FOREIGN KEY (OrganizationId)
+			REFERENCES auth.Organization(Id) ON DELETE NO ACTION,
+
 		CONSTRAINT FK_fc_Courses_TypeId FOREIGN KEY (TypeId)
 			REFERENCES fc.CourseTypes(Id) ON DELETE NO ACTION,
-
-		CONSTRAINT FK_fc_Courses_ProgramId FOREIGN KEY (ProgramId)
-			REFERENCES fc.Programs(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_Courses_CreatedById FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
@@ -711,10 +715,10 @@ BEGIN
 		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 		Uuid UNIQUEIDENTIFIER NOT NULL,
 
+		OrganizationId BIGINT NOT NULL,
+
 		Title VARCHAR(256) NOT NULL,
 		Description VARCHAR(MAX) NULL,
-
-		OrganizationId BIGINT NOT NULL,
 
 		CreatedAt DATETIME2 NOT NULL,
 		CreatedById BIGINT NOT NULL,
@@ -726,7 +730,7 @@ BEGIN
 		DeletedById BIGINT NULL,
 
 		CONSTRAINT FK_fc_ModuleTypes_OrganizationId FOREIGN KEY (OrganizationId)
-			REFERENCES auth.Companies(Id) ON DELETE NO ACTION,
+			REFERENCES auth.Organizations(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_ModuleTypes_CreatedById FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
@@ -753,12 +757,12 @@ BEGIN
 		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 		Uuid UNIQUEIDENTIFIER NOT NULL,
 
+		OrganizationId BIGINT NOT NULL,
+		TypeId BIGINT NOT NULL,
+
 		Title VARCHAR(256) NOT NULL,
 		Description VARCHAR(MAX) NULL,
-
-		TypeId BIGINT NOT NULL,
-		CourseId BIGINT NOT NULL,
-
+		
 		CreatedAt DATETIME2 NOT NULL,
 		CreatedById BIGINT NOT NULL,
 
@@ -768,11 +772,11 @@ BEGIN
 		DeletedAt DATETIME2 NULL,
 		DeletedById BIGINT NULL,
 
+		CONSTRAINT FK_fc_Modules_OrganizationId FOREIGN KEY (OrganizationId)
+			REFERENCES auth.Organization(Id) ON DELETE NO ACTION,
+
 		CONSTRAINT FK_fc_Modules_TypeId FOREIGN KEY (TypeId)
 			REFERENCES fc.ModuleTypes(Id) ON DELETE NO ACTION,
-
-		CONSTRAINT FK_fc_Modules_CourseId FOREIGN KEY (CourseId)
-			REFERENCES fc.Courses(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_Modules_CreatedById FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,

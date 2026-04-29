@@ -62,8 +62,8 @@ DECLARE @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'syst
 	@studentUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'student'),
 	@creatorRoleId BIGINT = (SELECT Id FROM auth.Roles WHERE Name = 'creator'),
 	@studentRoleId BIGINT = (SELECT Id FROM auth.Roles WHERE Name = 'student'),
-	@freeCampusOrganizationId BIGINT = (SELECT Id FROM auth.Companies WHERE Name = 'freeCampus');
-MERGE auth.RolesXUsersXCompanies AS target
+	@freeCampusOrganizationId BIGINT = (SELECT Id FROM auth.Organizations WHERE Name = 'freeCampus');
+MERGE auth.RolesXUsersXOrganizations AS target
 USING (VALUES 
 		(@creatorRoleId, @creatorUserId, @freeCampusOrganizationId),
 		(@studentRoleId, @studentUserId, @freeCampusOrganizationId)
@@ -85,7 +85,7 @@ GO
 /* Add program types */
 DECLARE
 	@systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
-	@freeCampusId BIGINT = (SELECT Id FROM auth.Companies WHERE Name = 'freeCampus'),
+	@freeCampusId BIGINT = (SELECT Id FROM auth.Organizations WHERE Name = 'freeCampus'),
 	@now DATETIME2 = GETUTCDATE();
 MERGE fc.ProgramTypes AS target
 USING (VALUES 
@@ -135,7 +135,7 @@ GO
 /* Add course types */
 DECLARE
 	@systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
-	@freeCampusId BIGINT = (SELECT Id FROM auth.Companies WHERE Name = 'freeCampus'),
+	@freeCampusId BIGINT = (SELECT Id FROM auth.Organizations WHERE Name = 'freeCampus'),
 	@now DATETIME2 = GETUTCDATE();
 MERGE fc.CourseTypes AS target
 USING (VALUES 
