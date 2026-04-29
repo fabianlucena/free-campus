@@ -10,9 +10,9 @@ namespace FreeCampusServer.Service
         : CommonEntityService<Course>(courseRepository),
         ICourseService
     {
-        public async Task<IEnumerable<Course>> GetListByStandaloneAsync(CourseQueryOptions? options = null)
+        public async Task<IEnumerable<Course>> GetListByOrganizationIdAsync(long organizationId, CourseQueryOptions? options = null)
         {
-            return await courseRepository.GetListByStandaloneAsync(options);
+            return await courseRepository.GetListByOrganizationIdAsync(organizationId, options);
         }
     }
 }

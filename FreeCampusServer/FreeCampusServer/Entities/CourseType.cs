@@ -1,4 +1,5 @@
 ﻿using RFBaseEntities.Entities;
+using RFRGOBACEntities.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FreeCampusServer.Entities
@@ -6,8 +7,10 @@ namespace FreeCampusServer.Entities
     [Table("CourseTypes", Schema = "fc")]
     public class CourseType : CommonEntity
     {
+        public long OrganizationId { get; set; }
+        public Organization? Organization { get; set; }
+
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-
     }
 }

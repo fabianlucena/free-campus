@@ -19,14 +19,14 @@ namespace FreeCampusServer.Repository
 
             if (options is ModuleQueryOptions moduleOptions)
             {
+                if (moduleOptions.IncludeOrganization)
+                {
+                    quereable = quereable.Include(m => m.Organization);
+                }
+
                 if (moduleOptions.IncludeType)
                 {
                     quereable = quereable.Include(m => m.Type);
-                }
-
-                if (moduleOptions.IncludeCourse)
-                {
-                    quereable = quereable.Include(m => m.Course);
                 }
             }
 

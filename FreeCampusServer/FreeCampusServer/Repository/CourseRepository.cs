@@ -19,25 +19,25 @@ namespace FreeCampusServer.Repository
 
             if (options is CourseQueryOptions courseOptions)
             {
+                if (courseOptions.IncludeOrganization)
+                {
+                    quereable = quereable.Include(c => c.Organization);
+                }
+
                 if (courseOptions.IncludeType)
                 {
                     quereable = quereable.Include(c => c.Type);
-                }
-
-                if (courseOptions.IncludeProgram)
-                {
-                    quereable = quereable.Include(c => c.Program);
                 }
             }
 
             return quereable;
         }
 
-        public async Task<IEnumerable<Course>> GetListByStandaloneAsync(CourseQueryOptions? options = null)
+        public async Task<IEnumerable<Course>> GetListByOrganizationIdAsync(long organizationId, CourseQueryOptions? options = null)
         {
             var set = CreateDBSet(options);
             var session = await set
-                .Where(c => c.ProgramId == null)
+                .Where(c => c.OrganizationId == organizationId)
                 .ToListAsync();
 
             return session;

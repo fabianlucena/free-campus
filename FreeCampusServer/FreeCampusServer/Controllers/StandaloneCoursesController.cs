@@ -2,6 +2,7 @@ using FreeCampusServer.DTO;
 using FreeCampusServer.IServices;
 using Microsoft.AspNetCore.Mvc;
 using RFPermissionsEntities.Attributes;
+using RFRGOBACEntities.Entities;
 
 namespace FreeCampusServer.Controllers
 {
@@ -18,7 +19,10 @@ namespace FreeCampusServer.Controllers
         {
             logger.LogInformation("Standalone courses");
 
-            var courses = await courseService.GetListByStandaloneAsync();
+            var organizationId = HttpContext.Items["OrganizationId"] as long?
+                ?? throw new Exception("OrganizationId is missing in HttpContext.Items");
+
+            var courses = await courseService.GetListByOrganizationIdAsync(organizationId);
             var coursesResponse = courses.Select(course => new CourseResponse(course));
 
             return Ok(coursesResponse);

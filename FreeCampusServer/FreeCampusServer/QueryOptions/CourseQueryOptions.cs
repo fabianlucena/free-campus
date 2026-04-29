@@ -4,7 +4,7 @@ namespace FreeCampusServer.QueryOptions
 {
     public class CourseQueryOptions : CommonEntityQueryOptions
     {
+        public bool IncludeOrganization { get; set; } = false;
         public bool IncludeType { get; set; } = true;
-        public bool IncludeProgram { get; set; } = false;
     }
 }

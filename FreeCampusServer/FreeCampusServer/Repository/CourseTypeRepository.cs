@@ -1,5 +1,6 @@
 ﻿using FreeCampusServer.Entities;
 using FreeCampusServer.IRepository;
+using FreeCampusServer.QueryOptions;
 using Microsoft.EntityFrameworkCore;
 using RFBaseEF.Repositories;
 using RFBaseEntities.QueryOptions;
@@ -15,6 +16,14 @@ namespace FreeCampusServer.Repository
         public override IQueryable<CourseType> CreateDBSet(BaseQueryOptions? options)
         {
             var quereable = base.CreateDBSet(options ?? new BaseQueryOptions());
+
+            if (options is CourseTypeQueryOptions courseTypeOptions)
+            {
+                if (courseTypeOptions.IncludeOrganization)
+                {
+                    quereable = quereable.Include(t => t.Organization);
+                }
+            }
 
             return quereable;
         }
