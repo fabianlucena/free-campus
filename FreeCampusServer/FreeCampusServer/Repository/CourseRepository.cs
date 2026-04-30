@@ -15,22 +15,22 @@ namespace FreeCampusServer.Repository
 
         public override IQueryable<Course> CreateDBSet(BaseQueryOptions? options)
         {
-            var quereable = base.CreateDBSet(options ?? new BaseQueryOptions());
+            var queryable = base.CreateDBSet(options ?? new BaseQueryOptions());
 
             if (options is CourseQueryOptions courseOptions)
             {
                 if (courseOptions.IncludeOrganization)
                 {
-                    quereable = quereable.Include(c => c.Organization);
+                    queryable = queryable.Include(c => c.Organization);
                 }
 
                 if (courseOptions.IncludeType)
                 {
-                    quereable = quereable.Include(c => c.Type);
+                    queryable = queryable.Include(c => c.Type);
                 }
             }
 
-            return quereable;
+            return queryable;
         }
 
         public async Task<IEnumerable<Course>> GetStandaloneListByOrganizationIdAsync(long organizationId, CourseQueryOptions? options = null)

@@ -15,17 +15,17 @@ namespace FreeCampusServer.Repository
 
         public override IQueryable<CourseType> CreateDBSet(BaseQueryOptions? options)
         {
-            var quereable = base.CreateDBSet(options ?? new BaseQueryOptions());
+            var queryable = base.CreateDBSet(options ?? new BaseQueryOptions());
 
             if (options is CourseTypeQueryOptions courseTypeOptions)
             {
                 if (courseTypeOptions.IncludeOrganization)
                 {
-                    quereable = quereable.Include(t => t.Organization);
+                    queryable = queryable.Include(t => t.Organization);
                 }
             }
 
-            return quereable;
+            return queryable;
         }
     }
 }

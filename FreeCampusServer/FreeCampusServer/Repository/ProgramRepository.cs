@@ -3,6 +3,7 @@ using FreeCampusServer.QueryOptions;
 using Microsoft.EntityFrameworkCore;
 using RFBaseEF.Repositories;
 using RFBaseEntities.QueryOptions;
+using RFRGOBACEntities.Entities;
 
 namespace FreeCampusServer.Repository
 {
@@ -14,30 +15,30 @@ namespace FreeCampusServer.Repository
 
         public override IQueryable<Entities.Program> CreateDBSet(BaseQueryOptions? options)
         {
-            var quereable = base.CreateDBSet(options ?? new BaseQueryOptions());
+            var queryable = base.CreateDBSet(options ?? new BaseQueryOptions());
 
             if (options is ProgramQueryOptions programOptions)
             {
                 if (programOptions.IncludeOrganization)
-                {
-                    quereable = quereable.Include(p => p.Organization);
-                }
+                    queryable = queryable.Include(p => p.Organization);
 
                 if (programOptions.IncludeType)
-                {
-                    quereable = quereable.Include(p => p.Type);
-                }
+                    queryable = queryable.Include(p => p.Type);
+
+                if (programOptions.OrganizationId is not null)
+                    queryable = queryable.Where(p => p.OrganizationId == programOptions.OrganizationId);
             }
 
-            return quereable;
+            return queryable;
         }
 
-        public async Task<IEnumerable<long>> GetIdListByOrganizationIdAsync(long organizationId, ProgramQueryOptions? options = null)
+        public async Task<IEnumerable<long>> GetIdListAsync(ProgramQueryOptions options)
         {
-            options ??= new ProgramQueryOptions();
             var queryable = CreateDBSet(options);
+            if (options.OrganizationId is not null)
+                queryable = queryable.Where(p => p.OrganizationId == options.OrganizationId);
+
             var idList = await queryable
-                .Where(p => p.OrganizationId == organizationId)
                 .Select(p => p.Id)
                 .Skip(options.Skip)
                 .Take(options.Take)

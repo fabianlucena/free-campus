@@ -2,7 +2,6 @@
 using FreeCampusServer.IRepository;
 using FreeCampusServer.IServices;
 using FreeCampusServer.QueryOptions;
-using FreeCampusServer.Repository;
 using RFBaseServices.Services;
 
 namespace FreeCampusServer.Service
@@ -14,16 +13,13 @@ namespace FreeCampusServer.Service
         : CommonEntityService<Entities.Program>(programRepository),
         IProgramService
     {
-        public async Task<IEnumerable<long>> GetIdListByOrganizationIdAsync(long organizationId, ProgramQueryOptions? options = null)
-        {
-            var programIds = await programRepository.GetIdListByOrganizationIdAsync(organizationId);
-            return programIds;
-        }
+        public async Task<IEnumerable<long>> GetIdListAsync(ProgramQueryOptions options)
+            => await programRepository.GetIdListAsync(options);
 
-        public async Task<IEnumerable<Course>> GetCoursesByOrganizationIdAsync(long organizationId, ProgramQueryOptions? options = null)
+        public async Task<IEnumerable<Course>> GetAvailableCoursesAsync(ProgramQueryOptions options)
         {
             var courseXProgramService = serviceProvider.GetRequiredService<ICourseXProgramService>();
-            var programIds = await programRepository.GetIdListByOrganizationIdAsync(organizationId);
+            var programIds = await programRepository.GetIdListAsync(options);
             var coursesList = await courseXProgramService.GetCoursesByProgramId(programIds);
             return coursesList;
         }

@@ -1,6 +1,7 @@
 using FreeCampusServer.DTO;
 using FreeCampusServer.Exceptions;
 using FreeCampusServer.IServices;
+using FreeCampusServer.QueryOptions;
 using Microsoft.AspNetCore.Mvc;
 using RFPermissionsEntities.Attributes;
 using RFRGOBACEntities.Entities;
@@ -23,7 +24,13 @@ namespace FreeCampusServer.Controllers
             var organizationId = HttpContext.Items["OrganizationId"] as long?
                 ?? throw new NoOrganizationIdException();
 
-            var courses = await courseService.GetListAvailableByOrganizationIdAsync(organizationId);
+            var userId = HttpContext.Items["UserId"] as long?
+                ?? throw new NoUserIdException();
+
+            var courses = await courseService.GetAvailableListAsync(new CourseQueryOptions {
+                OrganizationId = organizationId,
+                StudentId = userId,
+            });
             var coursesResponse = courses.Select(course => new CourseResponse(course));
 
             return Ok(coursesResponse);

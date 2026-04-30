@@ -15,22 +15,22 @@ namespace FreeCampusServer.Repository
 
         public override IQueryable<Module> CreateDBSet(BaseQueryOptions? options)
         {
-            var quereable = base.CreateDBSet(options ?? new BaseQueryOptions());
+            var queryable = base.CreateDBSet(options ?? new BaseQueryOptions());
 
             if (options is ModuleQueryOptions moduleOptions)
             {
                 if (moduleOptions.IncludeOrganization)
                 {
-                    quereable = quereable.Include(m => m.Organization);
+                    queryable = queryable.Include(m => m.Organization);
                 }
 
                 if (moduleOptions.IncludeType)
                 {
-                    quereable = quereable.Include(m => m.Type);
+                    queryable = queryable.Include(m => m.Type);
                 }
             }
 
-            return quereable;
+            return queryable;
         }
     }
 }
