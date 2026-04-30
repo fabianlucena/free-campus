@@ -33,11 +33,13 @@ namespace FreeCampusServer.Repository
             return quereable;
         }
 
-        public async Task<IEnumerable<Course>> GetListByOrganizationIdAsync(long organizationId, CourseQueryOptions? options = null)
+        public async Task<IEnumerable<Course>> GetStandaloneListByOrganizationIdAsync(long organizationId, CourseQueryOptions? options = null)
         {
             var set = CreateDBSet(options);
             var session = await set
-                .Where(c => c.OrganizationId == organizationId)
+                .Where(c => c.OrganizationId == organizationId
+                    && c.IsStandalone
+                )
                 .ToListAsync();
 
             return session;

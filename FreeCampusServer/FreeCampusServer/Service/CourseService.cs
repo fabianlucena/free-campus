@@ -6,13 +6,23 @@ using RFBaseServices.Services;
 
 namespace FreeCampusServer.Service
 {
-    public class CourseService(ICourseRepository courseRepository)
+    public class CourseService(
+        ICourseRepository courseRepository,
+        IServiceProvider serviceProvider
+    )
         : CommonEntityService<Course>(courseRepository),
         ICourseService
     {
-        public async Task<IEnumerable<Course>> GetListByOrganizationIdAsync(long organizationId, CourseQueryOptions? options = null)
+        public async Task<IEnumerable<Course>> GetListAvailableByOrganizationIdAsync(long organizationId, CourseQueryOptions? options = null)
         {
-            return await courseRepository.GetListByOrganizationIdAsync(organizationId, options);
+            var programService = serviceProvider.GetRequiredService<IProgramService>();
+
+            var list = await courseRepository.GetStandaloneListByOrganizationIdAsync(organizationId, options);
+            list = list.Where(c => c.IsStandalone);
+
+            var programList = await programService.GetCoursesByOrganizationIdAsync(organizationId);
+
+            return list;
         }
     }
 }

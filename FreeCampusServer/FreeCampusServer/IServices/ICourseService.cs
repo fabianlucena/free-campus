@@ -6,6 +6,6 @@ namespace FreeCampusServer.IServices
 {
     public interface ICourseService : ICommonEntityService<Course>
     {
-        Task<IEnumerable<Course>> GetListByOrganizationIdAsync(long organizationId, CourseQueryOptions? options = null);
+        Task<IEnumerable<Course>> GetListAvailableByOrganizationIdAsync(long organizationId, CourseQueryOptions? options = null);
     }
 }

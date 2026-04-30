@@ -6,6 +6,6 @@ namespace FreeCampusServer.IRepository
 {
     public interface ICourseRepository : ICommonEntityRepository<Course>
     {
-        Task<IEnumerable<Course>> GetListByOrganizationIdAsync(long organizationId, CourseQueryOptions? options = null);
+        Task<IEnumerable<Course>> GetStandaloneListByOrganizationIdAsync(long organizationId, CourseQueryOptions? options = null);
     }
 }

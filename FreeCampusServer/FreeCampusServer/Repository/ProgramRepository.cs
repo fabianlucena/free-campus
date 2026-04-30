@@ -31,5 +31,19 @@ namespace FreeCampusServer.Repository
 
             return quereable;
         }
+
+        public async Task<IEnumerable<long>> GetIdListByOrganizationIdAsync(long organizationId, ProgramQueryOptions? options = null)
+        {
+            options ??= new ProgramQueryOptions();
+            var queryable = CreateDBSet(options);
+            var idList = await queryable
+                .Where(p => p.OrganizationId == organizationId)
+                .Select(p => p.Id)
+                .Skip(options.Skip)
+                .Take(options.Take)
+                .ToListAsync();
+
+            return idList;
+        }
     }
 }
