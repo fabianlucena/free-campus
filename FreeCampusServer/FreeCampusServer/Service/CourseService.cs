@@ -17,12 +17,11 @@ namespace FreeCampusServer.Service
         {
             var programService = serviceProvider.GetRequiredService<IProgramService>();
 
-            var list = await courseRepository.GetStandaloneListByOrganizationIdAsync(organizationId, options);
-            list = list.Where(c => c.IsStandalone);
-
+            var standalonelist = await courseRepository.GetStandaloneListByOrganizationIdAsync(organizationId, options);
             var programList = await programService.GetCoursesByOrganizationIdAsync(organizationId);
 
-            return list;
+            return standalonelist
+                .Concat(programList);
         }
     }
 }
