@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../vue-comp"
+		},
+		{
+			"path": "../rf-nugets_v2"
+		},
+		{
+			"path": "../rf-nugets"
+		}
+	],
+	"settings": {}
+}

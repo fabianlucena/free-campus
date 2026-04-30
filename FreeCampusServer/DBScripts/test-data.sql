@@ -120,7 +120,7 @@ USING (VALUES
     ON target.OrganizationId = source.OrganizationId AND target.TypeId = source.TypeId AND target.Title = source.Title AND target.Description = source.Description
 WHEN NOT MATCHED THEN
     INSERT (
-		Uuid, source.OrganizationId, TypeId,
+		Uuid, OrganizationId, TypeId,
         CreatedAt, UpdatedAt, DeletedAt,
         CreatedById, UpdatedById, DeletedById,
         Title, Description
@@ -142,7 +142,7 @@ MERGE fc.CourseTypes AS target
 USING (VALUES 
 		(@freeCampusId, 'Independiente', 'Cursos independiente')
 	) AS source(OrganizationId, Title, Description)	
-    ON target.OrganizationId = source.OrganizationId, target.Title = source.Title AND target.Description = source.Description
+    ON target.OrganizationId = source.OrganizationId AND target.Title = source.Title AND target.Description = source.Description
 WHEN NOT MATCHED THEN
     INSERT (
 		Uuid, OrganizationId,
@@ -167,7 +167,7 @@ DECLARE
 MERGE fc.Courses AS target
 USING (VALUES 
 		(@freeCampusId, @courseTypeIndependienteId, 'Prueba 1', 'Curso de prueba 1')
-	) AS source(Title, Description, TypeId, ProgramId)	
+	) AS source(OrganizationId, TypeId, Title, Description)	
     ON target.OrganizationId = source.OrganizationId AND target.TypeId = source.TypeId AND target.Title = source.Title AND target.Description = source.Description
 WHEN NOT MATCHED THEN
     INSERT (
