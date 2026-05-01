@@ -12,9 +12,9 @@ var rawMenu = [
   },
   {
     name: 'courses',
-    label: _('Standalone courses'),
-    to: '/standalone-courses',
-    condition: () => authState.permissions.includes('standaloneCourses.view'),
+    label: _('Available courses'),
+    to: '/available-courses',
+    condition: () => authState.permissions.includes('availableCourses.view'),
   },
   {
     name: 'logout',

@@ -5,7 +5,7 @@ import HomeView from '../views/HomeView.vue';
 import AboutView from '../views/AboutView.vue';
 import LoginView from '../views/LoginView.vue';
 import DashboardView from '../views/DashboardView.vue';
-import StandaloneCoursesView from '../views/StandaloneCoursesView.vue';
+import AvailableCoursesView from '../views/AvailableCoursesView.vue';
 
 const routes = [
   {
@@ -18,7 +18,6 @@ const routes = [
   },
   {
     path: '/login',
-    component: LoginView,
     condition: () => !authState.isLoggedIn,
   },
   {
@@ -27,9 +26,9 @@ const routes = [
     condition: () => authState.isLoggedIn,
   },
   {
-    path: '/standalone-courses',
-    component: StandaloneCoursesView,
-    condition: () => authState.permissions.includes('standaloneCourses.view'),
+    path: '/available-courses',
+    component: AvailableCoursesView,
+    condition: () => authState.permissions.includes('availableCourses.view'),
   },
 ];
 
