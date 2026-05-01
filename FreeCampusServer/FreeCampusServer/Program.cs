@@ -47,7 +47,6 @@ namespace FreeCampusServer
 
             builder.Services.AddHttpContextAccessor();
 
-            builder.Services.AddRFBaseEntitiesServices();
             builder.Services.AddRFBaseServices();
             builder.Services.AddRFBaseEF();
 

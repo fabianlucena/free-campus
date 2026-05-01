@@ -6,6 +6,5 @@ namespace FreeCampusServer.IServices
 {
     public interface IProgramEnrollmentService : ICommonEntityService<ProgramEnrollment>
     {
-        Task<IEnumerable<long>> GetCourseIdsAsync(ProgramEnrollmentQueryOptions options);
     }
 }

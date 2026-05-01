@@ -8,8 +8,7 @@ using RFBaseServices.Services;
 namespace FreeCampusServer.Service
 {
     public class CourseService(
-        ICourseRepository courseRepository,
-        IServiceProvider serviceProvider
+        ICourseRepository courseRepository
     )
         : CommonEntityService<Course>(courseRepository),
         ICourseService
@@ -22,22 +21,14 @@ namespace FreeCampusServer.Service
             if (options.StudentId is null)
                 throw new NoStudentIdException();
 
-            var standalonelist = await GetListAsync(new CourseQueryOptions(options)
+            var availableList = await GetListAsync(new CourseQueryOptions(options)
             {
-                IsStandalone = true,
+                IsStandaloneOrEnrolledInProgram = true,
                 StudentId = null,
                 ExcludeStudentId = options.StudentId,
             });
 
-            var courseXProgramService = serviceProvider.GetRequiredService<ICourseXProgramService>();
-            var programCourses = await courseXProgramService.GetCoursesAsync(new CourseXProgramQueryOptions
-            {
-                OrganizationId = options.OrganizationId,
-                ExcludeStudentId = options.ExcludeStudentId,
-            });
-
-            return standalonelist
-                .Concat(programCourses);
+            return availableList;
         }
     }
 }

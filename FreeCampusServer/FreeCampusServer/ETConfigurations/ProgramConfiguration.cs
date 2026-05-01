@@ -3,7 +3,7 @@ using RFBaseEF.ETConfigurations;
 
 namespace FreeCampusServer.ETConfigurations
 {
-    public class ProgramConfiguration : BaseConfiguration<Entities.Program>
+    public class ProgramConfiguration : CommonEntityConfiguration<Entities.Program>
     {
         public override void Configure(EntityTypeBuilder<Entities.Program> entity)
         {

@@ -7,17 +7,17 @@ using RFBaseEntities.QueryOptions;
 
 namespace FreeCampusServer.Repository
 {
-    public class CourseTypeRepository(AppDbContext appContext)
-        : CreatableEntityRepository<CourseType>(appContext),
-        ICourseTypeRepository
+    public class CourseStatusRepository(AppDbContext appContext)
+        : NominableEntityRepository<CourseStatus>(appContext),
+        ICourseStatusRepository
     {
-        public override IQueryable<CourseType> CreateDBSet(BaseQueryOptions? options = null)
+        public override IQueryable<CourseStatus> CreateDBSet(BaseQueryOptions? options = null)
         {
             var queryable = base.CreateDBSet(options ?? new BaseQueryOptions());
 
-            if (options is CourseTypeQueryOptions courseTypeOptions)
+            if (options is CourseStatusQueryOptions courseStatusOptions)
             {
-                if (courseTypeOptions.IncludeOrganization)
+                if (courseStatusOptions.IncludeOrganization)
                 {
                     queryable = queryable.Include(t => t.Organization);
                 }
@@ -26,7 +26,7 @@ namespace FreeCampusServer.Repository
             return queryable;
         }
 
-        public async Task<IEnumerable<CourseType>> GetListByOrganizationIdAsync(long organizationId, CourseTypeQueryOptions? options = null)
+        public async Task<IEnumerable<CourseStatus>> GetListByOrganizationIdAsync(long organizationId, CourseStatusQueryOptions? options = null)
         {
             var query = CreateDBSet(options);
             var result = await query

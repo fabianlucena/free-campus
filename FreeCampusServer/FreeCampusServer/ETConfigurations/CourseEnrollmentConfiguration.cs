@@ -4,9 +4,9 @@ using RFBaseEF.ETConfigurations;
 
 namespace FreeCampusServer.ETConfigurations
 {
-    public class CourseTypeConfiguration : CommonEntityConfiguration<CourseType>
+    public class CourseEnrollmentConfiguration : CommonEntityConfiguration<CourseEnrollment>
     {
-        public override void Configure(EntityTypeBuilder<CourseType> entity)
+        public override void Configure(EntityTypeBuilder<CourseEnrollment> entity)
         {
             base.Configure(entity);
         }

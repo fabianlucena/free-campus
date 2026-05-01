@@ -10,10 +10,9 @@ namespace FreeCampusServer.QueryOptions
         public long? OrganizationId { get; init; }
         public long? StudentId { get; init; }
         public bool? IsStandalone { get; init; }
-        public long? ExcludeStudentId { get; init; }
 
-        public IEnumerable<long>? Ids { get; init; }
-        public IEnumerable<long>? ExcludeIds { get; init; }
+        public bool IsStandaloneOrEnrolledInProgram { get; init; }
+        public long? ExcludeStudentId { get; init; }
 
         public CourseQueryOptions() { }
 
@@ -29,9 +28,6 @@ namespace FreeCampusServer.QueryOptions
             StudentId = other.StudentId;
             IsStandalone = other.IsStandalone;
             ExcludeStudentId = other.ExcludeStudentId;
-
-            Ids = other.Ids?.ToList();
-            ExcludeIds = other.ExcludeIds?.ToList();
         }
     }
 }

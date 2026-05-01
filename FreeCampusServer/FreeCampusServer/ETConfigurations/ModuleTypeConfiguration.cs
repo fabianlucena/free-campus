@@ -4,7 +4,7 @@ using RFBaseEF.ETConfigurations;
 
 namespace FreeCampusServer.ETConfigurations
 {
-    public class ModuleTypeConfiguration : BaseConfiguration<ModuleType>
+    public class ModuleTypeConfiguration : CommonEntityConfiguration<ModuleType>
     {
         public override void Configure(EntityTypeBuilder<ModuleType> entity)
         {

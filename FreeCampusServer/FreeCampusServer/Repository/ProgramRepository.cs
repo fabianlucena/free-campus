@@ -6,12 +6,10 @@ using RFBaseEntities.QueryOptions;
 
 namespace FreeCampusServer.Repository
 {
-    public class ProgramRepository
-        : CreatableEntityRepository<Entities.Program>,
+    public class ProgramRepository(AppDbContext appContext)
+        : CreatableEntityRepository<Entities.Program>(appContext),
         IProgramRepository
     {
-        public ProgramRepository(DbContext context) : base(context) { }
-
         public override IQueryable<Entities.Program> CreateDBSet(BaseQueryOptions? options)
         {
             var queryable = base.CreateDBSet(options ?? new BaseQueryOptions());

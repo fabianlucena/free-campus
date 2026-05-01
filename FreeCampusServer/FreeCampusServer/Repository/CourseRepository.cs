@@ -7,8 +7,8 @@ using RFBaseEntities.QueryOptions;
 
 namespace FreeCampusServer.Repository
 {
-    public class CourseRepository(DbContext context)
-        : CreatableEntityRepository<Course>(context),
+    public class CourseRepository(AppDbContext appContext)
+        : CreatableEntityRepository<Course>(appContext),
         ICourseRepository
     {
         public override IQueryable<Course> CreateDBSet(BaseQueryOptions? options)
@@ -29,21 +29,36 @@ namespace FreeCampusServer.Repository
                 if (courseOptions.IsStandalone is not null)
                     queryable = queryable.Where(c => c.IsStandalone == courseOptions.IsStandalone);
 
-                if (courseOptions.Ids is not null)
-                    queryable = queryable.Where(c => courseOptions.Ids.Contains(c.Id));
-
-                if (courseOptions.ExcludeIds is not null)
-                    queryable = queryable.Where(c => !courseOptions.ExcludeIds.Contains(c.Id));
+                if (courseOptions.IsStandaloneOrEnrolledInProgram)
+                {
+                    var pe = appContext.ProgramEnrollments;
+                    var cxp = appContext.CoursesXPrograms;
+                    queryable = queryable.Where(c =>
+                        c.IsStandalone ||
+                        cxp.Any(cp =>
+                            cp.CourseId == c.Id &&
+                            pe.Any(p =>
+                                p.ProgramId == cp.ProgramId &&
+                                p.StudentId == courseOptions.StudentId
+                            )
+                        )
+                    );
+                }
 
                 if (courseOptions.StudentId is not null || courseOptions.ExcludeStudentId is not null)
                 {
-                    var courseEnrollmentRepository = new CourseEnrollmentRepository(context);
-                    var ceDB = courseEnrollmentRepository.CreateDBSet();
+                    var ce = appContext.CourseEnrollments.AsQueryable();
                     if (courseOptions.StudentId is not null)
-                        queryable.Where(c => ceDB.Any(ce => ce.CourseId == c.Id && ce.StudentId == courseOptions.StudentId));
+                        queryable = queryable.Where(c => 
+                            ce.Any(ce => ce.CourseId == c.Id &&
+                                ce.StudentId == courseOptions.StudentId
+                            ));
 
                     if (courseOptions.ExcludeStudentId is not null)
-                        queryable.Where(c => !ceDB.Any(ce => ce.CourseId == c.Id && ce.StudentId == courseOptions.ExcludeStudentId));
+                        queryable = queryable.Where(c => 
+                            !ce.Any(ce => ce.CourseId == c.Id && 
+                                ce.StudentId == courseOptions.ExcludeStudentId
+                            ));
                 }
             }
 

@@ -667,6 +667,50 @@ BEGIN
 END
 GO
 
+/* CourseStatuses table */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE t.name = 'CourseStatuses'
+      AND s.name = 'fc'
+)
+BEGIN
+	CREATE TABLE fc.CourseStatuses(
+		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+		Uuid UNIQUEIDENTIFIER NOT NULL,
+
+		OrganizationId BIGINT NOT NULL,
+
+		Name VARCHAR(256) NOT NULL,
+		Title VARCHAR(256) NOT NULL,
+		Description VARCHAR(MAX) NULL,
+		IsActive BIT NOT NULL DEFAULT 1,
+
+		CreatedAt DATETIME2 NOT NULL,
+		CreatedById BIGINT NOT NULL,
+
+		UpdatedAt DATETIME2 NOT NULL,
+		UpdatedById BIGINT NOT NULL,
+
+		DeletedAt DATETIME2 NULL,
+		DeletedById BIGINT NULL,
+
+		CONSTRAINT FK_fc_CourseStatuses_OrganizationId FOREIGN KEY (OrganizationId)
+			REFERENCES auth.Organizations(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_CourseStatuses_CreatedById FOREIGN KEY (CreatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_CourseStatuses_UpdatedById FOREIGN KEY (UpdatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_CourseStatuses_DeletedById FOREIGN KEY (DeletedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+	);
+END
+GO
+
 /* Courses table */
 IF NOT EXISTS (
     SELECT 1
@@ -682,9 +726,13 @@ BEGIN
 
 		OrganizationId BIGINT NOT NULL,
 		TypeId BIGINT NOT NULL,
+		StatusId BIGINT NOT NULL,
 
 		Title VARCHAR(256) NOT NULL,
 		Description VARCHAR(MAX) NULL,
+		IsStandalone BIT NULL,
+		Credits INT NULL,
+		Hours INT NULL,
 		
 		CreatedAt DATETIME2 NOT NULL,
 		CreatedById BIGINT NOT NULL,
@@ -700,6 +748,9 @@ BEGIN
 
 		CONSTRAINT FK_fc_Courses_TypeId FOREIGN KEY (TypeId)
 			REFERENCES fc.CourseTypes(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_Courses_StatusId FOREIGN KEY (StatusId)
+			REFERENCES fc.CourseStatuses(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_Courses_CreatedById FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,

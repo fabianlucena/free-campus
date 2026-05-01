@@ -6,7 +6,5 @@ namespace FreeCampusServer.QueryOptions
     {
         public bool IncludeProgram { get; init; }
         public bool IncludeStudent { get; init; }
-
-        public long? StudentId { get; init; }
     }
 }

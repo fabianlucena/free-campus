@@ -4,7 +4,6 @@ using FreeCampusServer.IServices;
 using FreeCampusServer.QueryOptions;
 using Microsoft.AspNetCore.Mvc;
 using RFPermissionsEntities.Attributes;
-using RFRGOBACEntities.Entities;
 
 namespace FreeCampusServer.Controllers
 {
@@ -21,7 +20,7 @@ namespace FreeCampusServer.Controllers
         {
             logger.LogInformation("GET v1/available-courses");
 
-            var organizationId = HttpContext.Items["OrganizationId"] as long?
+            var organizationId = HttpContext.Items["CurrentOrganizationId"] as long?
                 ?? throw new NoOrganizationIdException();
 
             var userId = HttpContext.Items["UserId"] as long?
