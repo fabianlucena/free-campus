@@ -3,7 +3,6 @@ using FreeCampusServer.QueryOptions;
 using Microsoft.EntityFrameworkCore;
 using RFBaseEF.Repositories;
 using RFBaseEntities.QueryOptions;
-using RFRGOBACEntities.Entities;
 
 namespace FreeCampusServer.Repository
 {
@@ -35,9 +34,6 @@ namespace FreeCampusServer.Repository
         public async Task<IEnumerable<long>> GetIdListAsync(ProgramQueryOptions options)
         {
             var queryable = CreateDBSet(options);
-            if (options.OrganizationId is not null)
-                queryable = queryable.Where(p => p.OrganizationId == options.OrganizationId);
-
             var idList = await queryable
                 .Select(p => p.Id)
                 .Skip(options.Skip)

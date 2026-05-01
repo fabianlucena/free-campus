@@ -9,7 +9,29 @@ namespace FreeCampusServer.QueryOptions
 
         public long? OrganizationId { get; init; }
         public long? StudentId { get; init; }
-        public bool? Standalone { get; init; }
+        public bool? IsStandalone { get; init; }
         public long? ExcludeStudentId { get; init; }
+
+        public IEnumerable<long>? Ids { get; init; }
+        public IEnumerable<long>? ExcludeIds { get; init; }
+
+        public CourseQueryOptions() { }
+
+        public CourseQueryOptions(CourseQueryOptions? other)
+        {
+            if (other is null)
+                return;
+
+            IncludeOrganization = other.IncludeOrganization;
+            IncludeType = other.IncludeType;
+
+            OrganizationId = other.OrganizationId;
+            StudentId = other.StudentId;
+            IsStandalone = other.IsStandalone;
+            ExcludeStudentId = other.ExcludeStudentId;
+
+            Ids = other.Ids?.ToList();
+            ExcludeIds = other.ExcludeIds?.ToList();
+        }
     }
 }

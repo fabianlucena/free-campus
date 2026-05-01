@@ -8,6 +8,15 @@ namespace FreeCampusServer.QueryOptions
         public bool IncludeType { get; init; } = true;
 
         public long? OrganizationId { get; init; }
-        public long? StudentId { get; init; }
+
+        public ProgramQueryOptions() { }
+
+        public ProgramQueryOptions(ProgramQueryOptions options)
+        {
+            IncludeOrganization = options.IncludeOrganization;
+            IncludeType = options.IncludeType;
+
+            OrganizationId = options.OrganizationId;
+        }
     }
 }

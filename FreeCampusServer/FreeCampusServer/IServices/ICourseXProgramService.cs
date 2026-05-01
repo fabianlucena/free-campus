@@ -4,8 +4,8 @@ using RFBaseIServices.IServices;
 
 namespace FreeCampusServer.IServices
 {
-    public interface ICourseXProgramService : ICommonJoinService<CourseXProgram>
+    public interface ICourseXProgramService : ICommonEntityService<CourseXProgram>
     {
-        Task<IEnumerable<Course>> GetCoursesByProgramId(IEnumerable<long> programIds, CourseXProgramQueryOptions? options = null);
+        Task<IEnumerable<Course>> GetCoursesAsync(CourseXProgramQueryOptions options);
     }
 }

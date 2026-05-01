@@ -14,36 +14,30 @@ namespace FreeCampusServer.Service
         : CommonEntityService<Course>(courseRepository),
         ICourseService
     {
-        public async Task<IEnumerable<Course>> GetListAsync(CourseQueryOptions options)
+        public async Task<IEnumerable<Course>> GetAvailableListAsync(CourseQueryOptions options)
         {
             if (options.OrganizationId is null)
                 throw new NoOrganizationIdException();
 
-            return await courseRepository.GetListAsync(options);
-        }
+            if (options.StudentId is null)
+                throw new NoStudentIdException();
 
-        public async Task<IEnumerable<Course>> GetStandaloneListAsync(CourseQueryOptions options)
-        {
-            options = new CourseQueryOptions(options)
+            var standalonelist = await GetListAsync(new CourseQueryOptions(options)
             {
-                Standalone = true
-            };
+                IsStandalone = true,
+                StudentId = null,
+                ExcludeStudentId = options.StudentId,
+            });
 
-            return await GetListAsync(options);
-        }
-
-        public async Task<IEnumerable<Course>> GetAvailableListAsync(CourseQueryOptions options)
-        {
-            var programService = serviceProvider.GetRequiredService<IProgramService>();
-
-            var standalonelist = await GetStandaloneListAsync(options);
-            var programList = await programService.GetAvailableCoursesAsync(new ProgramQueryOptions {
+            var courseXProgramService = serviceProvider.GetRequiredService<ICourseXProgramService>();
+            var programCourses = await courseXProgramService.GetCoursesAsync(new CourseXProgramQueryOptions
+            {
                 OrganizationId = options.OrganizationId,
-                StudentId = options.StudentId,
+                ExcludeStudentId = options.ExcludeStudentId,
             });
 
             return standalonelist
-                .Concat(programList);
+                .Concat(programCourses);
         }
     }
 }

@@ -17,5 +17,8 @@ namespace FreeCampusServer.Entities
         public string Description { get; set; } = string.Empty;
 
         public bool IsStandalone { get; set; } = false;
+
+        public int Credits { get; set; }
+        public int Hours { get; set; }
     }
 }
