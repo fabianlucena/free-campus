@@ -8,7 +8,7 @@ using RFBaseEntities.QueryOptions;
 namespace FreeCampusServer.Repository
 {
     public class CourseStatusRepository(AppDbContext appContext)
-        : NominableEntityRepository<CourseStatus>(appContext),
+        : TranslatableEntityRepository<CourseStatus>(appContext),
         ICourseStatusRepository
     {
         public override IQueryable<CourseStatus> CreateDBSet(BaseQueryOptions? options = null)

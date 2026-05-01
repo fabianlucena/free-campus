@@ -682,10 +682,11 @@ BEGIN
 
 		OrganizationId BIGINT NOT NULL,
 
+		[Order] INT NOT NULL,
 		Name VARCHAR(256) NOT NULL,
+		IsActive BIT NOT NULL DEFAULT 1,
 		Title VARCHAR(256) NOT NULL,
 		Description VARCHAR(MAX) NULL,
-		IsActive BIT NOT NULL DEFAULT 1,
 
 		CreatedAt DATETIME2 NOT NULL,
 		CreatedById BIGINT NOT NULL,
@@ -847,6 +848,59 @@ BEGIN
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_Modules_DeletedById FOREIGN KEY (DeletedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+	);
+END
+GO
+
+/* CourseEnrollments table */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE t.name = 'CourseEnrollments'
+      AND s.name = 'fc'
+)
+BEGIN
+	CREATE TABLE fc.CourseEnrollments(
+		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+		Uuid UNIQUEIDENTIFIER NOT NULL,
+
+		CourseId BIGINT NOT NULL,
+		StudentId BIGINT NOT NULL,
+		EnrolledAt DATETIME2 NOT NULL,
+		CompletedAt DATETIME2 NULL,
+		DroppedAt DATETIME2 NULL,
+		StatusId BIGINT NOT NULL,
+		FinalGrade DECIMAL(5,2) NULL,
+		Progress FLOAT NOT NULL,
+		IsActive BIT NOT NULL,
+
+		CreatedAt DATETIME2 NOT NULL,
+		CreatedById BIGINT NOT NULL,
+
+		UpdatedAt DATETIME2 NOT NULL,
+		UpdatedById BIGINT NOT NULL,
+
+		DeletedAt DATETIME2 NULL,
+		DeletedById BIGINT NULL,
+
+		CONSTRAINT FK_fc_CourseEnrollments_CourseId FOREIGN KEY (CourseId)
+			REFERENCES fc.Courses(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_CourseEnrollments_StudentId FOREIGN KEY (StudentId)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_CourseEnrollments_StatusId FOREIGN KEY (StatusId)
+			REFERENCES fc.CourseStatuses(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_CourseEnrollments_CreatedById FOREIGN KEY (CreatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_CourseEnrollments_UpdatedById FOREIGN KEY (UpdatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_CourseEnrollments_DeletedById FOREIGN KEY (DeletedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 	);
 END

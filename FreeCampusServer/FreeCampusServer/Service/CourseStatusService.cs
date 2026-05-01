@@ -7,7 +7,7 @@ using RFBaseServices.Services;
 namespace FreeCampusServer.Service
 {
     public class CourseStatusService(ICourseStatusRepository courseStatusRepository)
-        : NominableEntityService<CourseStatus>(courseStatusRepository),
+        : TranslatableEntityService<CourseStatus>(courseStatusRepository),
         ICourseStatusService
     {
         public async Task<IEnumerable<CourseStatus>> GetListByOrganizationIdAsync(long organizationId, CourseStatusQueryOptions? options = null)

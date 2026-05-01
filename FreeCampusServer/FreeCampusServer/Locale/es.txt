@@ -1,0 +1,65 @@
+Approved
+Aprobada
+
+Archived
+Archivada
+
+Canceled
+Cancelada
+
+Completed
+Completado
+
+Dropped
+Baja voluntaria
+
+Enrolled
+Inscripto
+
+Failed
+Reprobado
+
+InProgress
+En curso
+
+Pending
+Pendiente
+
+Rejected
+Rechazada
+
+The enrollment is no longer active and has been stored for historical or auditing purposes.
+La inscripción ya no está activa y se conserva solo con fines históricos o de auditoría.
+
+The enrollment request has been reviewed and officially approved by the institution or instructor.
+La solicitud de inscripción fue revisada y aprobada oficialmente por la institución o el instructor.
+
+The enrollment request has been submitted but is still awaiting review or approval.
+La solicitud de inscripción fue enviada pero aún está en revisión o espera aprobación.
+
+The enrollment request was reviewed and explicitly denied.
+La solicitud de inscripción fue enviada pero aún está en revisión o espera aprobación.
+
+The enrollment was invalidated or removed by the institution (administrative error, payment issue, or policy violation).
+La inscripción fue anulada por la institución (error administrativo, problema de pago o violación de políticas).
+
+The student completed the course but did not meet the minimum requirements to pass.
+El estudiante completó el curso pero no alcanzó los requisitos mínimos para aprobar.
+
+The student has begun participating in the course (accessed content, submitted work, or attended sessions).
+El estudiante comenzó a participar (accedió al contenido, entregó actividades o asistió a clases).
+
+The student has successfully finished all required activities and met the completion criteria.
+El estudiante finalizó todas las actividades requeridas y cumplió los criterios de aprobación.
+
+The student is officially enrolled in the course but has not yet started any activity.
+El estudiante está oficialmente inscripto en el curso, pero aún no comenzó ninguna actividad.
+
+The student is on a waiting list because the course is full. Enrollment will activate if a seat becomes available.
+El estudiante está en lista de espera porque el curso está completo. La inscripción se activará si se libera un cupo.
+
+The student voluntarily withdrew from the course after being enrolled.
+El estudiante se dio de baja del curso después de estar inscripto.
+
+Waitlisted
+En lista de espera

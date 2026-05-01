@@ -4,7 +4,7 @@ using RFBaseIServices.IServices;
 
 namespace FreeCampusServer.IServices
 {
-    public interface ICourseStatusService : INominableEntityService<CourseStatus>
+    public interface ICourseStatusService : ITranslatableEntityService<CourseStatus>
     {
         Task<IEnumerable<CourseStatus>> GetListByOrganizationIdAsync(long organizationId, CourseStatusQueryOptions? options = null);
     }

@@ -25,4 +25,8 @@
     <ProjectReference Include="..\..\..\rf-nugets_v2\RFRGOBACServices\RFRGOBACServices.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Locale\" />
+  </ItemGroup>
+
 </Project>

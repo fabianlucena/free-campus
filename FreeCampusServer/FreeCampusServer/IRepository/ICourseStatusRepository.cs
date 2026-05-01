@@ -4,7 +4,7 @@ using RFBaseIRepositories.IRepositories;
 
 namespace FreeCampusServer.IRepository
 {
-    public interface ICourseStatusRepository : INominableEntityRepository<CourseStatus>
+    public interface ICourseStatusRepository : ITranslatableEntityRepository<CourseStatus>
     {
         Task<IEnumerable<CourseStatus>> GetListByOrganizationIdAsync(long organizationId, CourseStatusQueryOptions? options = null);
     }

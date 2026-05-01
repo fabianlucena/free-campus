@@ -7,6 +7,7 @@ using RFAuthServices.Middlewares;
 using RFBaseEF;
 using RFBaseEntities;
 using RFBaseServices;
+using RFHttpExceptions.Middlewares;
 using RFPermissionsEF;
 using RFPermissionsServices;
 using RFRBACEF;
@@ -82,6 +83,7 @@ namespace FreeCampusServer
             app.UseAuthorization();
 
             app.UseMiddleware<AuthorizationMiddleware>();
+            app.UseMiddleware<HttpExceptionMiddleware>();
 
             app.MapControllers();
 
