@@ -168,3 +168,29 @@ WHEN NOT MATCHED THEN
         source.Name, 'Free campus academy'
     );
 GO
+
+/* Insert courses statuses for freeCampus */
+DECLARE
+	@systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
+	@templateId BIGINT = (SELECT Id FROM auth.Organizations WHERE Name = 'template'),
+	@freeCampusId BIGINT = (SELECT Id FROM auth.Organizations WHERE Name = 'freeCampus');
+MERGE fc.CourseStatuses AS target
+USING (SELECT [Order], Name, IsActive, Title, Description
+	FROM fc.CourseStatuses cs
+	WHERE cs.OrganizationId = @templateId
+) AS source
+    ON target.Name = source.Name AND target.OrganizationId = @freeCampusId
+WHEN NOT MATCHED THEN
+    INSERT (
+        Uuid, OrganizationId,
+		[Order], Name, IsActive, Title, Description,
+		CreatedAt, UpdatedAt, DeletedAt,
+		CreatedById, UpdatedById, DeletedById
+    )
+    VALUES (
+        NEWID(), @freeCampusId,
+		source.[Order], source.Name, source.IsActive, source.Title, source.Description,
+		GETUTCDATE(), GETUTCDATE(), NULL,
+        @systemUserId, @systemUserId, NULL
+    );
+GO
