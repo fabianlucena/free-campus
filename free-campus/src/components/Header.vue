@@ -5,7 +5,7 @@
   >
     <Header>
       <ButtonMenu v-if="showMenuButton" @click="emit('toggleMenu')" />
-      <span class="title">Free Campus</span>
+      <span class="title">{{ authState.currentOrganization?.title || 'Free Campus' }}</span>
       <span class="right">
         <ButtonLightDark :value="theme" @click="toggleTheme" />
         <ButtonUser v-if="authState.isLoggedIn" @click="emit('userClick')" />
