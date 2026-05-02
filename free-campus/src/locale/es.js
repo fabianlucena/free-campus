@@ -10,7 +10,7 @@ export const translations = {
   'Home': 'Inicio',
   'Login': 'Iniciar sesión',
   'Logout': 'Cerrar sesión',
-  'My Courses': 'Mis cursos',
+  'My courses': 'Mis cursos',
   'Password': 'Contraseña',
   'Username': 'Nombre de usuario',
 };

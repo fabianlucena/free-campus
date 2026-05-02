@@ -55,7 +55,8 @@ DECLARE
     @now DATETIME2 = GETUTCDATE();
 MERGE auth.Permissions AS target
 USING (VALUES
-    ('availableCourses.view')
+    ('availableCourses.view'),
+    ('myCourses.view')
 ) AS source (Name)
     ON target.Name = source.Name
 WHEN NOT MATCHED THEN
@@ -80,7 +81,8 @@ USING (SELECT r.Id, p.Id
 		auth.Permissions p
 	WHERE CONCAT(r.Name, '*', p.Name)
 		IN(
-			'student*availableCourses.view'
+			'student*availableCourses.view',
+			'student*myCourses.view'
 		)
 ) AS source (RoleId, PermissionId)
     ON target.RoleId = source.RoleId AND target.PermissionId = source.PermissionId

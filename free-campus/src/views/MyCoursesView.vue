@@ -1,6 +1,6 @@
 <template>
   <section>
-    <h2>{{ _('My Courses') }}</h2>
+    <h2>{{ _('My courses') }}</h2>
     <Cards>
       <CourseCard
         v-for="course in courses" :key="course.id"
