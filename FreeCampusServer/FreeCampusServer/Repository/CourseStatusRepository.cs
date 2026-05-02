@@ -13,7 +13,7 @@ namespace FreeCampusServer.Repository
     {
         public override IQueryable<CourseStatus> CreateDBSet(BaseQueryOptions? options = null)
         {
-            var queryable = base.CreateDBSet(options ?? new BaseQueryOptions());
+            var queryable = base.CreateDBSet(options);
 
             if (options is CourseStatusQueryOptions courseStatusOptions)
             {
@@ -28,7 +28,7 @@ namespace FreeCampusServer.Repository
 
         public async Task<IEnumerable<CourseStatus>> GetListByOrganizationIdAsync(long organizationId, CourseStatusQueryOptions? options = null)
         {
-            var query = CreateDBSet(options);
+            var query = GetDBSet(options);
             var result = await query
                 .Where(t => t.OrganizationId == organizationId)
                 .ToListAsync();

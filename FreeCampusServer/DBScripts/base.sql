@@ -116,7 +116,7 @@ WHEN NOT MATCHED THEN
     VALUES (
         NEWID(), GETUTCDATE(), GETUTCDATE(), NULL,
         @systemUserId, @systemUserId, NULL,
-        source.Name, source.IsActive, source.IsTranslatable, source.Title, source.Description, 
+        source.Name, source.IsActive, source.IsTranslatable, source.Title, source.Description
     );
 GO
 
@@ -171,7 +171,7 @@ WHEN NOT MATCHED THEN
     VALUES (
         NEWID(), GETUTCDATE(), GETUTCDATE(), NULL,
         @systemUserId, @systemUserId, NULL,
-        source.Name, source.IsActive, source.IsTranslatable, source.Title, source.Description, 
+        source.Name, source.IsActive, source.IsTranslatable, source.Title, source.Description
     );
 GO
 

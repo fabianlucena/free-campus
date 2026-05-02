@@ -10,9 +10,9 @@ namespace FreeCampusServer.Repository
         : CreatableEntityRepository<Entities.Program>(appContext),
         IProgramRepository
     {
-        public override IQueryable<Entities.Program> CreateDBSet(BaseQueryOptions? options)
+        public override IQueryable<Entities.Program> CreateDBSet(BaseQueryOptions? options = null)
         {
-            var queryable = base.CreateDBSet(options ?? new BaseQueryOptions());
+            var queryable = base.CreateDBSet(options);
 
             if (options is ProgramQueryOptions programOptions)
             {
@@ -31,7 +31,7 @@ namespace FreeCampusServer.Repository
 
         public async Task<IEnumerable<long>> GetIdListAsync(ProgramQueryOptions options)
         {
-            var queryable = CreateDBSet(options);
+            var queryable = GetDBSet(options);
             var idList = await queryable
                 .Select(p => p.Id)
                 .Skip(options.Skip)

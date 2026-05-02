@@ -11,9 +11,9 @@ namespace FreeCampusServer.Repository
         : LocalizableEntityRepository<ModuleType>(appContext),
         IModuleTypeRepository
     {
-        public override IQueryable<ModuleType> CreateDBSet(BaseQueryOptions? options)
+        public override IQueryable<ModuleType> CreateDBSet(BaseQueryOptions? options = null)
         {
-            var queryable = base.CreateDBSet(options ?? new BaseQueryOptions());
+            var queryable = base.CreateDBSet(options);
 
             if (options is ModuleTypeQueryOptions moduleTypeOptions)
             {

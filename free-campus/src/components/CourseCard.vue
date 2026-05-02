@@ -3,7 +3,10 @@
     <h3>{{ course.title }}</h3>
     <span>{{ course.type.title }}</span>
     <p>{{ course.description }}</p>
-    <Button>{{ _('Enroll') }}</Button>
+    <Button
+    >
+      {{ _('Enroll') }}
+    </Button>
   </Card>
 </template>
 

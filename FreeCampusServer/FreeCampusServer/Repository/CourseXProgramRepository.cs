@@ -9,9 +9,9 @@ namespace FreeCampusServer.Repository
         : CreatableEntityRepository<CourseXProgram>(appContext),
         ICourseXProgramRepository
     {
-        public override IQueryable<CourseXProgram> CreateDBSet(BaseQueryOptions? options)
+        public override IQueryable<CourseXProgram> CreateDBSet(BaseQueryOptions? options = null)
         {
-            var queryable = base.CreateDBSet(options ?? new BaseQueryOptions());
+            var queryable = base.CreateDBSet(options);
 
             return queryable;
         }

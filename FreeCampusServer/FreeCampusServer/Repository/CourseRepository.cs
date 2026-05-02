@@ -11,7 +11,7 @@ namespace FreeCampusServer.Repository
         : CreatableEntityRepository<Course>(appContext),
         ICourseRepository
     {
-        public override IQueryable<Course> CreateDBSet(BaseQueryOptions? options)
+        public override IQueryable<Course> CreateDBSet(BaseQueryOptions? options = null)
         {
             var queryable = base.CreateDBSet(options);
 
@@ -67,7 +67,7 @@ namespace FreeCampusServer.Repository
 
         public async Task<IEnumerable<Course>> GetStandaloneListByOrganizationIdAsync(long organizationId, CourseQueryOptions? options = null)
         {
-            var set = CreateDBSet(options);
+            var set = GetDBSet(options);
             var session = await set
                 .Where(c => c.OrganizationId == organizationId
                     && c.IsStandalone
