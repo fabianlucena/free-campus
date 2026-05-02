@@ -28,6 +28,9 @@ Pendiente
 Rejected
 Rechazada
 
+Standalone
+Independiente
+
 The enrollment is no longer active and has been stored for historical or auditing purposes.
 La inscripción ya no está activa y se conserva solo con fines históricos o de auditoría.
 

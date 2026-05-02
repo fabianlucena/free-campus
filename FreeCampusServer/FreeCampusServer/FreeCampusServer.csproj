@@ -17,6 +17,7 @@
     <ProjectReference Include="..\..\..\rf-nugets_v2\RFAuthServices\RFAuthServices.csproj" />
     <ProjectReference Include="..\..\..\rf-nugets_v2\RFBaseEF\RFBaseEF.csproj" />
     <ProjectReference Include="..\..\..\rf-nugets_v2\RFBaseServices\RFBaseServices.csproj" />
+    <ProjectReference Include="..\..\..\rf-nugets_v2\RFL10n\RFL10n.csproj" />
     <ProjectReference Include="..\..\..\rf-nugets_v2\RFPermissionsEF\RFPermissionsEF.csproj" />
     <ProjectReference Include="..\..\..\rf-nugets_v2\RFPermissionsServices\RFPermissionsServices.csproj" />
     <ProjectReference Include="..\..\..\rf-nugets_v2\RFRBACEF\RFRBACEF.csproj" />

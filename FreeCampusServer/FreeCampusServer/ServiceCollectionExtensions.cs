@@ -2,6 +2,7 @@
 using FreeCampusServer.IServices;
 using FreeCampusServer.Repository;
 using FreeCampusServer.Service;
+using RFL10n;
 using RFRGOBACIServices.IServices;
 
 namespace FreeCampusServer

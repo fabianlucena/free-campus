@@ -5,9 +5,9 @@ using RFAuthServices;
 using RFAuthServices.Filters;
 using RFAuthServices.Middlewares;
 using RFBaseEF;
-using RFBaseEntities;
 using RFBaseServices;
 using RFHttpExceptions.Middlewares;
+using RFL10n;
 using RFPermissionsEF;
 using RFPermissionsServices;
 using RFRBACEF;
@@ -48,6 +48,8 @@ namespace FreeCampusServer
 
             builder.Services.AddHttpContextAccessor();
 
+            builder.Services.AddRFL10nServices();
+
             builder.Services.AddRFBaseServices();
             builder.Services.AddRFBaseEF();
 
@@ -86,6 +88,11 @@ namespace FreeCampusServer
             app.UseMiddleware<HttpExceptionMiddleware>();
 
             app.MapControllers();
+
+            app.Services.CreateScope()
+                .ServiceProvider
+                .GetRequiredService<IL10n>()
+                .AddTranslationsFromPath("Locale");
 
             app.Run();
         }
