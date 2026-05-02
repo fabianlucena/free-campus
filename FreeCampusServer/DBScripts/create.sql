@@ -555,8 +555,11 @@ BEGIN
 
 		OrganizationId BIGINT NOT NULL,
 
+		Name NVARCHAR(256) NOT NULL,
 		Title NVARCHAR(256) NOT NULL,
 		Description NVARCHAR(MAX) NULL,
+
+		IsTranslatable BIT NOT NULL,
 
 		CreatedAt DATETIME2 NOT NULL,
 		CreatedById BIGINT NOT NULL,
@@ -643,8 +646,11 @@ BEGIN
 
 		OrganizationId BIGINT NOT NULL,
 
+		Name NVARCHAR(256) NOT NULL,
 		Title NVARCHAR(256) NOT NULL,
 		Description NVARCHAR(MAX) NULL,
+
+		IsTranslatable BIT NOT NULL,
 
 		CreatedAt DATETIME2 NOT NULL,
 		CreatedById BIGINT NOT NULL,
@@ -690,6 +696,8 @@ BEGIN
 		IsActive BIT NOT NULL DEFAULT 1,
 		Title NVARCHAR(256) NOT NULL,
 		Description NVARCHAR(MAX) NULL,
+
+		IsTranslatable BIT NOT NULL,
 
 		CreatedAt DATETIME2 NOT NULL,
 		CreatedById BIGINT NOT NULL,
@@ -783,8 +791,11 @@ BEGIN
 
 		OrganizationId BIGINT NOT NULL,
 
+		Name NVARCHAR(256) NOT NULL,
 		Title NVARCHAR(256) NOT NULL,
 		Description NVARCHAR(MAX) NULL,
+
+		IsTranslatable BIT NOT NULL,
 
 		CreatedAt DATETIME2 NOT NULL,
 		CreatedById BIGINT NOT NULL,

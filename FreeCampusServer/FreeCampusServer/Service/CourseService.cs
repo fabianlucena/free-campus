@@ -30,23 +30,5 @@ namespace FreeCampusServer.Service
 
             return availableList;
         }
-
-        public async Task<IEnumerable<Course>> GetMineListAsync(CourseQueryOptions options)
-        {
-            if (options.OrganizationId is null)
-                throw new NoOrganizationIdException();
-
-            if (options.StudentId is null)
-                throw new NoStudentIdException();
-
-            var availableList = await GetListAsync(new CourseQueryOptions(options)
-            {
-                IsStandaloneOrEnrolledInProgram = true,
-                StudentId = null,
-                ExcludeStudentId = options.StudentId,
-            });
-
-            return availableList;
-        }
     }
 }

@@ -26,7 +26,9 @@ namespace FreeCampusServer.Controllers
             var userId = HttpContext.Items["UserId"] as long?
                 ?? throw new NoUserIdException();
 
-            var courses = await courseService.GetMineListAsync(new CourseQueryOptions {
+            var courses = await courseService.GetListAsync(new CourseQueryOptions
+            {
+                IncludeType = true,
                 OrganizationId = organizationId,
                 StudentId = userId,
             });

@@ -3,7 +3,7 @@ using RFBaseIServices.IServices;
 
 namespace FreeCampusServer.IServices
 {
-    public interface IProgramTypeService : ICommonEntityService<ProgramType>
+    public interface IProgramTypeService : ILocalizableEntityService<ProgramType>
     {
     }
 }

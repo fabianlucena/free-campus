@@ -7,7 +7,7 @@ using RFBaseServices.Services;
 namespace FreeCampusServer.Service
 {
     public class CourseTypeService(ICourseTypeRepository courseTypeRepository)
-        : CommonEntityService<CourseType>(courseTypeRepository),
+        : LocalizableEntityService<CourseType>(courseTypeRepository),
         ICourseTypeService
     {
         public async Task<IEnumerable<CourseType>> GetListByOrganizationIdAsync(long organizationId, CourseTypeQueryOptions? options = null)

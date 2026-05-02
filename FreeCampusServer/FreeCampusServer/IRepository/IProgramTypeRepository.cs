@@ -3,7 +3,7 @@ using RFBaseIRepositories.IRepositories;
 
 namespace FreeCampusServer.IRepository
 {
-    public interface IProgramTypeRepository : ICommonEntityRepository<ProgramType>
+    public interface IProgramTypeRepository : ILocalizableEntityRepository<ProgramType>
     {
     }
 }

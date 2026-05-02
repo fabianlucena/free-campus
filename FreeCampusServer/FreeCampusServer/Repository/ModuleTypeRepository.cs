@@ -8,7 +8,7 @@ using RFBaseEntities.QueryOptions;
 namespace FreeCampusServer.Repository
 {
     public class ModuleTypeRepository(AppDbContext appContext)
-        : CreatableEntityRepository<ModuleType>(appContext),
+        : LocalizableEntityRepository<ModuleType>(appContext),
         IModuleTypeRepository
     {
         public override IQueryable<ModuleType> CreateDBSet(BaseQueryOptions? options)
