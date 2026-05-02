@@ -5,6 +5,7 @@ export const translations = {
   'About': 'Acerca de',
   'Available courses': 'Cursos disponibles',
   'Dashboard': 'Panel',
+  'Enroll': 'Inscribirse',
   'Error fetching available courses: ': 'Error al obtener los cursos disponibles: ',
   'Error fetching my courses: ': 'Error al obtener mis cursos: ',
   'Home': 'Inicio',
