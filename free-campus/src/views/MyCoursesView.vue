@@ -1,6 +1,6 @@
 <template>
   <section>
-    <h2>{{ _('Available courses') }}</h2>
+    <h2>{{ _('My Courses') }}</h2>
     <Cards>
       <CourseCard
         v-for="course in courses" :key="course.id"
@@ -14,16 +14,16 @@
 import { ref } from 'vue';
 import Cards from '@vc/Cards.vue';
 import CourseCard from '@/components/CourseCard.vue';
-import { getAvailableCourses } from '@/services/available-course-service';
+import { getMyCourses } from '@/services/my-course-service';
 import { _ } from '@vc/locale.js';
 
 const courses = ref([]);
-getAvailableCourses()
+getMyCourses()
   .then(fetchedCourses => {
     courses.value = fetchedCourses;
   })
   .catch(error => {
-    console.error('Error fetching available courses: ', error);
+    console.error('Error fetching my courses: ', error);
   });
 </script>
 

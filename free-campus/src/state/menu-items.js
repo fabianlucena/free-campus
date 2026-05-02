@@ -12,6 +12,12 @@ var rawMenu = [
   },
   {
     name: 'courses',
+    label: _('My courses'),
+    to: '/my-courses',
+    condition: () => authState.permissions.includes('myCourses.view'),
+  },
+  {
+    name: 'courses',
     label: _('Available courses'),
     to: '/available-courses',
     condition: () => authState.permissions.includes('availableCourses.view'),
