@@ -100,19 +100,21 @@ GO
 /* Insert template Organization */
 DECLARE @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system');
 MERGE auth.Organizations AS target
-USING (VALUES ('template')) AS source(Name)
+USING (VALUES 
+	('template', 0, 1, 'Template', 'For use as template only.')
+) AS source(Name, IsActive, IsTranslatable, Title, Description)
     ON target.Name = source.Name
 WHEN NOT MATCHED THEN
     INSERT (
         Uuid,
 		CreatedAt, UpdatedAt, DeletedAt,
 		CreatedById, UpdatedById, DeletedById,
-        Name, Description
+        Name, IsActive, IsTranslatable, Title, Description
     )
     VALUES (
         NEWID(), GETUTCDATE(), GETUTCDATE(), NULL,
         @systemUserId, @systemUserId, NULL,
-        source.Name, 'Template'
+        source.Name, source.IsActive, source.IsTranslatable, source.Title, source.Description, 
     );
 GO
 
@@ -153,19 +155,21 @@ GO
 /* Insert freeCampus system Organization */
 DECLARE @systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system');
 MERGE auth.Organizations AS target
-USING (VALUES ('freeCampus')) AS source(Name)
+USING (VALUES 
+	('freeCampus', 0, 1, 'Free Campus Academy', 'Free campus academy.')
+) AS source(Name, IsActive, IsTranslatable, Title, Description)
     ON target.Name = source.Name
 WHEN NOT MATCHED THEN
     INSERT (
         Uuid,
 		CreatedAt, UpdatedAt, DeletedAt,
 		CreatedById, UpdatedById, DeletedById,
-        Name, Description
+        Name, IsActive, IsTranslatable, Title, Description
     )
     VALUES (
         NEWID(), GETUTCDATE(), GETUTCDATE(), NULL,
         @systemUserId, @systemUserId, NULL,
-        source.Name, 'Free campus academy'
+        source.Name, source.IsActive, source.IsTranslatable, source.Title, source.Description, 
     );
 GO
 

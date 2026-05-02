@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/RF Nugets/">
     <Project Path="../../rf-nugets_v2/RFHttpExceptions/RFHttpExceptions.csproj" Id="9bcf18f1-07cd-4c59-9a77-372304699af1" />
+    <Project Path="../../rf-nugets_v2/RFL10n/RFL10n.csproj" />
   </Folder>
   <Folder Name="/RF Nugets/RFAuth/">
     <Project Path="../../rf-nugets_v2/RFAuthControllers/RFAuthControllers.csproj" Id="d1c898b4-bd22-4b61-80e8-6e1bc6ef9749" />
