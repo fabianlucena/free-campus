@@ -19,6 +19,7 @@ const routes = [
   },
   {
     path: '/login',
+    component: LoginView,
     condition: () => !authState.isLoggedIn,
   },
   {

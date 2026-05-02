@@ -11,13 +11,13 @@ var rawMenu = [
     condition: () => authState.isLoggedIn,
   },
   {
-    name: 'courses',
+    name: 'myCourses',
     label: _('My courses'),
     to: '/my-courses',
     condition: () => authState.permissions.includes('myCourses.view'),
   },
   {
-    name: 'courses',
+    name: 'availableCourses',
     label: _('Available courses'),
     to: '/available-courses',
     condition: () => authState.permissions.includes('availableCourses.view'),
