@@ -1,6 +1,8 @@
 <template>
   <Card>
     <h3>{{ course.title }}</h3>
+    <span>{{ course.type.title }}</span>
+    <p>{{ course.description }}</p>
   </Card>
 </template>
 

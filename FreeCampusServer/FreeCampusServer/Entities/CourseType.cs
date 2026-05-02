@@ -11,5 +11,20 @@ namespace FreeCampusServer.Entities
         public Organization? Organization { get; set; }
 
         public string Description { get; set; } = string.Empty;
+
+        public CourseType() { }
+
+        public CourseType(CourseType entity)
+            : base(entity)
+        {
+            OrganizationId = entity.OrganizationId;
+            Organization = entity.Organization;
+            Description = entity.Description;
+        }
+
+        public override CourseType Clone()
+        {
+            return new CourseType(this);
+        }
     }
 }

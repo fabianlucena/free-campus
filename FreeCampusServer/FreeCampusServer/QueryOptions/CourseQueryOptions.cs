@@ -4,6 +4,8 @@ namespace FreeCampusServer.QueryOptions
 {
     public class CourseQueryOptions : CommonEntityQueryOptions
     {
+        public bool Translate { get; init; }
+
         public bool IncludeOrganization { get; init; }
         public bool IncludeType { get; init; } = true;
 
@@ -16,18 +18,18 @@ namespace FreeCampusServer.QueryOptions
 
         public CourseQueryOptions() { }
 
-        public CourseQueryOptions(CourseQueryOptions? other)
+        public CourseQueryOptions(CourseQueryOptions options)
         {
-            if (other is null)
-                return;
+            Translate = options.Translate;
 
-            IncludeOrganization = other.IncludeOrganization;
-            IncludeType = other.IncludeType;
+            IncludeOrganization = options.IncludeOrganization;
+            IncludeType = options.IncludeType;
 
-            OrganizationId = other.OrganizationId;
-            StudentId = other.StudentId;
-            IsStandalone = other.IsStandalone;
-            ExcludeStudentId = other.ExcludeStudentId;
+            OrganizationId = options.OrganizationId;
+            StudentId = options.StudentId;
+            IsStandalone = options.IsStandalone;
+            IsStandaloneOrEnrolledInProgram = options.IsStandaloneOrEnrolledInProgram;
+            ExcludeStudentId = options.ExcludeStudentId;
         }
     }
 }

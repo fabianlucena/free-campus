@@ -29,6 +29,7 @@ namespace FreeCampusServer.Controllers
             var courses = await courseService.GetAvailableListAsync(new CourseQueryOptions {
                 OrganizationId = organizationId,
                 StudentId = userId,
+                Translate = true,
             });
             var coursesResponse = courses.Select(course => new CourseResponse(course));
 
