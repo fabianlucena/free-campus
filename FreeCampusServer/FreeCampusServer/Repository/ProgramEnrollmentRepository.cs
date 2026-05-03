@@ -18,7 +18,10 @@ namespace FreeCampusServer.Repository
             if (options is ProgramEnrollmentQueryOptions programEnrollmentOptions)
             {
                 if (programEnrollmentOptions.IncludeProgram)
-                    queryable = queryable.Include(pe => pe.Program);
+                    queryable = queryable.Include(pe => pe.ProgramVersion)
+                        .ThenInclude(pv => pv!.Program);
+                else if (programEnrollmentOptions.IncludeProgramVersion)
+                    queryable = queryable.Include(pe => pe.ProgramVersion);
 
                 if (programEnrollmentOptions.IncludeStudent)
                     queryable = queryable.Include(pe => pe.Student);

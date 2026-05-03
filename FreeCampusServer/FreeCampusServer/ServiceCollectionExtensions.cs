@@ -1,4 +1,5 @@
-﻿using FreeCampusServer.IRepository;
+﻿using FreeCampusServer.Entities;
+using FreeCampusServer.IRepository;
 using FreeCampusServer.IServices;
 using FreeCampusServer.Repository;
 using FreeCampusServer.Service;
@@ -13,25 +14,31 @@ namespace FreeCampusServer
         {
             services.Decorate<IOrganizationService, OrganizationServiceDecorator>();
 
-            services.AddScoped<IProgramService, ProgramService>();
             services.AddScoped<IProgramTypeService, ProgramTypeService>();
-            services.AddScoped<IModuleService, ModuleService>();
-            services.AddScoped<IModuleTypeService, ModuleTypeService>();
-            services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<IProgramService, ProgramService>();
+            services.AddScoped<IProgramVersionService, ProgramVersionService>();
             services.AddScoped<ICourseTypeService, CourseTypeService>();
+            services.AddScoped<ICourseVersionService, CourseVersionService>();
+            services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<ILearningItemTypeService, LearningItemTypeService>();
+            services.AddScoped<ILearningItemService, LearningItemService>();
+            services.AddScoped<ILearningItemVersionService, LearningItemVersionService>();
 
-            services.AddScoped<ICourseXProgramService, CourseXProgramService>();
+            services.AddScoped<IProgramVersionXCourseVersionService, ProgramVersionXCourseVersionService>();
             services.AddScoped<IProgramEnrollmentService, ProgramEnrollmentService>();
             services.AddScoped<ICourseEnrollmentService, CourseEnrollmentService>();
 
-            services.AddScoped<IProgramRepository, ProgramRepository>();
             services.AddScoped<IProgramTypeRepository, ProgramTypeRepository>();
-            services.AddScoped<IModuleRepository, ModuleRepository>();
-            services.AddScoped<IModuleTypeRepository, ModuleTypeRepository>();
-            services.AddScoped<ICourseRepository, CourseRepository>();
+            services.AddScoped<IProgramRepository, ProgramRepository>();
+            services.AddScoped<IProgramVersionRepository, ProgramVersionRepository>();
             services.AddScoped<ICourseTypeRepository, CourseTypeRepository>();
+            services.AddScoped<ICourseRepository, CourseRepository>();
+            services.AddScoped<ICourseVersionRepository, CourseVersionRepository>();
+            services.AddScoped<ILearningItemTypeRepository, LearningItemTypeRepository>();
+            services.AddScoped<ILearningItemRepository, LearningItemRepository>();
+            services.AddScoped<ILearningItemVersionRepository, LearningItemVersionRepository>();
 
-            services.AddScoped<ICourseXProgramRepository, CourseXProgramRepository>();
+            services.AddScoped<IProgramVersionXCourseVersionRepository, ProgramVersionXCourseVersionRepository>();
             services.AddScoped<IProgramEnrollmentRepository, ProgramEnrollmentRepository>();
             services.AddScoped<ICourseEnrollmentRepository, CourseEnrollmentRepository>();
 

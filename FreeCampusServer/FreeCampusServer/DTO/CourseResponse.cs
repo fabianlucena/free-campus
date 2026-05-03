@@ -8,7 +8,5 @@ namespace FreeCampusServer.DTO
         public Guid Uuid { get; set; } = course.Uuid;
         public OrganizationMinDTO? Organization { get; set; } = course.Organization != null ? new OrganizationMinDTO(course.Organization) : null;
         public CourseTypeMinDTO? Type { get; set; } = course.Type != null ? new CourseTypeMinDTO(course.Type) : null;
-        public string Title { get; set; } = course.Title;
-        public string Description { get; set; } = course.Description;
     }
 }

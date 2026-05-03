@@ -4,15 +4,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FreeCampusServer.Entities
 {
-    [Table("Courses", Schema = "fc")]
-    public class Course : CommonEntity
+    [Table("LearningItems", Schema = "fc")]
+    public class LearningItem : CommonEntity
     {
         public long OrganizationId { get; set; }
         public Organization? Organization { get; set; }
 
         public long TypeId { get; set; }
-        public CourseType? Type { get; set; }
+        public LearningItemType? Type { get; set; } 
 
-        public bool IsStandalone { get; set; } = false;
+        public bool IsActive { get; set; }
     }
 }

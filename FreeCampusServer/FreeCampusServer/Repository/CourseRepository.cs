@@ -31,15 +31,19 @@ namespace FreeCampusServer.Repository
 
                 if (courseOptions.IsStandaloneOrEnrolledInProgram)
                 {
-                    var pe = appContext.ProgramEnrollments;
-                    var cxp = appContext.CoursesXPrograms;
+                    var cvSet = appContext.CourseVersions;
+                    var peSet = appContext.ProgramEnrollments;
+                    var pxcSet = appContext.ProgramVersionXCourseVersion;
                     queryable = queryable.Where(c =>
                         c.IsStandalone ||
-                        cxp.Any(cp =>
-                            cp.CourseId == c.Id &&
-                            pe.Any(p =>
-                                p.ProgramId == cp.ProgramId &&
-                                p.StudentId == courseOptions.StudentId
+                        cvSet.Any(cv =>
+                            cv.CourseId == c.Id &&
+                            pxcSet.Any(pxc =>
+                                pxc.CourseVersionId == cv.Id &&
+                                peSet.Any(p =>
+                                    p.ProgramVersionId == pxc.ProgramVersionId &&
+                                    p.StudentId == courseOptions.StudentId
+                                )
                             )
                         )
                     );
@@ -47,18 +51,28 @@ namespace FreeCampusServer.Repository
 
                 if (courseOptions.StudentId is not null || courseOptions.ExcludeStudentId is not null)
                 {
-                    var ce = appContext.CourseEnrollments.AsQueryable();
+                    var ceSet = appContext.CourseEnrollments.AsQueryable();
+                    var cvSet = appContext.CourseVersions;
+
                     if (courseOptions.StudentId is not null)
-                        queryable = queryable.Where(c => 
-                            ce.Any(ce => ce.CourseId == c.Id &&
-                                ce.StudentId == courseOptions.StudentId
-                            ));
+                        queryable = queryable.Where(c =>
+                            cvSet.Any(cv =>
+                                cv.CourseId == c.Id &&
+                                ceSet.Any(ce => ce.CourseVersionId == cv.Id &&
+                                    ce.StudentId == courseOptions.StudentId
+                                )
+                            )
+                        );
 
                     if (courseOptions.ExcludeStudentId is not null)
-                        queryable = queryable.Where(c => 
-                            !ce.Any(ce => ce.CourseId == c.Id && 
-                                ce.StudentId == courseOptions.ExcludeStudentId
-                            ));
+                        queryable = queryable.Where(c =>
+                            cvSet.Any(cv =>
+                                cv.CourseId == c.Id &&
+                                !ceSet.Any(ce => ce.CourseVersionId == cv.Id &&
+                                    ce.StudentId == courseOptions.ExcludeStudentId
+                                )
+                            )
+                        );
                 }
             }
 
