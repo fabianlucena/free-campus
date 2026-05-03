@@ -19,7 +19,7 @@ namespace FreeCampusServer.Entities
         public DateTime? DroppedAt { get; set; }
 
         public long StatusId { get; set; }
-        public CourseStatus? Status { get; set; }
+        public ProgramEnrollmentStatus? Status { get; set; }
 
         public Decimal? FinalGrade { get; set; }
         public bool IsActive { get; set; }
