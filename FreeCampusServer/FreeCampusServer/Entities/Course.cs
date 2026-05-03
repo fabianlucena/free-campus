@@ -13,6 +13,8 @@ namespace FreeCampusServer.Entities
         public long TypeId { get; set; }
         public CourseType? Type { get; set; }
 
+        public string Code { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
         public bool IsStandalone { get; set; } = false;
     }
 }
