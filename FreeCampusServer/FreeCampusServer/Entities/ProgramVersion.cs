@@ -12,7 +12,7 @@ namespace FreeCampusServer.Entities
 
         public int VersionNumber { get; set; }
         public string? VersionLabel { get; set; }
-        public long PreviousVersionId { get; set; }
+        public long? PreviousVersionId { get; set; }
         public ProgramVersion? PreviousVersion { get; set; }
 
         public string Title { get; set; } = string.Empty;

@@ -16,7 +16,7 @@ namespace FreeCampusServer.Entities
         public TeachingRole? TeachingRole { get; set; }
 
         public DateTime AssignedAt { get; set; }
-        public User? AssignedBy { get; set; }
+        public User? AssignedById { get; set; }
         public bool IsActive { get; set; }
         public string? Notes { get; set; }
     }

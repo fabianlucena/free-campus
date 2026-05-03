@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FreeCampusServer.Entities
 {
-    [Table("CourseStatuses", Schema = "fc")]
-    public class CourseStatus : TranslatableEntity
+    [Table("CourseEnrollmentStatuses", Schema = "fc")]
+    public class CourseEnrollmentStatus : TranslatableEntity
     {
         public long OrganizationId { get; set; }
         public Organization? Organization { get; set; }

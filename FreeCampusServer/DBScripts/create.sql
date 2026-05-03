@@ -601,8 +601,8 @@ BEGIN
 		OrganizationId BIGINT NOT NULL,
 		TypeId BIGINT NOT NULL,
 
-		Title NVARCHAR(256) NOT NULL,
-		Description NVARCHAR(MAX) NULL,
+		Code NVARCHAR(256) NOT NULL,
+		[Name] NVARCHAR(256) NOT NULL,
 
 		CreatedAt DATETIME2 NOT NULL,
 		CreatedById BIGINT NOT NULL,
@@ -613,7 +613,7 @@ BEGIN
 		DeletedAt DATETIME2 NULL,
 		DeletedById BIGINT NULL,
 
-		CONSTRAINT FK_fc_Programs_OrganizationId FOREIGN KEY (TypeId)
+		CONSTRAINT FK_fc_Programs_OrganizationId FOREIGN KEY (OrganizationId)
 			REFERENCES auth.Organizations(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_Programs_TypeId FOREIGN KEY (TypeId)
@@ -626,6 +626,56 @@ BEGIN
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_Programs_DeletedById FOREIGN KEY (DeletedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+	);
+END
+GO
+
+/* ProgramVersions table */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE t.name = 'ProgramVersions'
+      AND s.name = 'fc'
+)
+BEGIN
+	CREATE TABLE fc.ProgramVersions(
+		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+		Uuid UNIQUEIDENTIFIER NOT NULL,
+
+		ProgramId BIGINT NOT NULL,
+
+		VersionNumber INT NOT NULL,
+		VersionLabel NVARCHAR(256) NOT NULL,
+		PreviousVersionId BIGINT NULL,
+
+		Title NVARCHAR(256) NOT NULL,
+		Description NVARCHAR(MAX) NULL,
+		TotalCredits INT NULL,
+
+		CreatedAt DATETIME2 NOT NULL,
+		CreatedById BIGINT NOT NULL,
+
+		UpdatedAt DATETIME2 NOT NULL,
+		UpdatedById BIGINT NOT NULL,
+
+		DeletedAt DATETIME2 NULL,
+		DeletedById BIGINT NULL,
+
+		CONSTRAINT FK_fc_ProgramVersions_OrganizationId FOREIGN KEY (ProgramId)
+			REFERENCES fc.Programs(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_ProgramVersions_PreviousVersionId FOREIGN KEY (PreviousVersionId)
+			REFERENCES fc.ProgramVersions(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_ProgramVersions_CreatedById FOREIGN KEY (CreatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_ProgramVersions_UpdatedById FOREIGN KEY (UpdatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_ProgramVersions_DeletedById FOREIGN KEY (DeletedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 	);
 END
@@ -676,16 +726,496 @@ BEGIN
 END
 GO
 
-/* CourseStatuses table */
+/* Courses table */
 IF NOT EXISTS (
     SELECT 1
     FROM sys.tables t
     JOIN sys.schemas s ON t.schema_id = s.schema_id
-    WHERE t.name = 'CourseStatuses'
+    WHERE t.name = 'Courses'
       AND s.name = 'fc'
 )
 BEGIN
-	CREATE TABLE fc.CourseStatuses(
+	CREATE TABLE fc.Courses(
+		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+		Uuid UNIQUEIDENTIFIER NOT NULL,
+
+		OrganizationId BIGINT NOT NULL,
+		TypeId BIGINT NOT NULL,
+
+		Code NVARCHAR(256) NOT NULL,
+		IsStandalone BIT NULL,
+		
+		CreatedAt DATETIME2 NOT NULL,
+		CreatedById BIGINT NOT NULL,
+
+		UpdatedAt DATETIME2 NOT NULL,
+		UpdatedById BIGINT NOT NULL,
+
+		DeletedAt DATETIME2 NULL,
+		DeletedById BIGINT NULL,
+
+		CONSTRAINT FK_fc_Courses_OrganizationId FOREIGN KEY (OrganizationId)
+			REFERENCES auth.Organizations(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_Courses_TypeId FOREIGN KEY (TypeId)
+			REFERENCES fc.CourseTypes(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_Courses_CreatedById FOREIGN KEY (CreatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_Courses_UpdatedById FOREIGN KEY (UpdatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_Courses_DeletedById FOREIGN KEY (DeletedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+	);
+END
+GO
+
+/* CoursePrerequisites table */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE t.name = 'CoursePrerequisites'
+      AND s.name = 'fc'
+)
+BEGIN
+	CREATE TABLE fc.CoursePrerequisites(
+		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+		Uuid UNIQUEIDENTIFIER NOT NULL,
+
+		CourseId BIGINT NOT NULL,
+		PrerequisiteId BIGINT NOT NULL,
+
+		CreatedAt DATETIME2 NOT NULL,
+		CreatedById BIGINT NOT NULL,
+
+		DeletedAt DATETIME2 NULL,
+		DeletedById BIGINT NULL,
+
+		CONSTRAINT FK_fc_CoursePrerequisites_CourseId FOREIGN KEY (CourseId)
+			REFERENCES fc.Courses(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_CoursePrerequisites_PrerequisiteId FOREIGN KEY (PrerequisiteId)
+			REFERENCES fc.Courses(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_CoursePrerequisites_CreatedById FOREIGN KEY (CreatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_CoursePrerequisites_DeletedById FOREIGN KEY (DeletedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+	);
+END
+GO
+
+/* CourseVersions table */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE t.name = 'CourseVersions'
+      AND s.name = 'fc'
+)
+BEGIN
+	CREATE TABLE fc.CourseVersions(
+		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+		Uuid UNIQUEIDENTIFIER NOT NULL,
+
+		CourseId BIGINT NOT NULL,
+
+		VersionNumber INT NOT NULL,
+		VersionLabel NVARCHAR(256) NOT NULL,
+		PreviousVersionId BIGINT NULL,
+
+		Title NVARCHAR(256) NOT NULL,
+		Description NVARCHAR(MAX) NULL,
+		Credits INT NULL,
+		Hours INT NULL,
+		
+		CreatedAt DATETIME2 NOT NULL,
+		CreatedById BIGINT NOT NULL,
+
+		UpdatedAt DATETIME2 NOT NULL,
+		UpdatedById BIGINT NOT NULL,
+
+		DeletedAt DATETIME2 NULL,
+		DeletedById BIGINT NULL,
+
+		CONSTRAINT FK_fc_CourseVersions_OrganizationId FOREIGN KEY (CourseId)
+			REFERENCES fc.Courses(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_CourseVersions_PreviousVersionId FOREIGN KEY (PreviousVersionId)
+			REFERENCES fc.CourseVersions(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_CourseVersions_CreatedById FOREIGN KEY (CreatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_CourseVersions_UpdatedById FOREIGN KEY (UpdatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_CourseVersions_DeletedById FOREIGN KEY (DeletedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+	);
+END
+GO
+
+/* LearningItemTypes table */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE t.name = 'LearningItemTypes'
+      AND s.name = 'fc'
+)
+BEGIN
+	CREATE TABLE fc.LearningItemTypes(
+		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+		Uuid UNIQUEIDENTIFIER NOT NULL,
+
+		OrganizationId BIGINT NOT NULL,
+
+		Name NVARCHAR(256) NOT NULL,
+		Title NVARCHAR(256) NOT NULL,
+		Description NVARCHAR(MAX) NULL,
+
+		IsTranslatable BIT NOT NULL,
+
+		CreatedAt DATETIME2 NOT NULL,
+		CreatedById BIGINT NOT NULL,
+
+		UpdatedAt DATETIME2 NOT NULL,
+		UpdatedById BIGINT NOT NULL,
+
+		DeletedAt DATETIME2 NULL,
+		DeletedById BIGINT NULL,
+
+		CONSTRAINT FK_fc_LearningItemTypes_OrganizationId FOREIGN KEY (OrganizationId)
+			REFERENCES auth.Organizations(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_LearningItemTypes_CreatedById FOREIGN KEY (CreatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_LearningItemTypes_UpdatedById FOREIGN KEY (UpdatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_LearningItemTypes_DeletedById FOREIGN KEY (DeletedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+	);
+END
+GO
+
+/* LearningItems table */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE t.name = 'LearningItems'
+      AND s.name = 'fc'
+)
+BEGIN
+	CREATE TABLE fc.LearningItems(
+		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+		Uuid UNIQUEIDENTIFIER NOT NULL,
+
+		OrganizationId BIGINT NOT NULL,
+		TypeId BIGINT NOT NULL,
+		
+		CreatedAt DATETIME2 NOT NULL,
+		CreatedById BIGINT NOT NULL,
+
+		UpdatedAt DATETIME2 NOT NULL,
+		UpdatedById BIGINT NOT NULL,
+
+		DeletedAt DATETIME2 NULL,
+		DeletedById BIGINT NULL,
+
+		CONSTRAINT FK_fc_LearningItems_OrganizationId FOREIGN KEY (OrganizationId)
+			REFERENCES auth.Organizations(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_LearningItems_TypeId FOREIGN KEY (TypeId)
+			REFERENCES fc.LearningItemTypes(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_LearningItems_CreatedById FOREIGN KEY (CreatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_LearningItems_UpdatedById FOREIGN KEY (UpdatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_LearningItems_DeletedById FOREIGN KEY (DeletedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+	);
+END
+GO
+
+/* LearningItemVersions table */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE t.name = 'LearningItemVersions'
+      AND s.name = 'fc'
+)
+BEGIN
+	CREATE TABLE fc.LearningItemVersions(
+		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+		Uuid UNIQUEIDENTIFIER NOT NULL,
+
+		LearningItemId BIGINT NOT NULL,
+
+		VersionNumber INT NOT NULL,
+		VersionLabel NVARCHAR(256) NOT NULL,
+		PreviousVersionId BIGINT NULL,
+
+		Title NVARCHAR(256) NOT NULL,
+		Description NVARCHAR(MAX) NULL,
+		IsPublished BIT NOT NULL,
+		
+		CreatedAt DATETIME2 NOT NULL,
+		CreatedById BIGINT NOT NULL,
+
+		UpdatedAt DATETIME2 NOT NULL,
+		UpdatedById BIGINT NOT NULL,
+
+		DeletedAt DATETIME2 NULL,
+		DeletedById BIGINT NULL,
+
+		CONSTRAINT FK_fc_LearningItemVersions_OrganizationId FOREIGN KEY (LearningItemId)
+			REFERENCES fc.LearningItems(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_LearningItemVersions_TypeId FOREIGN KEY (PreviousVersionId)
+			REFERENCES fc.LearningItemVersions(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_LearningItemVersions_CreatedById FOREIGN KEY (CreatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_LearningItemVersions_UpdatedById FOREIGN KEY (UpdatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_LearningItemVersions_DeletedById FOREIGN KEY (DeletedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+	);
+END
+GO
+
+/* ProgramVersionXCourseVersions table */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE t.name = 'ProgramVersionXCourseVersions'
+      AND s.name = 'fc'
+)
+BEGIN
+	CREATE TABLE fc.ProgramVersionXCourseVersions(
+		ProgramVersionId BIGINT NOT NULL,
+		CourseVersionId BIGINT NOT NULL,
+
+		Code NVARCHAR(256) NOT NULL,
+		[Order] INT NOT NULL,
+		Level INT NOT NULL,
+
+		IsActive BIT NOT NULL DEFAULT 1,
+		IsCore BIT NOT NULL DEFAULT 1,
+		IsRequired BIT NOT NULL DEFAULT 1,
+		IsElective BIT NOT NULL DEFAULT 1,
+
+		CreatedAt DATETIME2 NOT NULL,
+		DeletedAt DATETIME2 NULL,
+
+		CreatedById BIGINT NOT NULL,
+		DeletedById BIGINT NULL,
+
+		CONSTRAINT FK_ProgramVersionXCourseVersions_ProgramVersionId FOREIGN KEY (ProgramVersionId)
+			REFERENCES fc.ProgramVersions(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_ProgramVersionXCourseVersions_CourseVersionId FOREIGN KEY (CourseVersionId)
+			REFERENCES fc.CourseVersions(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_ProgramVersionXCourseVersions_CreatedBy FOREIGN KEY (CreatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_ProgramVersionXCourseVersions_DeletedBy FOREIGN KEY (DeletedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+	);
+END
+GO
+
+/* TeachingRoles table */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE t.name = 'TeachingRoles'
+      AND s.name = 'fc'
+)
+BEGIN
+	CREATE TABLE fc.TeachingRoles(
+		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+		Uuid UNIQUEIDENTIFIER NOT NULL,
+
+		Name NVARCHAR(255) NULL,
+		Title NVARCHAR(255) NULL,
+		IsTranslatable BIT NOT NULL,
+		Description NVARCHAR(MAX) NULL,
+
+		CreatedAt DATETIME2 NOT NULL,
+		UpdatedAt DATETIME2 NOT NULL,
+		DeletedAt DATETIME2 NULL,
+
+		CreatedById BIGINT NOT NULL,
+		UpdatedById BIGINT NOT NULL,
+		DeletedById BIGINT NULL,
+
+		CONSTRAINT FK_TeachingRoles_CreatedBy FOREIGN KEY (CreatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_TeachingRoles_UpdatedBy FOREIGN KEY (UpdatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_TeachingRoles_DeletedBy FOREIGN KEY (DeletedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+	);
+END
+GO
+
+/* TeachingPermissions table */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE t.name = 'TeachingPermissions'
+      AND s.name = 'fc'
+)
+BEGIN
+	CREATE TABLE fc.TeachingPermissions(
+		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+		Uuid UNIQUEIDENTIFIER NOT NULL,
+
+		Name NVARCHAR(255) NULL,
+		Title NVARCHAR(255) NULL,
+		IsTranslatable BIT NOT NULL,
+		Description NVARCHAR(MAX) NULL,
+
+		CreatedAt DATETIME2 NOT NULL,
+		UpdatedAt DATETIME2 NOT NULL,
+		DeletedAt DATETIME2 NULL,
+
+		CreatedById BIGINT NOT NULL,
+		UpdatedById BIGINT NOT NULL,
+		DeletedById BIGINT NULL,
+
+		CONSTRAINT FK_TeachingPermissions_CreatedBy FOREIGN KEY (CreatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_TeachingPermissions_UpdatedBy FOREIGN KEY (UpdatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_TeachingPermissions_DeletedBy FOREIGN KEY (DeletedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+	);
+END
+GO
+
+/* TeachingAssignments table */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE t.name = 'TeachingAssignments'
+      AND s.name = 'fc'
+)
+BEGIN
+	CREATE TABLE fc.TeachingAssignments(
+		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+		Uuid UNIQUEIDENTIFIER NOT NULL,
+
+		CourseId BIGINT NOT NULL,
+		InstructorId BIGINT NOT NULL,
+		TeachingRoleId BIGINT NOT NULL,
+
+		AssignedAt DATETIME2 NOT NULL,
+		AssignedById BIGINT NOT NULL,
+
+		IsActive BIT NOT NULL DEFAULT 1,
+		Notes NVARCHAR(MAX) NULL,
+
+		CreatedAt DATETIME2 NOT NULL,
+		UpdatedAt DATETIME2 NOT NULL,
+		DeletedAt DATETIME2 NULL,
+
+		CreatedById BIGINT NOT NULL,
+		UpdatedById BIGINT NOT NULL,
+		DeletedById BIGINT NULL,
+
+		CONSTRAINT FK_TeachingAssignments_CourseId FOREIGN KEY (CourseId)
+			REFERENCES fc.Courses(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_TeachingAssignments_InstructorId FOREIGN KEY (InstructorId)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_TeachingAssignments_TeachingRoleId FOREIGN KEY (TeachingRoleId)
+			REFERENCES fc.TeachingRoles(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_TeachingAssignments_AssignedById FOREIGN KEY (AssignedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_TeachingAssignments_CreatedBy FOREIGN KEY (CreatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_TeachingAssignments_UpdatedBy FOREIGN KEY (UpdatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_TeachingAssignments_DeletedBy FOREIGN KEY (DeletedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+	);
+END
+GO
+
+/* TeachingAssignmentXPermissions table */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE t.name = 'TeachingAssignmentXPermissions'
+      AND s.name = 'fc'
+)
+BEGIN
+	CREATE TABLE fc.TeachingAssignmentXPermissions(
+		TeachingAssignmentId BIGINT NOT NULL,
+		PermissionsId BIGINT NOT NULL,
+
+		CreatedAt DATETIME2 NOT NULL,
+		DeletedAt DATETIME2 NULL,
+
+		CreatedById BIGINT NOT NULL,
+		DeletedById BIGINT NULL,
+
+		CONSTRAINT FK_TeachingAssignmentXPermissions_ProgramVersionId FOREIGN KEY (TeachingAssignmentId)
+			REFERENCES fc.TeachingAssignments(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_TeachingAssignmentXPermissions_CourseVersionId FOREIGN KEY (PermissionsId)
+			REFERENCES fc.TeachingPermissions(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_TeachingAssignmentXPermissions_CreatedBy FOREIGN KEY (CreatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_TeachingAssignmentXPermissions_DeletedBy FOREIGN KEY (DeletedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+	);
+END
+GO
+
+/* CourseEnrollmentStatuses table */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE t.name = 'CourseEnrollmentStatuses'
+      AND s.name = 'fc'
+)
+BEGIN
+	CREATE TABLE fc.CourseEnrollmentStatuses(
 		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 		Uuid UNIQUEIDENTIFIER NOT NULL,
 
@@ -708,160 +1238,16 @@ BEGIN
 		DeletedAt DATETIME2 NULL,
 		DeletedById BIGINT NULL,
 
-		CONSTRAINT FK_fc_CourseStatuses_OrganizationId FOREIGN KEY (OrganizationId)
+		CONSTRAINT FK_fc_CourseEnrollmentStatuses_OrganizationId FOREIGN KEY (OrganizationId)
 			REFERENCES auth.Organizations(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_fc_CourseStatuses_CreatedById FOREIGN KEY (CreatedById)
+		CONSTRAINT FK_fc_CourseEnrollmentStatuses_CreatedById FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_fc_CourseStatuses_UpdatedById FOREIGN KEY (UpdatedById)
+		CONSTRAINT FK_fc_CourseEnrollmentStatuses_UpdatedById FOREIGN KEY (UpdatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
-		CONSTRAINT FK_fc_CourseStatuses_DeletedById FOREIGN KEY (DeletedById)
-			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
-	);
-END
-GO
-
-/* Courses table */
-IF NOT EXISTS (
-    SELECT 1
-    FROM sys.tables t
-    JOIN sys.schemas s ON t.schema_id = s.schema_id
-    WHERE t.name = 'Courses'
-      AND s.name = 'fc'
-)
-BEGIN
-	CREATE TABLE fc.Courses(
-		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-		Uuid UNIQUEIDENTIFIER NOT NULL,
-
-		OrganizationId BIGINT NOT NULL,
-		TypeId BIGINT NOT NULL,
-		StatusId BIGINT NOT NULL,
-
-		Title NVARCHAR(256) NOT NULL,
-		Description NVARCHAR(MAX) NULL,
-		IsStandalone BIT NULL,
-		Credits INT NULL,
-		Hours INT NULL,
-		
-		CreatedAt DATETIME2 NOT NULL,
-		CreatedById BIGINT NOT NULL,
-
-		UpdatedAt DATETIME2 NOT NULL,
-		UpdatedById BIGINT NOT NULL,
-
-		DeletedAt DATETIME2 NULL,
-		DeletedById BIGINT NULL,
-
-		CONSTRAINT FK_fc_Courses_OrganizationId FOREIGN KEY (OrganizationId)
-			REFERENCES auth.Organizations(Id) ON DELETE NO ACTION,
-
-		CONSTRAINT FK_fc_Courses_TypeId FOREIGN KEY (TypeId)
-			REFERENCES fc.CourseTypes(Id) ON DELETE NO ACTION,
-
-		CONSTRAINT FK_fc_Courses_StatusId FOREIGN KEY (StatusId)
-			REFERENCES fc.CourseStatuses(Id) ON DELETE NO ACTION,
-
-		CONSTRAINT FK_fc_Courses_CreatedById FOREIGN KEY (CreatedById)
-			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
-
-		CONSTRAINT FK_fc_Courses_UpdatedById FOREIGN KEY (UpdatedById)
-			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
-
-		CONSTRAINT FK_fc_Courses_DeletedById FOREIGN KEY (DeletedById)
-			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
-	);
-END
-GO
-
-/* ModuleTypes table */
-IF NOT EXISTS (
-    SELECT 1
-    FROM sys.tables t
-    JOIN sys.schemas s ON t.schema_id = s.schema_id
-    WHERE t.name = 'ModuleTypes'
-      AND s.name = 'fc'
-)
-BEGIN
-	CREATE TABLE fc.ModuleTypes(
-		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-		Uuid UNIQUEIDENTIFIER NOT NULL,
-
-		OrganizationId BIGINT NOT NULL,
-
-		Name NVARCHAR(256) NOT NULL,
-		Title NVARCHAR(256) NOT NULL,
-		Description NVARCHAR(MAX) NULL,
-
-		IsTranslatable BIT NOT NULL,
-
-		CreatedAt DATETIME2 NOT NULL,
-		CreatedById BIGINT NOT NULL,
-
-		UpdatedAt DATETIME2 NOT NULL,
-		UpdatedById BIGINT NOT NULL,
-
-		DeletedAt DATETIME2 NULL,
-		DeletedById BIGINT NULL,
-
-		CONSTRAINT FK_fc_ModuleTypes_OrganizationId FOREIGN KEY (OrganizationId)
-			REFERENCES auth.Organizations(Id) ON DELETE NO ACTION,
-
-		CONSTRAINT FK_fc_ModuleTypes_CreatedById FOREIGN KEY (CreatedById)
-			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
-
-		CONSTRAINT FK_fc_ModuleTypes_UpdatedById FOREIGN KEY (UpdatedById)
-			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
-
-		CONSTRAINT FK_fc_ModuleTypes_DeletedById FOREIGN KEY (DeletedById)
-			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
-	);
-END
-GO
-
-/* Modules table */
-IF NOT EXISTS (
-    SELECT 1
-    FROM sys.tables t
-    JOIN sys.schemas s ON t.schema_id = s.schema_id
-    WHERE t.name = 'Modules'
-      AND s.name = 'fc'
-)
-BEGIN
-	CREATE TABLE fc.Modules(
-		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-		Uuid UNIQUEIDENTIFIER NOT NULL,
-
-		OrganizationId BIGINT NOT NULL,
-		TypeId BIGINT NOT NULL,
-
-		Title NVARCHAR(256) NOT NULL,
-		Description NVARCHAR(MAX) NULL,
-		
-		CreatedAt DATETIME2 NOT NULL,
-		CreatedById BIGINT NOT NULL,
-
-		UpdatedAt DATETIME2 NOT NULL,
-		UpdatedById BIGINT NOT NULL,
-
-		DeletedAt DATETIME2 NULL,
-		DeletedById BIGINT NULL,
-
-		CONSTRAINT FK_fc_Modules_OrganizationId FOREIGN KEY (OrganizationId)
-			REFERENCES auth.Organizations(Id) ON DELETE NO ACTION,
-
-		CONSTRAINT FK_fc_Modules_TypeId FOREIGN KEY (TypeId)
-			REFERENCES fc.ModuleTypes(Id) ON DELETE NO ACTION,
-
-		CONSTRAINT FK_fc_Modules_CreatedById FOREIGN KEY (CreatedById)
-			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
-
-		CONSTRAINT FK_fc_Modules_UpdatedById FOREIGN KEY (UpdatedById)
-			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
-
-		CONSTRAINT FK_fc_Modules_DeletedById FOREIGN KEY (DeletedById)
+		CONSTRAINT FK_fc_CourseEnrollmentStatuses_DeletedById FOREIGN KEY (DeletedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 	);
 END
@@ -880,14 +1266,15 @@ BEGIN
 		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 		Uuid UNIQUEIDENTIFIER NOT NULL,
 
-		CourseId BIGINT NOT NULL,
+		CourseVersionId BIGINT NOT NULL,
 		StudentId BIGINT NOT NULL,
+
 		EnrolledAt DATETIME2 NOT NULL,
+		EnrolledById BIGINT NOT NULL,
 		CompletedAt DATETIME2 NULL,
 		DroppedAt DATETIME2 NULL,
 		StatusId BIGINT NOT NULL,
 		FinalGrade DECIMAL(5,2) NULL,
-		Progress FLOAT NOT NULL,
 		IsActive BIT NOT NULL,
 
 		CreatedAt DATETIME2 NOT NULL,
@@ -899,14 +1286,17 @@ BEGIN
 		DeletedAt DATETIME2 NULL,
 		DeletedById BIGINT NULL,
 
-		CONSTRAINT FK_fc_CourseEnrollments_CourseId FOREIGN KEY (CourseId)
-			REFERENCES fc.Courses(Id) ON DELETE NO ACTION,
+		CONSTRAINT FK_fc_CourseEnrollments_CourseId FOREIGN KEY (CourseVersionId)
+			REFERENCES fc.CourseVersions(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_CourseEnrollments_StudentId FOREIGN KEY (StudentId)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
+		CONSTRAINT FK_fc_CourseEnrollments_EnrolledById FOREIGN KEY (EnrolledById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
 		CONSTRAINT FK_fc_CourseEnrollments_StatusId FOREIGN KEY (StatusId)
-			REFERENCES fc.CourseStatuses(Id) ON DELETE NO ACTION,
+			REFERENCES fc.CourseEnrollmentStatuses(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_CourseEnrollments_CreatedById FOREIGN KEY (CreatedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
@@ -915,6 +1305,110 @@ BEGIN
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 
 		CONSTRAINT FK_fc_CourseEnrollments_DeletedById FOREIGN KEY (DeletedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+	);
+END
+GO
+
+/* ProgramEnrollmentStatuses table */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE t.name = 'ProgramEnrollmentStatuses'
+      AND s.name = 'fc'
+)
+BEGIN
+	CREATE TABLE fc.ProgramEnrollmentStatuses(
+		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+		Uuid UNIQUEIDENTIFIER NOT NULL,
+
+		OrganizationId BIGINT NOT NULL,
+
+		[Order] INT NOT NULL,
+		Name NVARCHAR(256) NOT NULL,
+		IsActive BIT NOT NULL DEFAULT 1,
+		Title NVARCHAR(256) NOT NULL,
+		Description NVARCHAR(MAX) NULL,
+
+		IsTranslatable BIT NOT NULL,
+
+		CreatedAt DATETIME2 NOT NULL,
+		CreatedById BIGINT NOT NULL,
+
+		UpdatedAt DATETIME2 NOT NULL,
+		UpdatedById BIGINT NOT NULL,
+
+		DeletedAt DATETIME2 NULL,
+		DeletedById BIGINT NULL,
+
+		CONSTRAINT FK_fc_ProgramEnrollmentStatuses_OrganizationId FOREIGN KEY (OrganizationId)
+			REFERENCES auth.Organizations(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_ProgramEnrollmentStatuses_CreatedById FOREIGN KEY (CreatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_ProgramEnrollmentStatuses_UpdatedById FOREIGN KEY (UpdatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_ProgramEnrollmentStatuses_DeletedById FOREIGN KEY (DeletedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+	);
+END
+GO
+
+/* ProgramEnrollments table */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.tables t
+    JOIN sys.schemas s ON t.schema_id = s.schema_id
+    WHERE t.name = 'ProgramEnrollments'
+      AND s.name = 'fc'
+)
+BEGIN
+	CREATE TABLE fc.ProgramEnrollments(
+		Id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+		Uuid UNIQUEIDENTIFIER NOT NULL,
+
+		ProgramVersionId BIGINT NOT NULL,
+		StudentId BIGINT NOT NULL,
+
+		EnrolledAt DATETIME2 NOT NULL,
+		EnrolledById BIGINT NOT NULL,
+		CompletedAt DATETIME2 NULL,
+		DroppedAt DATETIME2 NULL,
+		StatusId BIGINT NOT NULL,
+		FinalGrade DECIMAL(5,2) NULL,
+		IsActive BIT NOT NULL,
+
+		CreatedAt DATETIME2 NOT NULL,
+		CreatedById BIGINT NOT NULL,
+
+		UpdatedAt DATETIME2 NOT NULL,
+		UpdatedById BIGINT NOT NULL,
+
+		DeletedAt DATETIME2 NULL,
+		DeletedById BIGINT NULL,
+
+		CONSTRAINT FK_fc_ProgramEnrollments_ProgramId FOREIGN KEY (ProgramVersionId)
+			REFERENCES fc.ProgramVersions(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_ProgramEnrollments_StudentId FOREIGN KEY (StudentId)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_ProgramEnrollments_EnrolledById FOREIGN KEY (EnrolledById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_ProgramEnrollments_StatusId FOREIGN KEY (StatusId)
+			REFERENCES fc.ProgramEnrollmentStatuses(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_ProgramEnrollments_CreatedById FOREIGN KEY (CreatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_ProgramEnrollments_UpdatedById FOREIGN KEY (UpdatedById)
+			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
+
+		CONSTRAINT FK_fc_ProgramEnrollments_DeletedById FOREIGN KEY (DeletedById)
 			REFERENCES auth.Users(Id) ON DELETE NO ACTION,
 	);
 END

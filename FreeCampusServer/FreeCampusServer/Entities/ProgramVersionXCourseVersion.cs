@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FreeCampusServer.Entities
 {
-    [Table("ProgramVersionXCourseVersion", Schema = "fc")]
+    [Table("ProgramVersionXCourseVersions", Schema = "fc")]
     public class ProgramVersionXCourseVersion : CommonEntity
     {
         public long ProgramVersionId { get; set; }
