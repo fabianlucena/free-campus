@@ -7,8 +7,9 @@ DECLARE
     @now DATETIME2 = GETUTCDATE();
 MERGE auth.Roles AS target
 USING (VALUES
-    ('student', 'Student'),
-    ('creator', 'Creator')
+    ('teacher', 'Teacher'),
+    ('creator', 'Creator'),
+    ('student', 'Student')
 ) AS source (Name, Description)
     ON target.Name = source.Name
 WHEN NOT MATCHED THEN
@@ -124,7 +125,7 @@ GO
 DECLARE
 	@systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
 	@templateId BIGINT = (SELECT Id FROM auth.Organizations WHERE Name = 'template');
-MERGE fc.CourseStatuses AS target
+MERGE fc.CourseEnrollmentStatuses AS target
 USING (VALUES 
 	( 1, 'Pending',    1, 'Pending',    'The enrollment request has been submitted but is still awaiting review or approval.'),
 	( 2, 'Approved',   0, 'Approved',   'The enrollment request has been reviewed and officially approved by the institution or instructor.'),
@@ -141,13 +142,13 @@ USING (VALUES
     ON target.Name = source.Name AND target.OrganizationId = @templateId
 WHEN NOT MATCHED THEN
     INSERT (
-        Uuid, OrganizationId,
+        Uuid, OrganizationId, IsTranslatable,
 		[Order], Name, IsActive, Title, Description,
 		CreatedAt, UpdatedAt, DeletedAt,
 		CreatedById, UpdatedById, DeletedById
     )
     VALUES (
-        NEWID(), @templateId,
+        NEWID(), @templateId, 1,
 		source.[Order], source.Name, source.IsActive, source.Title, source.Description,
 		GETUTCDATE(), GETUTCDATE(), NULL,
         @systemUserId, @systemUserId, NULL
@@ -180,22 +181,22 @@ DECLARE
 	@systemUserId BIGINT = (SELECT Id FROM auth.Users WHERE Username = 'system'),
 	@templateId BIGINT = (SELECT Id FROM auth.Organizations WHERE Name = 'template'),
 	@freeCampusId BIGINT = (SELECT Id FROM auth.Organizations WHERE Name = 'freeCampus');
-MERGE fc.CourseStatuses AS target
-USING (SELECT [Order], Name, IsActive, Title, Description
-	FROM fc.CourseStatuses cs
+MERGE fc.CourseEnrollmentStatuses AS target
+USING (SELECT [Order], Name, IsActive, IsTranslatable, Title, Description
+	FROM fc.CourseEnrollmentStatuses cs
 	WHERE cs.OrganizationId = @templateId
 ) AS source
     ON target.Name = source.Name AND target.OrganizationId = @freeCampusId
 WHEN NOT MATCHED THEN
     INSERT (
         Uuid, OrganizationId,
-		[Order], Name, IsActive, Title, Description,
+		[Order], Name, IsActive, IsTranslatable, Title, Description,
 		CreatedAt, UpdatedAt, DeletedAt,
 		CreatedById, UpdatedById, DeletedById
     )
     VALUES (
         NEWID(), @freeCampusId,
-		source.[Order], source.Name, source.IsActive, source.Title, source.Description,
+		source.[Order], source.Name, source.IsActive, source.IsTranslatable, source.Title, source.Description,
 		GETUTCDATE(), GETUTCDATE(), NULL,
         @systemUserId, @systemUserId, NULL
     );
