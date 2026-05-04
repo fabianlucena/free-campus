@@ -23,7 +23,13 @@ namespace FreeCampusServer
         {
             base.OnModelCreating(modelBuilder);
 
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var assemblies = AppDomain.CurrentDomain
+                .GetAssemblies()
+                .Where(a => a.FullName?.StartsWith("RF") ?? false)
+                .Where(a => a.GetReferencedAssemblies()
+                    .Any(r => r.Name == "Microsoft.EntityFrameworkCore")
+                )
+                .ToArray();
 
             foreach (var assembly in assemblies)
             {
@@ -32,22 +38,17 @@ namespace FreeCampusServer
 
             foreach (var entity in modelBuilder.Model.GetEntityTypes())
             {
-                // Nombre de tabla
                 entity.SetTableName(ToSnakeCase(entity.GetTableName()!));
 
-                // Columnas
                 foreach (var property in entity.GetProperties())
                     property.SetColumnName(ToSnakeCase(property.GetColumnName()!));
 
-                // Claves primarias
                 foreach (var key in entity.GetKeys())
                     key.SetName(ToSnakeCase(key.GetName()!));
 
-                // Claves foráneas
                 foreach (var fk in entity.GetForeignKeys())
                     fk.SetConstraintName(ToSnakeCase(fk.GetConstraintName()!));
 
-                // Índices
                 foreach (var index in entity.GetIndexes())
                     index.SetDatabaseName(ToSnakeCase(index.GetDatabaseName()!));
             }
