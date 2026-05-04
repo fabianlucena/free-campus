@@ -88,7 +88,7 @@ BEGIN
 		UpdatedById BIGINT NOT NULL,
 		DeletedById BIGINT NULL,
 
-		Hash NVARCHAR(254) NOT NULL,
+		PasswordHash NVARCHAR(254) NOT NULL,
 
 		CONSTRAINT FK_UserPasswords_UserId
 			FOREIGN KEY (UserId) REFERENCES auth.Users(Id) ON DELETE NO ACTION,
@@ -149,13 +149,13 @@ WHEN NOT MATCHED THEN
 		UserId,
         CreatedAt, UpdatedAt, DeletedAt,
         CreatedById, UpdatedById, DeletedById,
-        Hash
+        PasswordHash
     )
     VALUES (
         source.UserId,
         GETUTCDATE(), GETUTCDATE(), NULL,
         @systemUserId, @systemUserId, NULL,
-		@1234hash
+				@1234hash
     );
 GO
 
@@ -1013,7 +1013,7 @@ BEGIN
 		CourseVersionId BIGINT NOT NULL,
 
 		Code NVARCHAR(256) NOT NULL,
-		[Order] INT NOT NULL,
+		SequenceNumber INT NOT NULL,
 		Level INT NOT NULL,
 
 		IsActive BIT NOT NULL DEFAULT 1,
@@ -1222,7 +1222,7 @@ BEGIN
 
 		OrganizationId BIGINT NOT NULL,
 
-		[Order] INT NOT NULL,
+		DisplayOrder INT NOT NULL,
 		Name NVARCHAR(256) NOT NULL,
 		IsActive BIT NOT NULL DEFAULT 1,
 		Title NVARCHAR(256) NOT NULL,
@@ -1326,7 +1326,7 @@ BEGIN
 
 		OrganizationId BIGINT NOT NULL,
 
-		[Order] INT NOT NULL,
+		DisplayOrder INT NOT NULL,
 		Name NVARCHAR(256) NOT NULL,
 		IsActive BIT NOT NULL DEFAULT 1,
 		Title NVARCHAR(256) NOT NULL,

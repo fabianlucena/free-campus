@@ -138,18 +138,18 @@ USING (VALUES
 	( 9, 'Dropped',    1, 'Dropped',    'The student voluntarily withdrew from the course after being enrolled.'),
 	(10, 'Canceled',   1, 'Canceled',   'The enrollment was invalidated or removed by the institution (administrative error, payment issue, or policy violation).'),
 	(11, 'Archived',   1, 'Archived',   'The enrollment is no longer active and has been stored for historical or auditing purposes.')
-) AS source([Order], Name, IsActive, Title, Description)
+) AS source(DisplayOrder, Name, IsActive, Title, Description)
     ON target.Name = source.Name AND target.OrganizationId = @templateId
 WHEN NOT MATCHED THEN
     INSERT (
         Uuid, OrganizationId, IsTranslatable,
-		[Order], Name, IsActive, Title, Description,
+		DisplayOrder, Name, IsActive, Title, Description,
 		CreatedAt, UpdatedAt, DeletedAt,
 		CreatedById, UpdatedById, DeletedById
     )
     VALUES (
         NEWID(), @templateId, 1,
-		source.[Order], source.Name, source.IsActive, source.Title, source.Description,
+		source.DisplayOrder, source.Name, source.IsActive, source.Title, source.Description,
 		GETUTCDATE(), GETUTCDATE(), NULL,
         @systemUserId, @systemUserId, NULL
     );
@@ -182,7 +182,7 @@ DECLARE
 	@templateId BIGINT = (SELECT Id FROM auth.Organizations WHERE Name = 'template'),
 	@freeCampusId BIGINT = (SELECT Id FROM auth.Organizations WHERE Name = 'freeCampus');
 MERGE fc.CourseEnrollmentStatuses AS target
-USING (SELECT [Order], Name, IsActive, IsTranslatable, Title, Description
+USING (SELECT DisplayOrder, Name, IsActive, IsTranslatable, Title, Description
 	FROM fc.CourseEnrollmentStatuses cs
 	WHERE cs.OrganizationId = @templateId
 ) AS source
@@ -190,13 +190,13 @@ USING (SELECT [Order], Name, IsActive, IsTranslatable, Title, Description
 WHEN NOT MATCHED THEN
     INSERT (
         Uuid, OrganizationId,
-		[Order], Name, IsActive, IsTranslatable, Title, Description,
+		DisplayOrder, Name, IsActive, IsTranslatable, Title, Description,
 		CreatedAt, UpdatedAt, DeletedAt,
 		CreatedById, UpdatedById, DeletedById
     )
     VALUES (
         NEWID(), @freeCampusId,
-		source.[Order], source.Name, source.IsActive, source.IsTranslatable, source.Title, source.Description,
+		source.DisplayOrder, source.Name, source.IsActive, source.IsTranslatable, source.Title, source.Description,
 		GETUTCDATE(), GETUTCDATE(), NULL,
         @systemUserId, @systemUserId, NULL
     );

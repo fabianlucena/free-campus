@@ -15,7 +15,7 @@ namespace FreeCampusServer.Entities
         public long ParentLearningItemVersionId { get; set; }
         public LearningItemVersion? ParentLearningItemVersion { get; set; }
 
-        public int Order { get; set; }
+        public int SequenceNumber { get; set; }
         public bool IsActive { get; set; }
         public bool IsPublished { get; set; }
     }

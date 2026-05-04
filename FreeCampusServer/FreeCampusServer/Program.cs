@@ -30,7 +30,9 @@ namespace FreeCampusServer
                 .AddEnvironmentVariables();
 
             var connectionString = builder.Configuration.GetConnectionString("Default");
-            builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
+            builder.Services.AddDbContext<AppDbContext>(options =>
+                options.UseNpgsql(connectionString)
+            );
 
             builder.Services.AddScoped<DbContext, AppDbContext>();
 

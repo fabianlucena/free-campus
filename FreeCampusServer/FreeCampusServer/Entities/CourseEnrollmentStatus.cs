@@ -10,7 +10,7 @@ namespace FreeCampusServer.Entities
         public long OrganizationId { get; set; }
         public Organization? Organization { get; set; }
 
-        public int Order { get; set; }
+        public int DisplayOrder { get; set; }
         public string Name { get; set; } = string.Empty;
         public bool IsActive { get; set; }
         public string Title { get; set; } = string.Empty;

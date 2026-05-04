@@ -14,7 +14,7 @@ namespace FreeCampusServer.Entities
 
         public string Code { get; set; } = string.Empty;
 
-        public int Order { get; set; }
+        public int SequenceNumber { get; set; }
         public int Level { get; set; }
 
         public bool IsActive { get; set; }
