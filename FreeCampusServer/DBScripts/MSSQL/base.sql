@@ -90,13 +90,13 @@ USING (SELECT r.Id, p.Id
 WHEN NOT MATCHED THEN
     INSERT (
 		RoleId, PermissionId,
-        CreatedAt, DeletedAt,
-        CreatedById, DeletedById
+        CreatedAt, CreatedById,
+        DeletedAt, DeletedById
     )
     VALUES (
 		source.RoleId, source.PermissionId,
-        @now, @now,
-        @systemUserId, @systemUserId
+        @now, @systemUserId
+        NULL, NULL
     );
 GO
 

@@ -21,8 +21,7 @@ BEGIN
 		deleted_at TIMESTAMP NULL,
 		deleted_by_id BIGINT NULL,
 
-		CONSTRAINT fk_auth_users_unique
-			UNIQUE (username)
+		CONSTRAINT uk_auth_users_username UNIQUE (username)
 	);
 
 	INSERT INTO auth.users (
@@ -118,7 +117,7 @@ BEGIN
 	IF NOT EXISTS (SELECT 1 FROM auth.users WHERE username = 'system') THEN
 		RAISE EXCEPTION 'El usuario system no existe.';
 	END IF;
-END $$
+END $$;
 
 -- Insert default admin user
 INSERT INTO auth.users (
@@ -135,7 +134,7 @@ VALUES (
 	NOW(), NOW(), NULL,
 	1, 1, NULL
 )
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (username) DO NOTHING;
 
 -- Insert default admin user pasword (only if admin does not have password) 1234
 INSERT INTO auth.user_passwords (
@@ -163,6 +162,8 @@ CREATE TABLE IF NOT EXISTS auth.devices (
 	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
 	created_by_id BIGINT NOT NULL,
 
+	CONSTRAINT uk_auth_devices_token UNIQUE (token),
+
 	CONSTRAINT fk_auth_devices_created_by_id FOREIGN KEY (created_by_id)
 		REFERENCES auth.users(id) ON DELETE RESTRICT
 );
@@ -184,6 +185,8 @@ CREATE TABLE IF NOT EXISTS auth.sessions (
 
 	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
 	created_by_id BIGINT NOT NULL,
+
+	CONSTRAINT uk_auth_sessions_token UNIQUE (token),
 	
 	CONSTRAINT fk_auth_sessions_User FOREIGN KEY (user_id)
 		REFERENCES auth.users(id) ON DELETE RESTRICT,
@@ -215,6 +218,8 @@ CREATE TABLE IF NOT EXISTS auth.organizations (
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
 
+	CONSTRAINT uk_auth_organizations_name UNIQUE (name),
+
 	CONSTRAINT fk_auth_organizations_created_by_id FOREIGN KEY (created_by_id)
 		REFERENCES auth.users(id) ON DELETE RESTRICT,
 
@@ -227,7 +232,7 @@ CREATE TABLE IF NOT EXISTS auth.organizations (
 
 -- session_organizations table
 CREATE TABLE IF NOT EXISTS auth.session_organizations (
-	session_id BIGINT NOT NULL,
+	session_id BIGINT NOT NULL PRIMARY KEY,
 	organization_id BIGINT NOT NULL,
 
 	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -272,6 +277,8 @@ CREATE TABLE IF NOT EXISTS auth.roles (
 	name VARCHAR(256) NOT NULL,
 	description TEXT NULL,
 
+	CONSTRAINT uk_auth_roles_name UNIQUE (name),
+
 	CONSTRAINT fk_auth_roles_created_by_id FOREIGN KEY (created_by_id)
 		REFERENCES auth.users(id) ON DELETE RESTRICT,
 
@@ -295,7 +302,7 @@ INSERT INTO auth.roles (
 		system.id, system.id, NULL
 	FROM auth.users system
 	WHERE system.username = 'system'
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (name) DO NOTHING;
 
 -- Insert default system Organization
 INSERT INTO auth.organizations (
@@ -310,7 +317,7 @@ INSERT INTO auth.organizations (
 		system.id, system.id, NULL
 	FROM auth.users system
 	WHERE system.username = 'system'
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (name) DO NOTHING;
 
 -- roles_x_users_x_organizations table
 CREATE TABLE IF NOT EXISTS auth.roles_x_users_x_organizations (
@@ -324,8 +331,7 @@ CREATE TABLE IF NOT EXISTS auth.roles_x_users_x_organizations (
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
 
-	CONSTRAINT roles_x_users_x_organizations_pk
-		PRIMARY KEY (role_id,user_id,organization_id);
+	CONSTRAINT pk_auth_roles_x_users_x_organizations PRIMARY KEY (role_id,user_id,organization_id),
 
 	CONSTRAINT fk_auth_roles_x_users_x_organizations_role FOREIGN KEY (role_id)
 		REFERENCES auth.roles(id) ON DELETE RESTRICT,
@@ -373,6 +379,8 @@ CREATE TABLE IF NOT EXISTS auth.roles_includes (
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
 
+	CONSTRAINT pk_auth_roles_includes PRIMARY KEY (role_id,include_id),
+
 	CONSTRAINT fk_auth_roles_includes_role FOREIGN KEY (role_id)
 		REFERENCES auth.roles(id) ON DELETE RESTRICT,
 
@@ -391,13 +399,15 @@ CREATE TABLE IF NOT EXISTS auth.permissions (
 	id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	uuid UUID NOT NULL DEFAULT gen_random_uuid(),
 
-	name VARCHAR(128) NOT NULL,
+	name VARCHAR(255) NOT NULL,
 
 	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
 	created_by_id BIGINT NOT NULL,
 
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
+
+	CONSTRAINT uk_auth_permissions_name UNIQUE (name),
 
 	CONSTRAINT fk_auth_permissions_created_by_id FOREIGN KEY (created_by_id)
 		REFERENCES auth.users(id) ON DELETE RESTRICT,
@@ -416,6 +426,8 @@ CREATE TABLE IF NOT EXISTS auth.permissions_x_roles (
 
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
+
+	CONSTRAINT pk_auth_permissions_x_roles PRIMARY KEY (permission_id,role_id),
 
 	CONSTRAINT fk_auth_permissions_x_roles_Permission FOREIGN KEY (permission_id)
 		REFERENCES auth.permissions(id) ON DELETE RESTRICT,
@@ -454,6 +466,8 @@ CREATE TABLE IF NOT EXISTS fc.program_types(
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
 
+	CONSTRAINT uk_fc_pprogram_types UNIQUE (organization_id, name),
+
 	CONSTRAINT fk_fc_program_types_organization_id FOREIGN KEY (organization_id)
 		REFERENCES auth.organizations(id) ON DELETE RESTRICT,
 
@@ -486,6 +500,8 @@ CREATE TABLE IF NOT EXISTS fc.programs(
 
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
+
+	CONSTRAINT uk_fc_programs UNIQUE (organization_id, name),
 
 	CONSTRAINT fk_fc_programs_organization_id FOREIGN KEY (organization_id)
 		REFERENCES auth.organizations(id) ON DELETE RESTRICT,
@@ -527,6 +543,8 @@ CREATE TABLE IF NOT EXISTS fc.program_versions(
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
 
+	CONSTRAINT uk_fc_program_versions UNIQUE (program_id, version_number),
+
 	CONSTRAINT fk_fc_program_versions_organization_id FOREIGN KEY (program_id)
 		REFERENCES fc.programs(id) ON DELETE RESTRICT,
 
@@ -565,6 +583,8 @@ CREATE TABLE IF NOT EXISTS fc.course_types(
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
 
+	CONSTRAINT uk_fc_course_types UNIQUE (organization_id, name),
+
 	CONSTRAINT fk_fc_course_types_organization_id FOREIGN KEY (organization_id)
 		REFERENCES auth.organizations(id) ON DELETE RESTRICT,
 
@@ -599,6 +619,8 @@ CREATE TABLE IF NOT EXISTS fc.courses(
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
 
+	CONSTRAINT uk_fc_courses UNIQUE (organization_id, code),
+
 	CONSTRAINT fk_fc_courses_organization_id FOREIGN KEY (organization_id)
 		REFERENCES auth.organizations(id) ON DELETE RESTRICT,
 
@@ -628,6 +650,8 @@ CREATE TABLE IF NOT EXISTS fc.course_prerequisites(
 
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
+
+	CONSTRAINT uk_fc_course_prerequisites UNIQUE (course_id, prerequisite_id),
 
 	CONSTRAINT fk_fc_course_prerequisites_course_id FOREIGN KEY (course_id)
 		REFERENCES fc.courses(id) ON DELETE RESTRICT,
@@ -667,6 +691,8 @@ CREATE TABLE IF NOT EXISTS fc.course_versions(
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
 
+	CONSTRAINT uk_fc_course_versions UNIQUE (course_id, version_number),
+
 	CONSTRAINT fk_fc_course_versions_organization_id FOREIGN KEY (course_id)
 		REFERENCES fc.courses(id) ON DELETE RESTRICT,
 
@@ -704,6 +730,8 @@ CREATE TABLE IF NOT EXISTS fc.learning_item_types(
 
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
+
+	CONSTRAINT uk_fc_learning_item_types UNIQUE (organization_id, name),
 
 	CONSTRAINT fk_fc_learning_item_types_organization_id FOREIGN KEY (organization_id)
 		REFERENCES auth.organizations(id) ON DELETE RESTRICT,
@@ -775,6 +803,8 @@ CREATE TABLE IF NOT EXISTS fc.learning_item_versions(
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
 
+	CONSTRAINT uk_fc_learning_item_versions UNIQUE (learning_item_id, version_number),
+
 	CONSTRAINT fk_fc_learning_item_versions_organization_id FOREIGN KEY (learning_item_id)
 		REFERENCES fc.learning_items(id) ON DELETE RESTRICT,
 
@@ -811,6 +841,8 @@ CREATE TABLE IF NOT EXISTS fc.program_version_x_course_versions(
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
 
+	CONSTRAINT pk_fc_program_version_x_course_versions PRIMARY KEY (program_version_id, course_version_id),
+
 	CONSTRAINT fk_auth_program_version_x_course_versions_program_version_id FOREIGN KEY (program_version_id)
 		REFERENCES fc.program_versions(id) ON DELETE RESTRICT,
 
@@ -843,13 +875,15 @@ CREATE TABLE IF NOT EXISTS fc.teaching_roles(
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
 
-	CONSTRAINT fk_auth_teaching_roles_created_by_id FOREIGN KEY (created_by_id)
+	CONSTRAINT uk_fc_teaching_roles UNIQUE (name),
+
+	CONSTRAINT fk_fc_teaching_roles_created_by_id FOREIGN KEY (created_by_id)
 		REFERENCES auth.users(id) ON DELETE RESTRICT,
 
-	CONSTRAINT fk_auth_teaching_roles_updated_by_id FOREIGN KEY (updated_by_id)
+	CONSTRAINT fk_fc_teaching_roles_updated_by_id FOREIGN KEY (updated_by_id)
 		REFERENCES auth.users(id) ON DELETE RESTRICT,
 
-	CONSTRAINT fk_auth_teaching_roles_deleted_by_id FOREIGN KEY (deleted_by_id)
+	CONSTRAINT fk_fc_teaching_roles_deleted_by_id FOREIGN KEY (deleted_by_id)
 		REFERENCES auth.users(id) ON DELETE RESTRICT
 );
 
@@ -872,13 +906,15 @@ CREATE TABLE IF NOT EXISTS fc.teaching_permissions(
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
 
-	CONSTRAINT fk_auth_teaching_permissions_created_by_id FOREIGN KEY (created_by_id)
+	CONSTRAINT uk_fc_teaching_permissions UNIQUE (name),
+
+	CONSTRAINT fk_fc_teaching_permissions_created_by_id FOREIGN KEY (created_by_id)
 		REFERENCES auth.users(id) ON DELETE RESTRICT,
 
-	CONSTRAINT fk_auth_teaching_permissions_updated_by_id FOREIGN KEY (updated_by_id)
+	CONSTRAINT fk_fc_teaching_permissions_updated_by_id FOREIGN KEY (updated_by_id)
 		REFERENCES auth.users(id) ON DELETE RESTRICT,
 
-	CONSTRAINT fk_auth_teaching_permissions_deleted_by_id FOREIGN KEY (deleted_by_id)
+	CONSTRAINT fk_fc_teaching_permissions_deleted_by_id FOREIGN KEY (deleted_by_id)
 		REFERENCES auth.users(id) ON DELETE RESTRICT
 );
 
@@ -906,25 +942,27 @@ CREATE TABLE IF NOT EXISTS fc.teaching_assignments(
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
 
-	CONSTRAINT fk_auth_teaching_assignments_course_id FOREIGN KEY (course_id)
+	CONSTRAINT uk_fc_teaching_assignments UNIQUE (course_id, instructor_id, teaching_role_id, assigned_at),
+
+	CONSTRAINT fk_fc_teaching_assignments_course_id FOREIGN KEY (course_id)
 		REFERENCES fc.courses(id) ON DELETE RESTRICT,
 
-	CONSTRAINT fk_auth_teaching_assignments_instructor_id FOREIGN KEY (instructor_id)
+	CONSTRAINT fk_fc_teaching_assignments_instructor_id FOREIGN KEY (instructor_id)
 		REFERENCES auth.users(id) ON DELETE RESTRICT,
 
-	CONSTRAINT fk_auth_teaching_assignments_teaching_role_id FOREIGN KEY (teaching_role_id)
+	CONSTRAINT fk_fc_teaching_assignments_teaching_role_id FOREIGN KEY (teaching_role_id)
 		REFERENCES fc.teaching_roles(id) ON DELETE RESTRICT,
 
-	CONSTRAINT fk_auth_teaching_assignments_assigned_by_id FOREIGN KEY (assigned_by_id)
+	CONSTRAINT fk_fc_teaching_assignments_assigned_by_id FOREIGN KEY (assigned_by_id)
 		REFERENCES auth.users(id) ON DELETE RESTRICT,
 
-	CONSTRAINT fk_auth_teaching_assignments_created_by_id FOREIGN KEY (created_by_id)
+	CONSTRAINT fk_fc_teaching_assignments_created_by_id FOREIGN KEY (created_by_id)
 		REFERENCES auth.users(id) ON DELETE RESTRICT,
 
-	CONSTRAINT fk_auth_teaching_assignments_updated_by_id FOREIGN KEY (updated_by_id)
+	CONSTRAINT fk_fc_teaching_assignments_updated_by_id FOREIGN KEY (updated_by_id)
 		REFERENCES auth.users(id) ON DELETE RESTRICT,
 
-	CONSTRAINT fk_auth_teaching_assignments_deleted_by_id FOREIGN KEY (deleted_by_id)
+	CONSTRAINT fk_fc_teaching_assignments_deleted_by_id FOREIGN KEY (deleted_by_id)
 		REFERENCES auth.users(id) ON DELETE RESTRICT
 );
 
@@ -939,16 +977,18 @@ CREATE TABLE IF NOT EXISTS fc.teaching_assignment_x_permissions(
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
 
-	CONSTRAINT fk_auth_teaching_assignment_x_permissions_program_version_id FOREIGN KEY (teaching_assignment_id)
+	CONSTRAINT pk_fc_teaching_assignment_x_permissions PRIMARY KEY (teaching_assignment_id, permissions_id),
+
+	CONSTRAINT fk_fc_teaching_assignment_x_permissions_program_version_id FOREIGN KEY (teaching_assignment_id)
 		REFERENCES fc.teaching_assignments(id) ON DELETE RESTRICT,
 
-	CONSTRAINT fk_auth_teaching_assignment_x_permissions_course_version_id FOREIGN KEY (permissions_id)
+	CONSTRAINT fk_fc_teaching_assignment_x_permissions_course_version_id FOREIGN KEY (permissions_id)
 		REFERENCES fc.teaching_permissions(id) ON DELETE RESTRICT,
 
-	CONSTRAINT fk_auth_teaching_assignment_x_permissions_created_by_id FOREIGN KEY (created_by_id)
+	CONSTRAINT fk_fc_teaching_assignment_x_permissions_created_by_id FOREIGN KEY (created_by_id)
 		REFERENCES auth.users(id) ON DELETE RESTRICT,
 
-	CONSTRAINT fk_auth_teaching_assignment_x_permissions_deleted_by_id FOREIGN KEY (deleted_by_id)
+	CONSTRAINT fk_fc_teaching_assignment_x_permissions_deleted_by_id FOREIGN KEY (deleted_by_id)
 		REFERENCES auth.users(id) ON DELETE RESTRICT
 );
 
@@ -975,6 +1015,8 @@ CREATE TABLE IF NOT EXISTS fc.course_enrollment_statuses(
 
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
+
+	CONSTRAINT uk_fc_course_enrollment_statuses UNIQUE (organization_id, name),
 
 	CONSTRAINT fk_fc_course_enrollment_statuses_organization_id FOREIGN KEY (organization_id)
 		REFERENCES auth.organizations(id) ON DELETE RESTRICT,
@@ -1013,6 +1055,8 @@ CREATE TABLE IF NOT EXISTS fc.course_enrollments(
 
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
+
+	CONSTRAINT uk_fc_course_enrollments UNIQUE (student_id,course_version_id,enrolled_at),
 
 	CONSTRAINT fk_fc_course_enrollments_course_id FOREIGN KEY (course_version_id)
 		REFERENCES fc.course_versions(id) ON DELETE RESTRICT,
@@ -1060,6 +1104,8 @@ CREATE TABLE IF NOT EXISTS fc.program_enrollment_statuses(
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
 
+	CONSTRAINT uk_fc_program_enrollment_statuses UNIQUE (organization_id, name),
+
 	CONSTRAINT fk_fc_program_enrollment_statuses_organization_id FOREIGN KEY (organization_id)
 		REFERENCES auth.organizations(id) ON DELETE RESTRICT,
 
@@ -1097,6 +1143,8 @@ CREATE TABLE IF NOT EXISTS fc.program_enrollments(
 
 	deleted_at TIMESTAMP NULL,
 	deleted_by_id BIGINT NULL,
+
+	CONSTRAINT uk_fc_program_enrollments UNIQUE (program_version_id, student_id, enrolled_at),
 
 	CONSTRAINT fk_fc_program_enrollments_program_id FOREIGN KEY (program_version_id)
 		REFERENCES fc.program_versions(id) ON DELETE RESTRICT,
