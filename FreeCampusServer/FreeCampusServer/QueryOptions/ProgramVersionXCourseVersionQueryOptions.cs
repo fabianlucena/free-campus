@@ -9,10 +9,17 @@ namespace FreeCampusServer.QueryOptions
 
         public ProgramVersionXCourseVersionQueryOptions() { }
 
-        public ProgramVersionXCourseVersionQueryOptions(ProgramVersionXCourseVersionQueryOptions options)
+        public ProgramVersionXCourseVersionQueryOptions(ProgramVersionXCourseVersionQueryOptions? options)
+            : base(options)
         {
+            if (options == null)
+                return;
+
             IncludeProgram = options.IncludeProgram;
             IncludeCourse = options.IncludeCourse;
         }
+
+        public override ProgramVersionXCourseVersionQueryOptions Clone()
+            => new(this);
     }
 }

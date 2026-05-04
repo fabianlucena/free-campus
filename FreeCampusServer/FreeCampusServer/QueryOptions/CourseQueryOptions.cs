@@ -18,8 +18,12 @@ namespace FreeCampusServer.QueryOptions
 
         public CourseQueryOptions() { }
 
-        public CourseQueryOptions(CourseQueryOptions options)
+        public CourseQueryOptions(CourseQueryOptions? options)
+            : base(options)
         {
+            if (options == null)
+                return;
+
             Translate = options.Translate;
 
             IncludeOrganization = options.IncludeOrganization;
@@ -31,5 +35,8 @@ namespace FreeCampusServer.QueryOptions
             IsStandaloneOrEnrolledInProgram = options.IsStandaloneOrEnrolledInProgram;
             ExcludeStudentId = options.ExcludeStudentId;
         }
+
+        public override CourseQueryOptions Clone()
+            => new(this);
     }
 }

@@ -19,5 +19,8 @@ namespace FreeCampusServer.QueryOptions
             IncludeOrganization = options.IncludeOrganization;
             OrganizationId = options.OrganizationId;
         }
+
+        public override CourseEnrollmentStatusQueryOptions Clone()
+            => new(this);
     }
 }

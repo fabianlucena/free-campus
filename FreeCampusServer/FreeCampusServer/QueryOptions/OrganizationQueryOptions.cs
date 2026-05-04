@@ -1,4 +1,5 @@
-﻿using RFBaseEntities.QueryOptions;
+﻿using RFAuthEntities.QueryOptions;
+using RFBaseEntities.QueryOptions;
 
 namespace FreeCampusServer.QueryOptions
 {
@@ -18,5 +19,8 @@ namespace FreeCampusServer.QueryOptions
             IsActive = true;
             Description = options.Description;
         }
+
+        public override OrganizationQueryOptions Clone()
+            => new(this);
     }
 }
