@@ -2,7 +2,7 @@
 
 namespace FreeCampusServer.QueryOptions
 {
-    public class LearningItemTypeQueryOptions : CommonEntityQueryOptions
+    public sealed class LearningItemTypeQueryOptions : CommonEntityQueryOptions
     {
         public bool IncludeOrganization { get; init; }
 

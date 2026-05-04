@@ -2,7 +2,7 @@
 
 namespace FreeCampusServer.QueryOptions
 {
-    public class ProgramVersionXCourseVersionQueryOptions : CommonEntityQueryOptions
+    public sealed class ProgramVersionXCourseVersionQueryOptions : CommonEntityQueryOptions
     {
         public bool IncludeProgram { get; init; }
         public bool IncludeCourse { get; init; }

@@ -2,7 +2,7 @@
 
 namespace FreeCampusServer.QueryOptions
 {
-    public class CourseQueryOptions : CommonEntityQueryOptions
+    public sealed class CourseQueryOptions : CommonEntityQueryOptions
     {
         public bool Translate { get; init; }
 

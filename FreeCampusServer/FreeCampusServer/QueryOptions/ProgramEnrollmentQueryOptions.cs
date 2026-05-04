@@ -2,7 +2,7 @@
 
 namespace FreeCampusServer.QueryOptions
 {
-    public class ProgramEnrollmentQueryOptions : CommonJoinQueryOptions
+    public sealed class ProgramEnrollmentQueryOptions : CommonJoinQueryOptions
     {
         public bool IncludeProgram { get; init; }
         public bool IncludeProgramVersion { get; init; }

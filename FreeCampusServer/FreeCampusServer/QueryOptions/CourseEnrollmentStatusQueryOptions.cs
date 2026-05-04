@@ -2,7 +2,7 @@
 
 namespace FreeCampusServer.QueryOptions
 {
-    public class CourseEnrollmentStatusQueryOptions : NominableEntityQueryOptions
+    public sealed class CourseEnrollmentStatusQueryOptions : NominableEntityQueryOptions
     {
         public bool IncludeOrganization { get; init; }
 

@@ -3,7 +3,7 @@ using RFBaseEntities.QueryOptions;
 
 namespace FreeCampusServer.QueryOptions
 {
-    public class OrganizationQueryOptions : LocalizableEntityQueryOptions
+    public sealed class OrganizationQueryOptions : LocalizableEntityQueryOptions
     {
         public bool IsActive { get; init; }
         public string? Description { get; init; }

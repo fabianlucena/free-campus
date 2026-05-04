@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace FreeCampusServer.Entities
 {
     [Table("CourseEnrollments", Schema = "fc")]
-    public class CourseEnrollment : CommonEntity
+    public sealed class CourseEnrollment : CommonEntity
     {
         public long CourseVersionId { get; set; }
         public CourseVersion? CourseVersion { get; set; }
@@ -23,5 +23,35 @@ namespace FreeCampusServer.Entities
 
         public Decimal? FinalGrade { get; set; }
         public bool IsActive { get; set; }
+
+        public CourseEnrollment() { }
+
+        public CourseEnrollment(CourseEnrollment? entity = null)
+            : base(entity)
+        {
+            if (entity == null)
+                return;
+
+            CourseVersionId = entity.CourseVersionId;
+            CourseVersion = entity.CourseVersion;
+
+            StudentId = entity.StudentId;
+            Student = entity.Student;
+
+            EnrolledAt = entity.EnrolledAt;
+            EnrolledById = entity.EnrolledById;
+            EnrolledBy = entity.EnrolledBy;
+            CompletedAt = entity.CompletedAt;
+            DroppedAt = entity.DroppedAt;
+
+            StatusId = entity.StatusId;
+            Status = entity.Status;
+
+            FinalGrade = entity.FinalGrade;
+            IsActive = entity.IsActive;
+        }
+
+        public override CourseEnrollment Clone()
+            => new(this);
     }
 }
