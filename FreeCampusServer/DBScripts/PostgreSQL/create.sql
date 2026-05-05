@@ -260,6 +260,32 @@ CREATE TABLE IF NOT EXISTS auth.session_organizations (
 		REFERENCES auth.users(id) ON DELETE RESTRICT
 );
 
+-- user_groups table
+CREATE TABLE IF NOT EXISTS auth.user_groups (
+	user_id BIGINT NOT NULL,
+	group_id BIGINT NOT NULL,
+
+	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+	created_by_id BIGINT NOT NULL,
+
+	deleted_at TIMESTAMP NULL,
+	deleted_by_id BIGINT NULL,
+
+	CONSTRAINT pk_auth_user_groups PRIMARY KEY (user_id,group_id),
+
+	CONSTRAINT fk_auth_user_groups_user FOREIGN KEY (user_id)
+		REFERENCES auth.users(id) ON DELETE RESTRICT,
+
+	CONSTRAINT fk_auth_user_groups_group FOREIGN KEY (group_id)
+		REFERENCES auth.users(id) ON DELETE RESTRICT,
+
+	CONSTRAINT fk_auth_user_groups_created_by_id FOREIGN KEY (created_by_id)
+		REFERENCES auth.users(id) ON DELETE RESTRICT,
+
+	CONSTRAINT fk_auth_user_groups_deleted_by_id FOREIGN KEY (deleted_by_id)
+		REFERENCES auth.users(id) ON DELETE RESTRICT
+);
+
 -- roles table
 CREATE TABLE IF NOT EXISTS auth.roles (
 	id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,

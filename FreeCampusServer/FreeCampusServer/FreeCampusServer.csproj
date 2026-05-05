@@ -24,6 +24,8 @@
     <ProjectReference Include="..\..\..\rf-nugets_v2\RFRBACServices\RFRBACServices.csproj" />
     <ProjectReference Include="..\..\..\rf-nugets_v2\RFRGOBACEF\RFRGOBACEF.csproj" />
     <ProjectReference Include="..\..\..\rf-nugets_v2\RFRGOBACServices\RFRGOBACServices.csproj" />
+    <ProjectReference Include="..\..\..\rf-nugets_v2\RFUserGroupsEF\RFUserGroupsEF.csproj" />
+    <ProjectReference Include="..\..\..\rf-nugets_v2\RFUserGroupsServices\RFUserGroupsServices.csproj" />
   </ItemGroup>
 
   <ItemGroup>

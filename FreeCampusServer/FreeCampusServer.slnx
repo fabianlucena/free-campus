@@ -39,5 +39,12 @@
     <Project Path="../../rf-nugets_v2/RFRGOBACIServices/RFRGOBACIServices.csproj" Id="55287687-95dd-4f39-8727-60a07df35160" />
     <Project Path="../../rf-nugets_v2/RFRGOBACServices/RFRGOBACServices.csproj" Id="fb3b5d39-91eb-41a4-8a06-1fe5c96d1929" />
   </Folder>
+  <Folder Name="/RF Nugets/RFUserGroups/">
+    <Project Path="../../rf-nugets_v2/RFUserGroupsEF/RFUserGroupsEF.csproj" />
+    <Project Path="../../rf-nugets_v2/RFUserGroupsEntities/RFUserGroupsEntities.csproj" />
+    <Project Path="../../rf-nugets_v2/RFUserGroupsIRepositories/RFUserGroupsIRepositories.csproj" />
+    <Project Path="../../rf-nugets_v2/RFUserGroupsIServices/RFUserGroupsIServices.csproj" />
+    <Project Path="../../rf-nugets_v2/RFUserGroupsServices/RFUserGroupsServices.csproj" />
+  </Folder>
   <Project Path="FreeCampusServer/FreeCampusServer.csproj" />
 </Solution>
