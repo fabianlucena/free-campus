@@ -12,20 +12,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\rf-nugets_v2\RFAuthControllers\RFAuthControllers.csproj" />
-    <ProjectReference Include="..\..\..\rf-nugets_v2\RFAuthEF\RFAuthEF.csproj" />
-    <ProjectReference Include="..\..\..\rf-nugets_v2\RFAuthServices\RFAuthServices.csproj" />
-    <ProjectReference Include="..\..\..\rf-nugets_v2\RFBaseEF\RFBaseEF.csproj" />
-    <ProjectReference Include="..\..\..\rf-nugets_v2\RFBaseServices\RFBaseServices.csproj" />
-    <ProjectReference Include="..\..\..\rf-nugets_v2\RFL10n\RFL10n.csproj" />
-    <ProjectReference Include="..\..\..\rf-nugets_v2\RFPermissionsEF\RFPermissionsEF.csproj" />
-    <ProjectReference Include="..\..\..\rf-nugets_v2\RFPermissionsServices\RFPermissionsServices.csproj" />
-    <ProjectReference Include="..\..\..\rf-nugets_v2\RFRBACEF\RFRBACEF.csproj" />
-    <ProjectReference Include="..\..\..\rf-nugets_v2\RFRBACServices\RFRBACServices.csproj" />
-    <ProjectReference Include="..\..\..\rf-nugets_v2\RFRGOBACEF\RFRGOBACEF.csproj" />
-    <ProjectReference Include="..\..\..\rf-nugets_v2\RFRGOBACServices\RFRGOBACServices.csproj" />
-    <ProjectReference Include="..\..\..\rf-nugets_v2\RFUserGroupsEF\RFUserGroupsEF.csproj" />
-    <ProjectReference Include="..\..\..\rf-nugets_v2\RFUserGroupsServices\RFUserGroupsServices.csproj" />
+    <ProjectReference Include="..\..\..\rf-nugets\RFAuthControllers\RFAuthControllers.csproj" />
+    <ProjectReference Include="..\..\..\rf-nugets\RFAuthEF\RFAuthEF.csproj" />
+    <ProjectReference Include="..\..\..\rf-nugets\RFAuthServices\RFAuthServices.csproj" />
+    <ProjectReference Include="..\..\..\rf-nugets\RFBaseEF\RFBaseEF.csproj" />
+    <ProjectReference Include="..\..\..\rf-nugets\RFBaseServices\RFBaseServices.csproj" />
+    <ProjectReference Include="..\..\..\rf-nugets\RFL10n\RFL10n.csproj" />
+    <ProjectReference Include="..\..\..\rf-nugets\RFPermissionsEF\RFPermissionsEF.csproj" />
+    <ProjectReference Include="..\..\..\rf-nugets\RFPermissionsServices\RFPermissionsServices.csproj" />
+    <ProjectReference Include="..\..\..\rf-nugets\RFRBACEF\RFRBACEF.csproj" />
+    <ProjectReference Include="..\..\..\rf-nugets\RFRBACServices\RFRBACServices.csproj" />
+    <ProjectReference Include="..\..\..\rf-nugets\RFRGOBACEF\RFRGOBACEF.csproj" />
+    <ProjectReference Include="..\..\..\rf-nugets\RFRGOBACServices\RFRGOBACServices.csproj" />
+    <ProjectReference Include="..\..\..\rf-nugets\RFUserGroupsEF\RFUserGroupsEF.csproj" />
+    <ProjectReference Include="..\..\..\rf-nugets\RFUserGroupsServices\RFUserGroupsServices.csproj" />
   </ItemGroup>
 
   <ItemGroup>
